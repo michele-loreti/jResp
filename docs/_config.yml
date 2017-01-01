@@ -1,7 +1,4 @@
 theme: jekyll-theme-slate
 
-show_downloads: true
+show_downloads: false
 
-github.zip_url: https://github.com/michele-loreti/jResp/archive/master.zip
-
-github.tar_url: https://github.com/michele-loreti/jResp/archive/master.tar.gz
