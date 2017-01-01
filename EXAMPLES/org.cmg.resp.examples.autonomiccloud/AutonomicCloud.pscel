@@ -1,0 +1,91 @@
+PSCEL{ 
+    
+   process Server( ) {
+		while (true) {
+			string dest;
+			int pId;
+			int res;
+			get("task",?dest, ?pId)@(locality=="UNIFI");
+			put("result", pId)@self;
+			get("result",?res)@self;
+			put("result",pId, res)@(id==dest);
+		}
+	}             
+	
+	process Client( ) {
+		int i = 0;
+		while (i < 5){
+			put("task",self)@self; 
+			print("task"); 
+			i = i + 1;	
+		}
+	}   
+	
+	policy PServer <permit-unless-deny 
+		rules:
+		//Violation of Confidentiality Level
+		 rule S1 ( deny
+		 	target: equal(action/id, get) && equal(subject/id,this)
+		 		&& pattern-match(action/arg,("task",*string,*int))
+		 		&& equal(subject/level,1) && equal(object/level,2)
+		 )
+		//HighlyLoaded Nod e
+		 rule S2 (deny 
+		 	target: equal(action/id, get) && equal(subject/id,this)
+		 		&& pattern-match(action/arg,("task",*string,*int))
+		 		&& greater-than(subject/load,90)
+		 	obl: [B
+		 		//TODO FRESH ACTION
+		 		//TODO NEW COMPONENT 
+		 		read(load)
+		 	] 
+		 )    
+		 //Block the controlled process until the load is higher than 60
+		 rule S3 (deny 
+		 	target: equal(action/id, read) && pattern-match(action/arg,"load")
+		 			&& greater-than(subject/load,60)
+		 )
+		 //Logging of put actions
+		 rule S4 (permit
+		 	target: equal(action/id, put) && equal(subject/id,this)
+		 	obl: [B put("log",action/arg)@self] 
+		 ) 
+	>  
+	    
+	policy PClient (int num) <permit-unless-deny  
+	rules:
+		//Incrementally enumerate tasks
+	 	rule C1 (permit
+	 		target: equal(action/id, put) && pattern-match(action/arg,("task",*string))
+	 			&& equal(subject/id,this)
+	 		obl: [A get("taskId",?num)@self.put(action/arg,num)@self.put("taskId",num + 1)@self]
+	 	)
+	 	//Inform gateway of a retrieved task
+	 	rule C2 (permit 
+	 		target: equal(action/id, get) && equal(subject/role, "server")
+	 		obl: [A put("log", "task retrieved", subject/id)@(role=="gateway")]
+	 	)
+	 	//Deny log when node is highly loaded
+	 	rule C3 (deny
+	 		target: equal(action/id, put) && equal(object/id, this)
+	 				&& greater-than(object/load,90)
+	 	)
+	> 
+	
+	feature string id
+	feature string role
+	feature int level
+	feature string locality
+	feature int load      
+	
+	node (id := "s1", role:="server", level:=1, locality:= "UNIFI", load := 60) {
+		processes:Server();
+		policy: PServer;
+	}
+	
+	node (id := "c1", role:="client", level:=1, locality:= "UNIFI", load := 60) {
+		processes:Client();
+		knowledge: <"taskId",0>;
+		policy: PClient;
+	}
+}

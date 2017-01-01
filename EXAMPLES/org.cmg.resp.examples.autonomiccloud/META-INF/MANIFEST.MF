@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Autonomiccloud
+Bundle-SymbolicName: org.cmg.res.examples.autonomiccloud
+Bundle-Version: 1.0.0.qualifier
+Export-Package: .,
+ pscel.behaviour
+Require-Bundle: org.cmg.jresp.core;bundle-version="1.0.0",
+ org.cmg.jresp.simulation;bundle-version="1.0.0",
+ org.cmg.jresp.pastry;bundle-version="1.0.0"

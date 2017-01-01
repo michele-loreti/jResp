@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Bikes
+Bundle-SymbolicName: org.cmg.resp.examples.bikes
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.cmg.jresp.examples.bikes
+Require-Bundle: org.cmg.jresp.core;bundle-version="1.0.0",
+ org.cmg.jresp.simulation;bundle-version="1.0.0",
+ org.cmg.jresp.pastry;bundle-version="1.0.0"
