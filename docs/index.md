@@ -31,3 +31,62 @@ Behaviour of a component is defined via the abstract class ```Agent```, which pr
 ## Policies
 
 In jRESP policies can be used to regulate the interaction between the different internal parts of components and their mutual interactions. When a method of an instance of class ```Agent``` is invoked, its execution is delegated to the policy associated to the node where the agent is running. The policy can then control the execution of the action (for instance, by generating an exception when some access right has been violated) and, possibly, of related extra actions. By default, each node is instantiated with the policy allowing any operation. Different kinds of policies can be easily integrated in jRESP by implementing the interface ```IPolicy```.
+
+# Gettin Started
+
+The best way to develop applications with jResp is to use [Eclipse](https://eclipse.org). Below a brief description showing how set-up the environment:
+
+1. Download and Install Eclipse;
+
+2. Check if the ```gson``` plug-in is available in your distribution, if not install it via the [Orbit repository](https://www.eclipse.org/orbit/);
+
+3. Create directory ```<projectbase>``` 
+
+4. Go into your directory ```<projectbase>``` and clone the jresp repository with git:
+
+```
+cd <projectbase>
+git clone https://github.com/michele-loreti/jResp.git
+```
+
+5. Run Eclipse and open and create a new workspace in 
+
+```
+<projectbase>/JRESP_WORKSPACE
+```
+
+6. Import all the projects in the folder ```<projectbase>/jResp```. Notice that it is convenient that the imported project *is not* copied  in the workspace.
+
+If needed, you can update your jRESP installation you have to execute:
+
+```
+cd <projectbase>
+git pull 
+```
+
+## Create a new jResp project
+
+1. Create a New Plug-In Project (If you have a “Java project” you can assign to it “Plug-In Nature”)
+
+2. Open the MANIFEST.MF file under META-INF folder and add ```org.cmg.jresp.core```, ```org.cmg.jresp.pastry```, ```org.cmg.jresp.simulation``` among the “Required Plug-ins"
+
+
+## Expoort Executable Code
+
+If you have an executable Java you can create an executable jar. 
+
+1. Select your project and click the menu “File -> Export”
+
+2. Select “Java -> Runnable JAR File"
+
+3. Select your “Lunch configuration” and choose a ```<myjarfile>.jar``` name 
+
+4. Tick the “Extract required libraries into generated JAR”
+
+5. Press “Finish” button
+
+After that you can execute you program by running
+
+```
+java -jar <myjarfile>.jar
+```
