@@ -6,7 +6,7 @@ This project is a fork of the project started in the context of [EU Project ASCE
 
 A jResp system consists of a set of components executed over a distributed infrastructure. Components are implemented via the class ```Node```. The architecture of a node is shown in the following figure:
 
-node_structure
+![alt text](./images/node_structure.png "Node Structure")
 
 Nodes are executed over virtual machines or physical devices providing access to input/output devices and network connections. A node aggregates a knowledge repository, a set of running processes, and a set of policies. Structural and behavioral information about a node are collected into an interface via attribute collectors. Nodes interact via ports supporting both point-to-point and group-oriented communications.
 
