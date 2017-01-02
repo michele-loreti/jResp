@@ -32,7 +32,7 @@ Behaviour of a component is defined via the abstract class ```Agent```, which pr
 
 In jRESP policies can be used to regulate the interaction between the different internal parts of components and their mutual interactions. When a method of an instance of class ```Agent``` is invoked, its execution is delegated to the policy associated to the node where the agent is running. The policy can then control the execution of the action (for instance, by generating an exception when some access right has been violated) and, possibly, of related extra actions. By default, each node is instantiated with the policy allowing any operation. Different kinds of policies can be easily integrated in jRESP by implementing the interface ```IPolicy```.
 
-# Gettin Started
+# Getting Started
 
 The best way to develop applications with jResp is to use [Eclipse](https://eclipse.org). Below a brief description showing how set-up the environment:
 
