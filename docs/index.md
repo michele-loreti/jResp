@@ -71,7 +71,7 @@ git pull
 2. Open the MANIFEST.MF file under META-INF folder and add ```org.cmg.jresp.core```, ```org.cmg.jresp.pastry```, ```org.cmg.jresp.simulation``` among the “Required Plug-ins"
 
 
-## Expoort Executable Code
+## Export Executable Code
 
 If you have an executable Java you can create an executable jar. 
 
