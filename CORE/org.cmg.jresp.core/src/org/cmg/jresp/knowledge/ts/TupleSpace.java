@@ -114,13 +114,19 @@ public class TupleSpace implements KnowledgeManager {
 	 */
 	private synchronized LinkedList<Tuple> _InReadAll(Template template, boolean remove) {
 		LinkedList<Tuple> toReturn = new LinkedList<Tuple>();
-		for (int i = 0; i < elements.size(); i++) {
-			Tuple t = elements.get(i);
+		// 5/01/2017: Iteration is done now with iterators to correctly delete tuples while iterating
+		//            spotted by Martin Hemmingsen (DTU)
+		Tuple t;
+		Iterator<Tuple> itr = elements.iterator();
+		while(itr.hasNext()) {
+			t = itr.next();
 			if (template.match(t)) {
-				if (remove) {
-					elements.remove(i);
-				}
 				toReturn.add(t);
+				if (remove) {
+					// According to the documentation this is the only way
+					// of deleting while iterating.
+					itr.remove();
+				}
 			}
 		}
 		return toReturn;
