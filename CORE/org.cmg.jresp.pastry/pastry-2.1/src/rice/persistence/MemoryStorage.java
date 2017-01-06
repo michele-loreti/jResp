@@ -96,7 +96,8 @@ public class MemoryStorage implements Storage {
    *
    * @param c The command to run once done
    */
-  public void flush(Continuation c) {
+  @Override
+public void flush(Continuation c) {
     storage = new HashMap();
     metadata = new ReverseTreeMap();
     idSet = factory.buildIdSet();
@@ -113,7 +114,8 @@ public class MemoryStorage implements Storage {
    * @param newId The new id of the object in question.
    * @param c The command to run once the operation is complete
    */
-  public void rename(Id oldId, Id newId, Continuation c) {
+  @Override
+public void rename(Id oldId, Id newId, Continuation c) {
     if (! idSet.isMemberId(oldId)) {
       c.receiveResult(new Boolean(false));
       return;
@@ -145,7 +147,8 @@ public class MemoryStorage implements Storage {
    * @return <code>true</code> if the action succeeds, else
    * <code>false</code>.
    */
-  public void store(Id id, Serializable metadata, Serializable obj, Continuation c) {
+  @Override
+public void store(Id id, Serializable metadata, Serializable obj, Continuation c) {
     if (id == null || obj == null) {
       c.receiveResult(new Boolean(false));
       return;
@@ -172,7 +175,8 @@ public class MemoryStorage implements Storage {
    * @return <code>true</code> if the action succeeds, else
    * <code>false</code>.
    */
-  public void unstore(Id id, Continuation c) {
+  @Override
+public void unstore(Id id, Continuation c) {
     Object stored = storage.remove(id);
     metadata.remove(id);
     idSet.removeId(id);
@@ -191,7 +195,8 @@ public class MemoryStorage implements Storage {
    * @param id The id to check
    * @return Whether or not the given id is stored
    */
-  public boolean exists(Id id) {
+  @Override
+public boolean exists(Id id) {
     return storage.containsKey(id);
   }
   
@@ -203,7 +208,8 @@ public class MemoryStorage implements Storage {
    * @param id The id for which the metadata is needed
    * @return The metadata, or null of non exists
    */
-  public Serializable getMetadata(Id id) {
+  @Override
+public Serializable getMetadata(Id id) {
     return (Serializable) metadata.get(id);
   }
   
@@ -216,7 +222,8 @@ public class MemoryStorage implements Storage {
    * @param metadata The metadata to store
    * @param c The command to run once the operation is complete
    */
-  public void setMetadata(Id id, Serializable metadata, Continuation command) {
+  @Override
+public void setMetadata(Id id, Serializable metadata, Continuation command) {
     if (exists(id)) 
       this.metadata.put(id, metadata);
 
@@ -230,7 +237,8 @@ public class MemoryStorage implements Storage {
    * @param id The id of the object in question.
    * @param c The command to run once the operation is complete
    */
-  public void getObject(Id id, Continuation c) {
+  @Override
+public void getObject(Id id, Continuation c) {
     c.receiveResult(storage.get(id));
   }
 
@@ -247,7 +255,8 @@ public class MemoryStorage implements Storage {
    * @param range The range to query  
    * @return The idset containg the keys 
    */
-  public IdSet scan(IdRange range){
+  @Override
+public IdSet scan(IdRange range){
     return idSet.subSet(range);
   }
   
@@ -259,7 +268,8 @@ public class MemoryStorage implements Storage {
    *
    * @return The idset containg the keys 
    */
-  public IdSet scan() {
+  @Override
+public IdSet scan() {
     return idSet;
   }
   
@@ -270,7 +280,8 @@ public class MemoryStorage implements Storage {
    * @param range The range to query  
    * @return The map containg the keys 
    */
-  public SortedMap scanMetadata(IdRange range) {    
+  @Override
+public SortedMap scanMetadata(IdRange range) {    
     if (range.isEmpty()) 
       return new RedBlackMap();
     else if (range.getCCWId().equals(range.getCWId())) 
@@ -285,7 +296,8 @@ public class MemoryStorage implements Storage {
    *
    * @return The treemap mapping ids to metadata 
    */
-  public SortedMap scanMetadata() {
+  @Override
+public SortedMap scanMetadata() {
     return new ImmutableSortedMap(metadata.keyMap());
   }
   
@@ -296,7 +308,8 @@ public class MemoryStorage implements Storage {
    * @param value The maximal metadata value 
    * @return The submapping
    */
-  public SortedMap scanMetadataValuesHead(Object value) {
+  @Override
+public SortedMap scanMetadataValuesHead(Object value) {
     return new ImmutableSortedMap(metadata.valueHeadMap(value));
   }
   
@@ -305,7 +318,8 @@ public class MemoryStorage implements Storage {
    *
    * @return The submapping
    */
-  public SortedMap scanMetadataValuesNull() {
+  @Override
+public SortedMap scanMetadataValuesNull() {
     return new ImmutableSortedMap(metadata.valueNullMap());
   }
 
@@ -316,7 +330,8 @@ public class MemoryStorage implements Storage {
    *
    * @param c The command to run once the operation is complete
    */
-  public long getTotalSize() {
+  @Override
+public long getTotalSize() {
     return currentSize;
   }
   
@@ -325,7 +340,8 @@ public class MemoryStorage implements Storage {
    *
    * @return The number of ids in the catalog
    */
-  public int getSize() {
+  @Override
+public int getSize() {
     return idSet.numElements();
   }
 

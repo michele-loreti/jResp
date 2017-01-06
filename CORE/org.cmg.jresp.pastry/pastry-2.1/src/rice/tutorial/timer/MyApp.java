@@ -86,7 +86,8 @@ public class MyApp implements Application {
    * NotSerializableException!
    */
   class MessageToSelf implements Message {
-    public int getPriority() {
+    @Override
+	public int getPriority() {
       return MAX_PRIORITY;
     }    
   }
@@ -132,7 +133,8 @@ public class MyApp implements Application {
   /**
    * Called when we receive a message.
    */
-  public void deliver(Id id, Message message) {
+  @Override
+public void deliver(Id id, Message message) {
     System.out.println(this+" received "+message);
     if (message instanceof MessageToSelf) {
       // This will get called every 5 seconds, on Pastry's thread.
@@ -146,18 +148,21 @@ public class MyApp implements Application {
    * Called when you hear about a new neighbor.
    * Don't worry about this method for now.
    */
-  public void update(NodeHandle handle, boolean joined) {
+  @Override
+public void update(NodeHandle handle, boolean joined) {
   }
   
   /**
    * Called a message travels along your path.
    * Don't worry about this method for now.
    */
-  public boolean forward(RouteMessage message) {
+  @Override
+public boolean forward(RouteMessage message) {
     return true;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "MyApp "+endpoint.getId();
   }
 

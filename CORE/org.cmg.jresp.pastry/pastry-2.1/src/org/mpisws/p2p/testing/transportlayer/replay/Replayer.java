@@ -41,14 +41,11 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.direct.EventSimulator;
-import org.mpisws.p2p.transport.liveness.LivenessProvider;
-import org.mpisws.p2p.transport.multiaddress.MultiInetSocketAddress;
 import org.mpisws.p2p.transport.peerreview.history.HashProvider;
 import org.mpisws.p2p.transport.peerreview.history.SecureHistory;
 import org.mpisws.p2p.transport.peerreview.history.SecureHistoryFactory;
@@ -58,7 +55,6 @@ import org.mpisws.p2p.transport.peerreview.replay.BasicEntryDeserializer;
 import org.mpisws.p2p.transport.peerreview.replay.EventCallback;
 import org.mpisws.p2p.transport.peerreview.replay.playback.ReplayLayer;
 import org.mpisws.p2p.transport.peerreview.replay.playback.ReplaySM;
-import org.mpisws.p2p.transport.proximity.ProximityProvider;
 import org.mpisws.p2p.transport.simpleidentity.InetSocketAddressSerializer;
 import org.mpisws.p2p.transport.util.Serializer;
 
@@ -66,21 +62,15 @@ import rice.environment.Environment;
 import rice.environment.logging.LogManager;
 import rice.environment.logging.Logger;
 import rice.environment.params.Parameters;
-import rice.environment.params.simple.SimpleParameters;
-import rice.environment.processing.Processor;
-import rice.environment.processing.sim.SimProcessor;
 import rice.environment.random.RandomSource;
-import rice.environment.time.simulated.DirectTimeSource;
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 import rice.pastry.Id;
 import rice.pastry.NodeHandle;
 import rice.pastry.NodeIdFactory;
 import rice.pastry.NodeHandleFactory;
 import rice.pastry.PastryNode;
-import rice.pastry.PastryNodeFactory;
 import rice.pastry.socket.SocketNodeHandle;
 import rice.pastry.socket.SocketPastryNodeFactory;
-import rice.selector.SelectorManager;
 
 public class Replayer implements MyEvents, EventCallback {
   InetSocketAddress bootaddress;
@@ -109,7 +99,8 @@ public class Replayer implements MyEvents, EventCallback {
     
     
     SocketPastryNodeFactory factory = new SocketPastryNodeFactory(new NodeIdFactory() {    
-      public Id generateNodeId() {
+      @Override
+	public Id generateNodeId() {
         return id;
       }    
     },addr.getPort(),env) {
@@ -155,7 +146,7 @@ public class Replayer implements MyEvents, EventCallback {
     
     // construct a node, passing the null boothandle on the first loop will
     // cause the node to start its own ring
-    node = (PastryNode)factory.newNode();
+    node = factory.newNode();
     app = new MyScribeClient(node);
     
     ReplaySM sim = (ReplaySM)env.getSelectorManager();
@@ -237,7 +228,8 @@ public class Replayer implements MyEvents, EventCallback {
 
   }
 
-  public void replayEvent(short type, InputBuffer entry) {
+  @Override
+public void replayEvent(short type, InputBuffer entry) {
     if (logger.level <= Logger.FINE) logger.log("replayEvent("+type+")");
     switch (type) {
     case EVT_BOOT:

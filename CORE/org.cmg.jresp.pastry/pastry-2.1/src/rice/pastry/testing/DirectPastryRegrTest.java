@@ -73,7 +73,8 @@ public class DirectPastryRegrTest extends PastryRegrTest {
   /**
    * Get pastryNodes.last() to bootstrap with, or return null.
    */
-  protected NodeHandle getBootstrap(boolean firstNode) {
+  @Override
+protected NodeHandle getBootstrap(boolean firstNode) {
     NodeHandle bootstrap = null;
     try {
       PastryNode lastnode = (PastryNode) pastryNodes.lastElement();
@@ -90,13 +91,15 @@ public class DirectPastryRegrTest extends PastryRegrTest {
    * @param pn pastry node
    * @param app newly created application
    */
-  protected void registerapp(PastryNode pn, RegrTestApp app) {
+  @Override
+protected void registerapp(PastryNode pn, RegrTestApp app) {
   }
 
   /**
    * send one simulated message
    */
-  protected boolean simulate() {
+  @Override
+protected boolean simulate() {
     try { Thread.sleep(300); } catch (InterruptedException ie) {}
     return false;
 //    boolean res = simulator.simulate();
@@ -106,26 +109,30 @@ public class DirectPastryRegrTest extends PastryRegrTest {
   }
 
   // do nothing in the simulated world
-  public void pause(int ms) {
+  @Override
+public void pause(int ms) {
   }
 
   /**
    * get authoritative information about liveness of node.
    */
-  protected boolean isReallyAlive(NodeHandle nh) {
-    return simulator.isAlive((DirectNodeHandle)nh);
+  @Override
+protected boolean isReallyAlive(NodeHandle nh) {
+    return simulator.isAlive(nh);
   }
 
   /**
    * murder the node. comprehensively.
    */
-  protected void killNode(PastryNode pn) {
+  @Override
+protected void killNode(PastryNode pn) {
     pn.destroy();
 //    NetworkSimulator enet = (NetworkSimulator) simulator;
 //    enet.setAlive(pn.getNodeId(), false);
   }
 
-  protected void checkRoutingTable(final RegrTestApp rta) {
+  @Override
+protected void checkRoutingTable(final RegrTestApp rta) {
     PastryNode temp = DirectPastryNode.setCurrentNode(rta.getPastryNode());
     try {
       super.checkRoutingTable(rta);

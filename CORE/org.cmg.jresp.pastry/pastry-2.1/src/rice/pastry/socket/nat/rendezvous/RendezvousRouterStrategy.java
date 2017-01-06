@@ -36,7 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package rice.pastry.socket.nat.rendezvous;
 
-import java.net.NoRouteToHostException;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -63,7 +62,8 @@ public class RendezvousRouterStrategy implements RouterStrategy {
     this.logger = env.getLogManager().getLogger(RendezvousRouterStrategy.class, null);
   }
   
-  public NodeHandle pickNextHop(RouteMessage msg, Iterator<NodeHandle> i) {
+  @Override
+public NodeHandle pickNextHop(RouteMessage msg, Iterator<NodeHandle> i) {
     if (!i.hasNext()) return null;
     NodeHandle best = i.next();
     int bestRating = routingQuality(best);

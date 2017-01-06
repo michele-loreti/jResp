@@ -37,11 +37,7 @@ advised of the possibility of such damage.
 package org.mpisws.p2p.transport.networkinfo;
 
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.util.Map;
-
-import org.mpisws.p2p.transport.MessageCallback;
-import org.mpisws.p2p.transport.multiaddress.MultiInetSocketAddress;
 
 import rice.Continuation;
 import rice.p2p.commonapi.Cancellable;

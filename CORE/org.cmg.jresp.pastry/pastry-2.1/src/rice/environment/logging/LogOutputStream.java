@@ -38,8 +38,6 @@ package rice.environment.logging;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintStream;
-
 import rice.environment.Environment;
 
 /**
@@ -93,7 +91,8 @@ public class LogOutputStream extends OutputStream {
     this.level = level;
   }
 
-  public void write(int b) throws IOException {
+  @Override
+public void write(int b) throws IOException {
     if (b == '\n') {
       if ((offset > 0) && (buffer[offset-1] == '\r'))
         offset--;
@@ -112,14 +111,16 @@ public class LogOutputStream extends OutputStream {
     buffer[offset++] = (byte)(b & 0xff);
   }
   
-  public void flush() {
+  @Override
+public void flush() {
     if (offset == 0)
       return;
     if (logger.level <= level) logger.log(new String(buffer, 0, offset));
     offset = 0;
   }
   
-  public void close() {
+  @Override
+public void close() {
     flush();
   }
 

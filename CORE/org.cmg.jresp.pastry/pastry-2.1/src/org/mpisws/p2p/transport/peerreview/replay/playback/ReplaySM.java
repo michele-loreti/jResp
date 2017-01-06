@@ -36,15 +36,12 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package org.mpisws.p2p.transport.peerreview.replay.playback;
 
-import java.io.IOException;
-
 import org.mpisws.p2p.transport.peerreview.replay.Verifier;
 
 
 import rice.environment.Environment;
 import rice.environment.logging.LogManager;
 import rice.environment.logging.Logger;
-import rice.environment.time.TimeSource;
 import rice.environment.time.simulated.DirectTimeSource;
 import rice.selector.SelectorManager;
 import rice.selector.TimerTask;
@@ -77,7 +74,8 @@ public class ReplaySM extends SelectorManager {
   /**
    * Don't automatically start the thread.
    */
-  public void setEnvironment(Environment env) {
+  @Override
+public void setEnvironment(Environment env) {
     if (env == null) throw new IllegalArgumentException("env is null!");
     if (environment != null) return;
     environment = env;
@@ -130,7 +128,7 @@ public class ReplaySM extends SelectorManager {
       
       synchronized (this) {
         if (timerQueue.size() > 0) {
-          next = (TimerTask) timerQueue.peek();
+          next = timerQueue.peek();
           if (next.scheduledExecutionTime() <= now) {
             timerQueue.poll(); // remove the event
             simTime.setTime(next.scheduledExecutionTime()); // set the time            

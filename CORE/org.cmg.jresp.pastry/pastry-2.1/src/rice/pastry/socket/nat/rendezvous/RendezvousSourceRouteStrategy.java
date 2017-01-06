@@ -49,7 +49,8 @@ import org.mpisws.p2p.transport.sourceroute.manager.SourceRouteStrategy;
 @SuppressWarnings("unchecked")
 public class RendezvousSourceRouteStrategy implements SourceRouteStrategy {
 
-  public Collection getSourceRoutes(Object destination) {
+  @Override
+public Collection getSourceRoutes(Object destination) {
     // TODO Auto-generated method stub
     return null;
   }

@@ -54,7 +54,8 @@ public class JavaSerializedScribeContent implements RawScribeContent {
     this.content = content;
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     try {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -73,11 +74,13 @@ public class JavaSerializedScribeContent implements RawScribeContent {
     }
   }
 
-  public short getType() {
+  @Override
+public short getType() {
     return 0;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "JSSC ["+content+"]"; 
   }
 

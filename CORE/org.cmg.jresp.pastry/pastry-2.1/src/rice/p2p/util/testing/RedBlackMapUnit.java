@@ -38,14 +38,10 @@ package rice.p2p.util.testing;
 
 import rice.environment.Environment;
 import rice.environment.random.RandomSource;
-import rice.environment.random.simple.SimpleRandomSource;
 import rice.p2p.commonapi.*;
-import rice.p2p.multiring.*;
-import rice.p2p.past.gc.*;
 import rice.pastry.commonapi.*;
 import rice.p2p.util.*;
 
-import java.io.IOException;
 import java.util.*;
 
 @SuppressWarnings("unchecked")

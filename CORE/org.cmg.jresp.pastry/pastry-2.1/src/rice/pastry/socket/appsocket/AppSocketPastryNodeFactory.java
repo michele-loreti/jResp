@@ -54,10 +54,10 @@ import org.mpisws.p2p.transport.SocketCallback;
 import org.mpisws.p2p.transport.SocketRequestHandle;
 import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.TransportLayerCallback;
-import org.mpisws.p2p.transport.TransportLayerListener;
 import org.mpisws.p2p.transport.identity.IdentityImpl;
 import org.mpisws.p2p.transport.liveness.LivenessListener;
 import org.mpisws.p2p.transport.liveness.LivenessProvider;
+import org.mpisws.p2p.transport.liveness.LivenessTypes;
 import org.mpisws.p2p.transport.liveness.OverrideLiveness;
 import org.mpisws.p2p.transport.liveness.PingListener;
 import org.mpisws.p2p.transport.liveness.Pinger;
@@ -81,7 +81,6 @@ import rice.pastry.PastryNode;
 import rice.pastry.socket.SocketNodeHandleFactory;
 import rice.pastry.socket.SocketPastryNodeFactory;
 import rice.pastry.socket.TransportLayerNodeHandle;
-import rice.pastry.socket.nat.NATHandler;
 import rice.pastry.transport.NodeHandleAdapter;
 import rice.pastry.transport.SocketAdapter;
 import rice.pastry.transport.TLDeserializer;
@@ -130,19 +129,23 @@ public class AppSocketPastryNodeFactory extends SocketPastryNodeFactory {
       this.wtl.setCallback(this);
     }
     
-    public void acceptMessages(boolean b) {
+    @Override
+	public void acceptMessages(boolean b) {
       wtl.acceptMessages(b);
     }
 
-    public void acceptSockets(boolean b) {
+    @Override
+	public void acceptSockets(boolean b) {
       wtl.acceptSockets(b);
     }
 
-    public InetSocketAddress getLocalIdentifier() {      
+    @Override
+	public InetSocketAddress getLocalIdentifier() {      
       return wtl.getLocalIdentifier();
     }
 
-    public SocketRequestHandle<InetSocketAddress> openSocket(
+    @Override
+	public SocketRequestHandle<InetSocketAddress> openSocket(
         final InetSocketAddress i,
         final SocketCallback<InetSocketAddress> deliverSocketToMe,
         final Map<String, Object> options) {
@@ -150,7 +153,8 @@ public class AppSocketPastryNodeFactory extends SocketPastryNodeFactory {
 
       return wtl.openSocket(i, new SocketCallback<InetSocketAddress>() {
       
-        public void receiveResult(SocketRequestHandle<InetSocketAddress> cancellable,
+        @Override
+		public void receiveResult(SocketRequestHandle<InetSocketAddress> cancellable,
             P2PSocket<InetSocketAddress> sock) {
 //          logger.log("openSocket2("+i+","+options+")");
 
@@ -161,7 +165,8 @@ public class AppSocketPastryNodeFactory extends SocketPastryNodeFactory {
           deliverSocketToMe.receiveResult(cancellable, sock);
         }
       
-        public void receiveException(SocketRequestHandle<InetSocketAddress> s,
+        @Override
+		public void receiveException(SocketRequestHandle<InetSocketAddress> s,
             Exception ex) {
 //          logger.logException("receiveException("+s+")",ex);
           deliverSocketToMe.receiveException(s,ex);
@@ -170,7 +175,8 @@ public class AppSocketPastryNodeFactory extends SocketPastryNodeFactory {
       }, options);
     }
 
-    public MessageRequestHandle<InetSocketAddress, ByteBuffer> sendMessage(
+    @Override
+	public MessageRequestHandle<InetSocketAddress, ByteBuffer> sendMessage(
         InetSocketAddress i, ByteBuffer m,
         MessageCallback<InetSocketAddress, ByteBuffer> deliverAckToMe,
         Map<String, Object> options) {
@@ -178,26 +184,31 @@ public class AppSocketPastryNodeFactory extends SocketPastryNodeFactory {
       return wtl.sendMessage(i, m, deliverAckToMe, options);
     }
 
-    public void setCallback(
+    @Override
+	public void setCallback(
         TransportLayerCallback<InetSocketAddress, ByteBuffer> callback) {
       this.callback = callback;
     }
 
-    public void setErrorHandler(ErrorHandler<InetSocketAddress> handler) {
+    @Override
+	public void setErrorHandler(ErrorHandler<InetSocketAddress> handler) {
       
     }
 
-    public void incomingSocket(P2PSocket<InetSocketAddress> s)
+    @Override
+	public void incomingSocket(P2PSocket<InetSocketAddress> s)
         throws IOException {
       callback.incomingSocket(s);
     }
 
-    public void messageReceived(InetSocketAddress i, ByteBuffer m,
+    @Override
+	public void messageReceived(InetSocketAddress i, ByteBuffer m,
         Map<String, Object> options) throws IOException {
       callback.messageReceived(i, m, options);
     }
 
-    public void destroy() {
+    @Override
+	public void destroy() {
       // TODO Auto-generated method stub
       
     }
@@ -246,22 +257,26 @@ public class AppSocketPastryNodeFactory extends SocketPastryNodeFactory {
     
     sf = new SocketFactory() {
       int uid = Integer.MIN_VALUE;
-      public Cancellable getAppSocket(InetSocketAddress addr, int appid, final Continuation<AppSocket, Exception> c, Map<String, Object> options) {
+      @Override
+	public Cancellable getAppSocket(InetSocketAddress addr, int appid, final Continuation<AppSocket, Exception> c, Map<String, Object> options) {
         return getSocket(addr, appid, 
             new Continuation<P2PSocket<TransportLayerNodeHandle<MultiInetSocketAddress>>, Exception>(){
 
-              public void receiveException(Exception exception) {
+              @Override
+			public void receiveException(Exception exception) {
                 c.receiveException(exception);
               }
 
-              public void receiveResult(
+              @Override
+			public void receiveResult(
                   P2PSocket<TransportLayerNodeHandle<MultiInetSocketAddress>> result) {
                 c.receiveResult(new SocketAdapter<TransportLayerNodeHandle<MultiInetSocketAddress>>(result, environment));
               }          
             }, options);
       }
       
-      public Cancellable getSocketChannel(InetSocketAddress addr, int appid, final Continuation<SocketChannel, Exception> c, Map<String, Object> options) {
+      @Override
+	public Cancellable getSocketChannel(InetSocketAddress addr, int appid, final Continuation<SocketChannel, Exception> c, Map<String, Object> options) {
         // increment the uid
         final int myUid;
         synchronized(this) {
@@ -276,11 +291,13 @@ public class AppSocketPastryNodeFactory extends SocketPastryNodeFactory {
         return getSocket(addr, appid, 
             new Continuation<P2PSocket<TransportLayerNodeHandle<MultiInetSocketAddress>>, Exception>(){
 
-              public void receiveException(Exception exception) {
+              @Override
+			public void receiveException(Exception exception) {
                 c.receiveException(exception);
               }
 
-              public void receiveResult(
+              @Override
+			public void receiveResult(
                   P2PSocket<TransportLayerNodeHandle<MultiInetSocketAddress>> result) {
                 // return the socket
                 SocketManager sm = socketTable.remove(myUid); 
@@ -303,11 +320,13 @@ public class AppSocketPastryNodeFactory extends SocketPastryNodeFactory {
         // send the id
         ret.setSubCancellable(getTL().openSocket(handle, new SocketCallback<TransportLayerNodeHandle<MultiInetSocketAddress>>() {
         
-          public void receiveResult(
+          @Override
+		public void receiveResult(
               SocketRequestHandle<TransportLayerNodeHandle<MultiInetSocketAddress>> cancellable,
               final P2PSocket<TransportLayerNodeHandle<MultiInetSocketAddress>> sock) {
             ret.setSubCancellable(new Cancellable() {              
-              public boolean cancel() {
+              @Override
+			public boolean cancel() {
                 sock.close();
                 return true;
               }
@@ -321,7 +340,8 @@ public class AppSocketPastryNodeFactory extends SocketPastryNodeFactory {
                   buf = ByteBuffer.wrap(idBytes);
                 }
                 
-                public void receiveSelectResult(
+                @Override
+				public void receiveSelectResult(
                     P2PSocket<TransportLayerNodeHandle<MultiInetSocketAddress>> socket,
                     boolean canRead, boolean canWrite) throws IOException {
                   // send the id
@@ -335,7 +355,8 @@ public class AppSocketPastryNodeFactory extends SocketPastryNodeFactory {
                   }
                   c.receiveResult(socket);
                 }
-                public void receiveException(
+                @Override
+				public void receiveException(
                     P2PSocket<TransportLayerNodeHandle<MultiInetSocketAddress>> socket,
                     Exception ioe) {
                   c.receiveException(ioe);
@@ -346,7 +367,8 @@ public class AppSocketPastryNodeFactory extends SocketPastryNodeFactory {
             }
           }
         
-          public void receiveException(
+          @Override
+		public void receiveException(
               SocketRequestHandle<TransportLayerNodeHandle<MultiInetSocketAddress>> s,
               Exception ex) {
             // TODO Auto-generated method stub
@@ -362,7 +384,7 @@ public class AppSocketPastryNodeFactory extends SocketPastryNodeFactory {
       }
       
       public TransportLayer<TransportLayerNodeHandle<MultiInetSocketAddress>, RawMessage> getTL() {
-        return (TransportLayer<TransportLayerNodeHandle<MultiInetSocketAddress>, RawMessage>)nha.getTL();
+        return nha.getTL();
       }
       
     };
@@ -394,66 +416,79 @@ public class AppSocketPastryNodeFactory extends SocketPastryNodeFactory {
       PastryNode pn) {
     if (pn instanceof BogusTLPastryNode) {
       return new TransLiveness<SourceRoute<MultiInetSocketAddress>, ByteBuffer>(){    
-        public TransportLayer<SourceRoute<MultiInetSocketAddress>, ByteBuffer> getTransportLayer() {
+        @Override
+		public TransportLayer<SourceRoute<MultiInetSocketAddress>, ByteBuffer> getTransportLayer() {
           return tl;
         }
-        public LivenessProvider<SourceRoute<MultiInetSocketAddress>> getLivenessProvider() {
+        @Override
+		public LivenessProvider<SourceRoute<MultiInetSocketAddress>> getLivenessProvider() {
           return new LivenessProvider<SourceRoute<MultiInetSocketAddress>>(){
 
-            public void addLivenessListener(
+            @Override
+			public void addLivenessListener(
                 LivenessListener<SourceRoute<MultiInetSocketAddress>> name) {
               // TODO Auto-generated method stub
               
             }
 
-            public boolean checkLiveness(SourceRoute<MultiInetSocketAddress> i,
+            @Override
+			public boolean checkLiveness(SourceRoute<MultiInetSocketAddress> i,
                 Map<String, Object> options) {
               // TODO Auto-generated method stub
               return false;
             }
 
-            public void clearState(SourceRoute<MultiInetSocketAddress> i) {
+            @Override
+			public void clearState(SourceRoute<MultiInetSocketAddress> i) {
               // TODO Auto-generated method stub
               
             }
 
-            public int getLiveness(SourceRoute<MultiInetSocketAddress> i,
+            @Override
+			public int getLiveness(SourceRoute<MultiInetSocketAddress> i,
                 Map<String, Object> options) {
               // TODO Auto-generated method stub
-              return LivenessListener.LIVENESS_ALIVE;
+              return LivenessTypes.LIVENESS_ALIVE;
             }
 
-            public boolean removeLivenessListener(
+            @Override
+			public boolean removeLivenessListener(
                 LivenessListener<SourceRoute<MultiInetSocketAddress>> name) {
               // TODO Auto-generated method stub
               return false;
             }};
         }
-        public OverrideLiveness<SourceRoute<MultiInetSocketAddress>> getOverrideLiveness() {
+        @Override
+		public OverrideLiveness<SourceRoute<MultiInetSocketAddress>> getOverrideLiveness() {
           return new OverrideLiveness<SourceRoute<MultiInetSocketAddress>>(){
 
-            public void setLiveness(SourceRoute<MultiInetSocketAddress> i,
+            @Override
+			public void setLiveness(SourceRoute<MultiInetSocketAddress> i,
                 int liveness, Map<String, Object> options) {
               // TODO Auto-generated method stub
               
             }};
         }
-        public Pinger<SourceRoute<MultiInetSocketAddress>> getPinger() {
+        @Override
+		public Pinger<SourceRoute<MultiInetSocketAddress>> getPinger() {
           return new Pinger<SourceRoute<MultiInetSocketAddress>>(){
 
-            public void addPingListener(
+            @Override
+			public void addPingListener(
                 PingListener<SourceRoute<MultiInetSocketAddress>> name) {
               // TODO Auto-generated method stub
               
             }
 
-            public boolean ping(SourceRoute<MultiInetSocketAddress> i,
+            @Override
+			public boolean ping(SourceRoute<MultiInetSocketAddress> i,
                 Map<String, Object> options) {
               // TODO Auto-generated method stub
               return false;
             }
 
-            public boolean removePingListener(
+            @Override
+			public boolean removePingListener(
                 PingListener<SourceRoute<MultiInetSocketAddress>> name) {
               // TODO Auto-generated method stub
               return false;

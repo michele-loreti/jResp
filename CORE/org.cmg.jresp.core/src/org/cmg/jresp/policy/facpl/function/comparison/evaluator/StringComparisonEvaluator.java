@@ -41,7 +41,7 @@ public class StringComparisonEvaluator implements ComparisonEvaluator {
 		if (o2 instanceof String) {
 			return ((String) o1).equals(o2);
 		} else if (o2 instanceof Date) {
-			return (Util.parseDate((String) o1)).equals((Date) o2);
+			return (Util.parseDate((String) o1)).equals(o2);
 		}
 		throw new UnsupportedTypeException(o2.getClass().getName(), "Equal");
 	}
@@ -51,7 +51,7 @@ public class StringComparisonEvaluator implements ComparisonEvaluator {
 		if (o2 instanceof String) {
 			return !(((String) o1).equals(o2));
 		} else if (o2 instanceof Date) {
-			return !((Util.parseDate((String) o1)).equals((Date) o2));
+			return !((Util.parseDate((String) o1)).equals(o2));
 		}
 		throw new UnsupportedTypeException(o2.getClass().getName(), "Not-Equal");
 	}
@@ -99,7 +99,7 @@ public class StringComparisonEvaluator implements ComparisonEvaluator {
 	@Override
 	public boolean isSubsetOf(Object o1, Object o2) throws Throwable {
 		if (o2 instanceof Bag) {
-			return ((Bag) o2).contains((String) o1);
+			return ((Bag) o2).contains(o1);
 		} else {
 			throw new UnsupportedTypeException("String", "Subset");
 		}
@@ -108,7 +108,7 @@ public class StringComparisonEvaluator implements ComparisonEvaluator {
 	@Override
 	public boolean isAtLestOneMemberOf(Object o1, Object o2) throws Throwable {
 		if (o2 instanceof Bag) {
-			return ((Bag) o2).contains((String) o1);
+			return ((Bag) o2).contains(o1);
 		} else {
 			throw new UnsupportedTypeException("String", "AtLeastOneMemberOf");
 		}

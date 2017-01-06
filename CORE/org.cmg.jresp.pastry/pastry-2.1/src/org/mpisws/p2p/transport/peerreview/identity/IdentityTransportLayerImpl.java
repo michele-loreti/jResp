@@ -36,7 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package org.mpisws.p2p.transport.peerreview.identity;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -45,41 +44,23 @@ import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 import org.mpisws.p2p.pki.x509.X509Serializer;
-import org.mpisws.p2p.transport.ErrorHandler;
-import org.mpisws.p2p.transport.MessageCallback;
-import org.mpisws.p2p.transport.MessageRequestHandle;
-import org.mpisws.p2p.transport.P2PSocket;
-import org.mpisws.p2p.transport.P2PSocketReceiver;
-import org.mpisws.p2p.transport.SocketCallback;
-import org.mpisws.p2p.transport.SocketRequestHandle;
 import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.TransportLayerCallback;
 import org.mpisws.p2p.transport.peerreview.history.HashProvider;
 import org.mpisws.p2p.transport.table.TableStore;
 import org.mpisws.p2p.transport.table.TableTransprotLayerImpl;
-import org.mpisws.p2p.transport.util.BufferReader;
-import org.mpisws.p2p.transport.util.BufferWriter;
 import org.mpisws.p2p.transport.util.DefaultErrorHandler;
 import org.mpisws.p2p.transport.util.Serializer;
-import org.mpisws.p2p.transport.util.SocketInputBuffer;
-import org.mpisws.p2p.transport.util.SocketRequestHandleImpl;
-
 import rice.Continuation;
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
-import rice.environment.params.Parameters;
 import rice.p2p.commonapi.Cancellable;
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 import rice.p2p.util.MathUtils;
-import rice.p2p.util.rawserialization.SimpleInputBuffer;
-import rice.p2p.util.rawserialization.SimpleOutputBuffer;
-import rice.p2p.util.tuples.Tuple3;
 
 /**
  * TODO: make it store known certs to a file, make it periodically check the revocation server.
@@ -161,17 +142,20 @@ public class IdentityTransportLayerImpl<Identifier, I> extends
   /**
    * CERT_REQUEST, int requestId, Identifier
    */
-  public Cancellable requestCertificate(final Identifier source,
+  @Override
+public Cancellable requestCertificate(final Identifier source,
       final I principal, final Continuation<X509Certificate, Exception> c,
       Map<String, Object> options) {
     return super.requestValue(source, principal, c, options);
   }
   
-  public boolean hasCertificate(I i) {
+  @Override
+public boolean hasCertificate(I i) {
     return super.hasKey(i);
   }
   
-  public byte[] sign(byte[] bytes) {
+  @Override
+public byte[] sign(byte[] bytes) {
     try {
       signer.update(bytes);
       byte[] ret = signer.sign();
@@ -184,7 +168,8 @@ public class IdentityTransportLayerImpl<Identifier, I> extends
     }
   }
 
-  public int verify(I id, byte[] msg, byte[] signature) {
+  @Override
+public int verify(I id, byte[] msg, byte[] signature) {
     if (logger.level <= Logger.FINEST) logger.log("Verify:"+id+" "+msg.length+" "+MathUtils.toBase64(msg)+" == "+signature.length+" "+MathUtils.toBase64(signature));
     Signature verifier = getVerifier(id);
     if (verifier == null) return NO_CERTIFICATE; //throw new UnknownCertificateException(getLocalIdentifier(),id);
@@ -233,27 +218,33 @@ public class IdentityTransportLayerImpl<Identifier, I> extends
     return ret;
   }
 
-  public short getSignatureSizeBytes() {
+  @Override
+public short getSignatureSizeBytes() {
     return DEFAULT_SIGNATURE_SIZE;
   }
 
-  public byte[] getEmptyHash() {
+  @Override
+public byte[] getEmptyHash() {
     return hasher.getEmptyHash();
   }
 
-  public short getHashSizeBytes() {
+  @Override
+public short getHashSizeBytes() {
     return hasher.getHashSizeBytes();
   }
 
-  public byte[] hash(long seq, short type, byte[] nodeHash, byte[] contentHash) {
+  @Override
+public byte[] hash(long seq, short type, byte[] nodeHash, byte[] contentHash) {
     return hasher.hash(seq, type, nodeHash, contentHash);
   }
 
-  public byte[] hash(ByteBuffer... hashMe) {
+  @Override
+public byte[] hash(ByteBuffer... hashMe) {
     return hasher.hash(hashMe);
   }
 
-  public Environment getEnvironment() {
+  @Override
+public Environment getEnvironment() {
     return environment;
   }  
 }

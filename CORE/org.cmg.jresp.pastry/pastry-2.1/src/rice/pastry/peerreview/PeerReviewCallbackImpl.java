@@ -51,7 +51,6 @@ import org.mpisws.p2p.transport.SocketRequestHandle;
 import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.TransportLayerCallback;
 import org.mpisws.p2p.transport.multiaddress.MultiInetSocketAddress;
-import org.mpisws.p2p.transport.peerreview.PeerReview;
 import org.mpisws.p2p.transport.peerreview.PeerReviewCallback;
 import org.mpisws.p2p.transport.peerreview.WitnessListener;
 import org.mpisws.p2p.transport.peerreview.replay.Verifier;
@@ -65,12 +64,7 @@ import rice.pastry.Id;
 import rice.pastry.NodeHandle;
 import rice.pastry.NodeHandleFactory;
 import rice.pastry.PastryNode;
-import rice.pastry.socket.SocketNodeHandle;
-import rice.pastry.socket.SocketNodeHandleFactory;
-import rice.pastry.socket.SocketPastryNodeFactory;
 import rice.pastry.socket.TransportLayerNodeHandle;
-import rice.pastry.transport.NodeHandleAdapter;
-import rice.pastry.transport.TLDeserializer;
 
 public class PeerReviewCallbackImpl implements PeerReviewCallback<TransportLayerNodeHandle<MultiInetSocketAddress>, Id>,
     TransportLayer<TransportLayerNodeHandle<MultiInetSocketAddress>, ByteBuffer> {
@@ -105,7 +99,8 @@ public class PeerReviewCallbackImpl implements PeerReviewCallback<TransportLayer
    * Construct a PeerReviewCallbackImpl with the PastryNode/Verifier
    * Construct the layers above self, attach them appropriately.
    */
-  public PeerReviewCallback<TransportLayerNodeHandle<MultiInetSocketAddress>, Id> getReplayInstance(
+  @Override
+public PeerReviewCallback<TransportLayerNodeHandle<MultiInetSocketAddress>, Id> getReplayInstance(
       Verifier<TransportLayerNodeHandle<MultiInetSocketAddress>> v) {
     // defer the pastry node construction until we can get a checkpoint!
     return new PeerReviewCallbackImpl(v);
@@ -114,7 +109,8 @@ public class PeerReviewCallbackImpl implements PeerReviewCallback<TransportLayer
   /**
    * Store rt/leafset
    */
-  public void storeCheckpoint(OutputBuffer buffer) throws IOException {
+  @Override
+public void storeCheckpoint(OutputBuffer buffer) throws IOException {
     pn.getId().serialize(buffer); // redundant, but necessary for the way a PastryNode is constructed
     pn.getLocalHandle().serialize(buffer);
   }
@@ -122,7 +118,8 @@ public class PeerReviewCallbackImpl implements PeerReviewCallback<TransportLayer
   /**
    * Load rt/leafset
    */
-  public boolean loadCheckpoint(InputBuffer buffer) throws IOException {
+  @Override
+public boolean loadCheckpoint(InputBuffer buffer) throws IOException {
     Environment environment = ((Verifier<TransportLayerNodeHandle<MultiInetSocketAddress>>)tl).getEnvironment();
     Id nodeId = Id.build(buffer);
     pn = new PastryNode(nodeId, environment);
@@ -138,7 +135,8 @@ public class PeerReviewCallbackImpl implements PeerReviewCallback<TransportLayer
     return true;
   }
 
-  public Collection<TransportLayerNodeHandle<MultiInetSocketAddress>> getMyWitnessedNodes() {
+  @Override
+public Collection<TransportLayerNodeHandle<MultiInetSocketAddress>> getMyWitnessedNodes() {
     Collection<NodeHandle> foo = pn.getLeafSet().getUniqueSet(); // TODO: make this a smaller set
     ArrayList<TransportLayerNodeHandle<MultiInetSocketAddress>> ret = 
       new ArrayList<TransportLayerNodeHandle<MultiInetSocketAddress>>(foo.size());
@@ -149,51 +147,61 @@ public class PeerReviewCallbackImpl implements PeerReviewCallback<TransportLayer
     return ret;
   }
   
-  public void init() {
+  @Override
+public void init() {
     // TODO Auto-generated method stub
     
   }
 
-  public void destroy() {
+  @Override
+public void destroy() {
     // TODO Auto-generated method stub
     
   }
 
-  public void notifyCertificateAvailable(Id id) {
+  @Override
+public void notifyCertificateAvailable(Id id) {
     // TODO Auto-generated method stub
     
   }
 
-  public void incomingSocket(P2PSocket<TransportLayerNodeHandle<MultiInetSocketAddress>> s) throws IOException {
+  @Override
+public void incomingSocket(P2PSocket<TransportLayerNodeHandle<MultiInetSocketAddress>> s) throws IOException {
     callback.incomingSocket(s);
   }
 
-  public void messageReceived(TransportLayerNodeHandle<MultiInetSocketAddress> i, ByteBuffer m,
+  @Override
+public void messageReceived(TransportLayerNodeHandle<MultiInetSocketAddress> i, ByteBuffer m,
       Map<String, Object> options) throws IOException {
     callback.messageReceived(i, m, options);
   }
 
-  public void notifyStatusChange(Id id, int newStatus) {
+  @Override
+public void notifyStatusChange(Id id, int newStatus) {
     // TODO Auto-generated method stub
     
   }
 
-  public void acceptMessages(boolean b) {
+  @Override
+public void acceptMessages(boolean b) {
     // TODO Auto-generated method stub
     
   }
 
-  public void acceptSockets(boolean b) {
+  @Override
+public void acceptSockets(boolean b) {
     // TODO Auto-generated method stub
     
   }
 
-  public void getWitnesses(
+  @Override
+public void getWitnesses(
       final Id subject,
       final WitnessListener<TransportLayerNodeHandle<MultiInetSocketAddress>, Id> callback) {
     fetchLeafSetApp.getNeighbors(subject,new Continuation<Collection<NodeHandle>, Exception>() {
     
-      public void receiveResult(Collection<NodeHandle> result) {
+      @Override
+	public void receiveResult(Collection<NodeHandle> result) {
         ArrayList<TransportLayerNodeHandle<MultiInetSocketAddress>> ret = new ArrayList<TransportLayerNodeHandle<MultiInetSocketAddress>>(result.size());
         for (NodeHandle nh : result) {
           if (!nh.getId().equals(subject)) ret.add((TransportLayerNodeHandle<MultiInetSocketAddress>)nh);
@@ -202,33 +210,39 @@ public class PeerReviewCallbackImpl implements PeerReviewCallback<TransportLayer
         callback.notifyWitnessSet(subject, ret);
       }
     
-      public void receiveException(Exception exception) {
+      @Override
+	public void receiveException(Exception exception) {
         throw new RuntimeException(exception);
       }
     
     });
   }
 
-  public TransportLayerNodeHandle<MultiInetSocketAddress> getLocalIdentifier() {
+  @Override
+public TransportLayerNodeHandle<MultiInetSocketAddress> getLocalIdentifier() {
     return tl.getLocalIdentifier();
   }
 
-  public SocketRequestHandle<TransportLayerNodeHandle<MultiInetSocketAddress>> openSocket(TransportLayerNodeHandle<MultiInetSocketAddress> i,
+  @Override
+public SocketRequestHandle<TransportLayerNodeHandle<MultiInetSocketAddress>> openSocket(TransportLayerNodeHandle<MultiInetSocketAddress> i,
       SocketCallback<TransportLayerNodeHandle<MultiInetSocketAddress>> deliverSocketToMe, Map<String, Object> options) {
     return tl.openSocket(i, deliverSocketToMe, options);
   }
 
-  public void setCallback(
+  @Override
+public void setCallback(
       TransportLayerCallback<TransportLayerNodeHandle<MultiInetSocketAddress>, ByteBuffer> callback) {
     this.callback = callback;
   }
 
-  public void setErrorHandler(ErrorHandler<TransportLayerNodeHandle<MultiInetSocketAddress>> handler) {
+  @Override
+public void setErrorHandler(ErrorHandler<TransportLayerNodeHandle<MultiInetSocketAddress>> handler) {
     // TODO Auto-generated method stub
     
   }
 
-  public MessageRequestHandle<TransportLayerNodeHandle<MultiInetSocketAddress>, ByteBuffer> sendMessage(
+  @Override
+public MessageRequestHandle<TransportLayerNodeHandle<MultiInetSocketAddress>, ByteBuffer> sendMessage(
       TransportLayerNodeHandle<MultiInetSocketAddress> i,
       ByteBuffer m,
       MessageCallback<TransportLayerNodeHandle<MultiInetSocketAddress>, ByteBuffer> deliverAckToMe,

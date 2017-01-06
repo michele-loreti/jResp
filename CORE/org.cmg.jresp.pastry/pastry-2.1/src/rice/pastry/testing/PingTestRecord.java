@@ -69,7 +69,8 @@ public class PingTestRecord extends TestRecord {
     fProb = new double[nIndex*2];
   }
 
-  public void doneTest() {
+  @Override
+public void doneTest() {
     int i;
     //calculate averages ...
     long sum = 0;

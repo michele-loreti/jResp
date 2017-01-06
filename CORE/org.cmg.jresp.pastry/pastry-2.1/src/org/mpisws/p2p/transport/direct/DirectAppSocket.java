@@ -42,7 +42,6 @@ package org.mpisws.p2p.transport.direct;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -141,7 +140,8 @@ public class DirectAppSocket<Identifier, MessageType> {
       return counterpart.localNodeHandle;
     }
   
-    public long read(ByteBuffer dsts) throws IOException {
+    @Override
+	public long read(ByteBuffer dsts) throws IOException {
 //      ByteBuffer[] foo = new ByteBuffer[1];
 //      foo[0] = dsts;
 //      return read(foo, 0, 1);
@@ -161,7 +161,7 @@ public class DirectAppSocket<Identifier, MessageType> {
         Iterator<byte[]> i = byteDeliveries.iterator();
         // loop over all messages to be delivered
         while(i.hasNext()) {
-          byte[] msg = (byte[])i.next();          
+          byte[] msg = i.next();          
           
           // loop through all the dsts, and fill them with the current message if possible
 //          for (int dstCtr = offset; dstCtr < offset+length;dstCtr++) {
@@ -197,20 +197,24 @@ public class DirectAppSocket<Identifier, MessageType> {
       if (logger.level <= Logger.FINER) logger.log(this+".write("+dsts+") len:"+lengthRead+" inFlight:"+bytesInFlight);
 
       simulator.enqueueDelivery(new Delivery() {              
-        public void deliver() {
+        @Override
+		public void deliver() {
           counterpart.notifyCanWrite();            
         }            
-        public int getSeq() {
+        @Override
+		public int getSeq() {
           return 0;            
         }
-        public String toString() {
+        @Override
+		public String toString() {
           return DirectAppSocketEndpoint.this.toString()+" counterpart notifyCanWrite()";
         }
       }, 0);            
       return lengthRead;
     }
 
-    public long write(ByteBuffer srcs) throws IOException {
+    @Override
+	public long write(ByteBuffer srcs) throws IOException {
 //      ByteBuffer[] foo = new ByteBuffer[1];
 //      foo[0] = srcs;
 //      return write(foo, 0, 1);
@@ -249,16 +253,19 @@ public class DirectAppSocket<Identifier, MessageType> {
       if (logger.level <= Logger.FINER) logger.log(this+".write("+srcs+") len:"+lengthToWrite+" inFlight:"+counterpart.bytesInFlight);
       simulator.enqueueDelivery(new Delivery() {      
         int mySeq = seq++;
-        public void deliver() {
+        @Override
+		public void deliver() {
           counterpart.addToReadQueue(msg);      
         }
-        public int getSeq() {
+        @Override
+		public int getSeq() {
           return mySeq; 
         }
-        public String toString() {
+        @Override
+		public String toString() {
           return DirectAppSocketEndpoint.this.toString()+" deliver msg "+msg;
         }
-      }, (int)Math.round(simulator.networkDelay(localNodeHandle, counterpart.localNodeHandle)));      
+      }, Math.round(simulator.networkDelay(localNodeHandle, counterpart.localNodeHandle)));      
       return lengthToWrite;
     }
   
@@ -317,21 +324,25 @@ public class DirectAppSocket<Identifier, MessageType> {
     /**
      * Can be called on any thread
      */
-    public void register(boolean wantToRead, boolean wantToWrite, 
+    @Override
+	public void register(boolean wantToRead, boolean wantToWrite, 
         P2PSocketReceiver<Identifier> receiver) {
       if (wantToWrite) {
         writer = receiver; 
         
         simulator.enqueueDelivery(new Delivery() {              
-          public void deliver() {
+          @Override
+		public void deliver() {
             if (!simulator.isAlive(localNodeHandle)) return;
             notifyCanWrite(); // only actually notifies if proper at the time
           }
           // I don't think this needs a sequence number, but I may be wrong
-          public int getSeq() {
+          @Override
+		public int getSeq() {
             return 0;
           }
-          public String toString() {
+          @Override
+		public String toString() {
             return DirectAppSocketEndpoint.this.toString()+" notifyCanWrite()";
           }
 
@@ -342,57 +353,68 @@ public class DirectAppSocket<Identifier, MessageType> {
         reader = receiver;
         
         simulator.enqueueDelivery(new Delivery() {              
-          public void deliver() {
+          @Override
+		public void deliver() {
             if (!simulator.isAlive(localNodeHandle)) return;
             notifyCanRead(); // only actually notifies if proper at the time           
           }            
           // I don't think this needs a sequence number, but I may be wrong
-          public int getSeq() {
+          @Override
+		public int getSeq() {
             return 0;
           }
-          public String toString() {
+          @Override
+		public String toString() {
             return DirectAppSocketEndpoint.this.toString()+" notifyCanRead()";
           }
         }, 0); // I dont think this needs a delay, but I could be wrong            
       }        
     }
   
-    public void shutdownOutput() {
+    @Override
+	public void shutdownOutput() {
       if (logger.level <= Logger.FINER) logger.log(this+".shutdownOutput()");
       outputClosed = true;
       if (!simulator.isAlive(counterpart.localNodeHandle)) return; // do nothing
       simulator.enqueueDelivery(new Delivery() {      
         int mySeq = seq++;
-        public void deliver() {
+        @Override
+		public void deliver() {
           counterpart.addToReadQueue(EOF);      
         }
-        public int getSeq() {
+        @Override
+		public int getSeq() {
           return mySeq;
         }
-        public String toString() {
+        @Override
+		public String toString() {
           return DirectAppSocketEndpoint.this.toString()+" counterpart shutDownOutput()";
         }
-      }, (int)Math.round(simulator.networkDelay(localNodeHandle, counterpart.localNodeHandle))); // I dont think this needs a delay, but I could be wrong            
+      }, Math.round(simulator.networkDelay(localNodeHandle, counterpart.localNodeHandle))); // I dont think this needs a delay, but I could be wrong            
     }
   
     public void shutdownInput() {
 //      inputClosed = true;
     }
   
-    public void close() {
+    @Override
+	public void close() {
       shutdownOutput();
       shutdownInput();
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
       return "DAS{"+localNodeHandle+":"+simulator.isAlive(localNodeHandle)+"->"+counterpart.localNodeHandle+":"+simulator.isAlive(counterpart.localNodeHandle)+" w:"+writer+" r:"+reader+"}"; 
     }
 
-    public Identifier getIdentifier() {
+    @Override
+	public Identifier getIdentifier() {
       return getRemoteNodeHandle();
     }
 
-    public Map<String, Object> getOptions() {
+    @Override
+	public Map<String, Object> getOptions() {
       return options;
     }
   }  
@@ -406,16 +428,17 @@ public class DirectAppSocket<Identifier, MessageType> {
    * @author Jeff Hoye
    */
   class AcceptorDelivery implements Delivery {
-    public void deliver() {
+    @Override
+	public void deliver() {
       if (simulator.isAlive(acceptor)) {
         DirectTransportLayer<Identifier, MessageType> acceptorTL = simulator.getTL(acceptor);
         if (acceptorTL.canReceiveSocket()) {
           acceptorTL.finishReceiveSocket(acceptorEndpoint);
           simulator.enqueueDelivery(new ConnectorDelivery(),
-              (int)Math.round(simulator.networkDelay(acceptor, connector))); 
+              Math.round(simulator.networkDelay(acceptor, connector))); 
         } else {
           simulator.enqueueDelivery(new ConnectorExceptionDelivery<Identifier>(connectorReceiver,connectorHandle,new SocketTimeoutException()),
-              (int)Math.round(simulator.networkDelay(acceptor, connector))); 
+              Math.round(simulator.networkDelay(acceptor, connector))); 
         }
       } else {
         simulator.enqueueDelivery(new ConnectorExceptionDelivery<Identifier>(connectorReceiver,connectorHandle,new NodeIsFaultyException(acceptor)),0);
@@ -424,13 +447,15 @@ public class DirectAppSocket<Identifier, MessageType> {
 //            (int)Math.round(simulator.networkDelay(connector, acceptor))); 
       }
     }
-    public int getSeq() {
+    @Override
+	public int getSeq() {
       return -1; 
     }
   }
   
   class ConnectorDelivery implements Delivery {
-    public void deliver() {      
+    @Override
+	public void deliver() {      
       if (simulator.isAlive(connector)) {
         connectorReceiver.receiveResult(connectorHandle, connectorEndpoint);
       } else {
@@ -439,7 +464,8 @@ public class DirectAppSocket<Identifier, MessageType> {
       }
     }
     // out of band, needs to get in front of any other message
-    public int getSeq() {
+    @Override
+	public int getSeq() {
       return -1; 
     }
   }
@@ -448,7 +474,8 @@ public class DirectAppSocket<Identifier, MessageType> {
     return new AcceptorDelivery();
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "DAS{"+connector+"["+connectorReceiver+"]->"+acceptor+"}"; 
   }
 }

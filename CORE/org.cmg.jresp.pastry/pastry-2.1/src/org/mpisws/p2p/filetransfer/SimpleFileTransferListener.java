@@ -36,8 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package org.mpisws.p2p.filetransfer;
 
-import rice.tutorial.sendfile.MyApp;
-
 /**
  * Prints out the progress of the FileTransfer
  * 
@@ -51,7 +49,8 @@ public class SimpleFileTransferListener implements FileTransferListener {
     this.prefix = prefix;
   }
   
-  public void fileTransferred(FileReceipt receipt,
+  @Override
+public void fileTransferred(FileReceipt receipt,
       long bytesTransferred, long total, boolean incoming) {
     String s;
     if (incoming) {
@@ -63,7 +62,8 @@ public class SimpleFileTransferListener implements FileTransferListener {
     System.out.println(prefix+s+percent+"% of "+receipt);
   }
 
-  public void msgTransferred(BBReceipt receipt, int bytesTransferred,
+  @Override
+public void msgTransferred(BBReceipt receipt, int bytesTransferred,
       int total, boolean incoming) {
     String s;
     if (incoming) {
@@ -75,7 +75,8 @@ public class SimpleFileTransferListener implements FileTransferListener {
     System.out.println(prefix+s+percent+"% of "+receipt);
   }
 
-  public void transferCancelled(Receipt receipt, boolean incoming) {
+  @Override
+public void transferCancelled(Receipt receipt, boolean incoming) {
     String s;
     if (incoming) {
       s = "download";
@@ -85,7 +86,8 @@ public class SimpleFileTransferListener implements FileTransferListener {
     System.out.println(prefix+": Cancelled "+s+" of "+receipt);
   }
   
-  public void transferFailed(Receipt receipt, boolean incoming) {
+  @Override
+public void transferFailed(Receipt receipt, boolean incoming) {
     String s;
     if (incoming) {
       s = "download";

@@ -60,19 +60,23 @@ public class OutgoingUserDataMessage<Handle extends RawSerializable> extends Use
     this.deliverAckToMe = deliverAckToMe;
   }
 
-  public Handle getIdentifier() {
+  @Override
+public Handle getIdentifier() {
     return pi.getHandle();
   }
 
-  public ByteBuffer getMessage() {
+  @Override
+public ByteBuffer getMessage() {
     return getPayload();
   }
 
-  public Map<String, Object> getOptions() {
+  @Override
+public Map<String, Object> getOptions() {
     return options;
   }
 
-  public boolean cancel() {
+  @Override
+public boolean cancel() {
     // implementing this is going to be a bit tricky
     // make a cancelled bit here, and then check it before sending, 
     // and when receive the ack, don't call notify

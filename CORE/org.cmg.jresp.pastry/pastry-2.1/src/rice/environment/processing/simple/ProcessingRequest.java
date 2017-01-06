@@ -88,7 +88,8 @@ public class ProcessingRequest implements Runnable,
     return priority;
   }
 
-  public int compareTo(ProcessingRequest request) {
+  @Override
+public int compareTo(ProcessingRequest request) {
     if (priority == request.getPriority()) {
       if (seq > request.seq) return 1;
       return -1;
@@ -97,7 +98,8 @@ public class ProcessingRequest implements Runnable,
     return -1;
   }
 
-  public void run() {
+  @Override
+public void run() {
     if (cancelled) return;
     running = true;
     if (logger.level <= Logger.FINER)
@@ -110,21 +112,25 @@ public class ProcessingRequest implements Runnable,
             + r.toString());
 
       selectorManager.invoke(new Runnable() {
-        public void run() {
+        @Override
+		public void run() {
           returnResult(result);
         }
 
-        public String toString() {
+        @Override
+		public String toString() {
           return "return ProcessingRequest for " + r + " to " + c;
         }
       });
     } catch (final Exception e) {
       selectorManager.invoke(new Runnable() {
-        public void run() {
+        @Override
+		public void run() {
           returnError(e);
         }
 
-        public String toString() {
+        @Override
+		public String toString() {
           return "return ProcessingRequest for " + r + " to " + c;
         }
       });
@@ -133,7 +139,8 @@ public class ProcessingRequest implements Runnable,
       logger.log("COUNT: Done execution of " + this);
   }
 
-  public boolean cancel() {
+  @Override
+public boolean cancel() {
     cancelled = true;
     return !running;
   }

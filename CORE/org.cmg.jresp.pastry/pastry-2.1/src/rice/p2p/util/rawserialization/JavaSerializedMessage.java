@@ -42,7 +42,6 @@ package rice.p2p.util.rawserialization;
 import java.io.*;
 
 import rice.p2p.commonapi.rawserialization.*;
-import rice.pastry.messaging.*;
 import rice.p2p.commonapi.Message;
 
 /**
@@ -62,11 +61,13 @@ public class JavaSerializedMessage implements RawMessage {
 //    constructionStack = new Exception("Stack Trace: msg:"+msg).printStackTrace();
   }
 
-  public short getType() {
+  @Override
+public short getType() {
     return 0;
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     try {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -89,11 +90,13 @@ public class JavaSerializedMessage implements RawMessage {
     return msg; 
   }
 
-  public int getPriority() {
+  @Override
+public int getPriority() {
     return msg.getPriority();
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "JavaSerializedMessage["+msg+"]"; 
   }
 }

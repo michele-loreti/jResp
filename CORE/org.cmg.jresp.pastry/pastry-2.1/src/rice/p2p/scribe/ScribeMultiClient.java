@@ -57,7 +57,8 @@ public interface ScribeMultiClient extends ScribeClient {
    * @param content The content which was anycasted
    * @return Whether or not the anycast should continue, true if we will accept the anycast
    */
-  public boolean anycast(Topic topic, ScribeContent content);
+  @Override
+public boolean anycast(Topic topic, ScribeContent content);
 
   /**
    * This method is invoked when a message is delivered for a topic this
@@ -66,7 +67,8 @@ public interface ScribeMultiClient extends ScribeClient {
    * @param topic The topic the message was published to
    * @param content The content which was published
    */
-  public void deliver(Topic topic, ScribeContent content);
+  @Override
+public void deliver(Topic topic, ScribeContent content);
 
   /**
    * Informs this client that a child was added to a topic in
@@ -75,7 +77,8 @@ public interface ScribeMultiClient extends ScribeClient {
    * @param topic The topic to unsubscribe from
    * @param child The child that was added
    */
-  public void childAdded(Topic topic, NodeHandle child);
+  @Override
+public void childAdded(Topic topic, NodeHandle child);
 
   /**
    * Informs this client that a child was removed from a topic in
@@ -84,7 +87,8 @@ public interface ScribeMultiClient extends ScribeClient {
    * @param topic The topic to unsubscribe from
    * @param child The child that was removed
    */
-  public void childRemoved(Topic topic, NodeHandle child);
+  @Override
+public void childRemoved(Topic topic, NodeHandle child);
   
   /**
    * Informs the client that a subscribe on the given topic failed
@@ -94,7 +98,9 @@ public interface ScribeMultiClient extends ScribeClient {
    * @deprecated use subscribeFailed(Collection<Topic> topics)
    * @param topic The topic which the subscribe failed on
    */
-  public void subscribeFailed(Topic topic);
+  @Deprecated
+@Override
+public void subscribeFailed(Topic topic);
 
   /**
    * Informs the client that a subscribe on the given topic failed

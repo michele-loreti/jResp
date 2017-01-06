@@ -73,7 +73,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    * @return the comparator associated with this sorted map, or
    *          <tt>null</tt> if it uses its keys' natural ordering.
    */
-  public Comparator comparator() {
+  @Override
+public Comparator comparator() {
     return map.comparator();
   }
   
@@ -85,7 +86,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    * @param toKey high endpoint (exclusive) of the subMap.
    * @return a view of the specified range within this sorted map.
    */
-  public SortedMap subMap(Object fromKey, Object toKey) {
+  @Override
+public SortedMap subMap(Object fromKey, Object toKey) {
     return new ImmutableSortedMap(map.subMap(fromKey, toKey));
   }
   
@@ -96,7 +98,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    * @param toKey high endpoint (exclusive) of the subMap.
    * @return a view of the specified initial range of this sorted map.
    */
-  public SortedMap headMap(Object toKey) {
+  @Override
+public SortedMap headMap(Object toKey) {
     return new ImmutableSortedMap(map.headMap(toKey));
   }
   
@@ -107,7 +110,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    * @param fromKey low endpoint (inclusive) of the tailMap.
    * @return a view of the specified final range of this sorted map.
    */
-  public SortedMap tailMap(Object fromKey) {
+  @Override
+public SortedMap tailMap(Object fromKey) {
     return new ImmutableSortedMap(map.tailMap(fromKey));
   }
   
@@ -117,7 +121,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    * @return the first (lowest) key currently in this sorted map.
    * @throws    NoSuchElementException if this map is empty.
    */
-  public Object firstKey() {
+  @Override
+public Object firstKey() {
     return map.firstKey();
   }
   
@@ -127,7 +132,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    * @return the last (highest) key currently in this sorted map.
    * @throws     NoSuchElementException if this map is empty.
    */
-  public Object lastKey() {
+  @Override
+public Object lastKey() {
     return map.lastKey();
   }
   
@@ -138,7 +144,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    *
    * @return the number of key-value mappings in this map.
    */
-  public int size() {
+  @Override
+public int size() {
     return map.size();
   }
   
@@ -147,7 +154,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    *
    * @return <tt>true</tt> if this map contains no key-value mappings.
    */
-  public boolean isEmpty() {
+  @Override
+public boolean isEmpty() {
     return map.isEmpty();
   }
   
@@ -158,7 +166,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    * @param key key whose presence in this map is to be tested.
    * @return <tt>true</tt> if this map contains a mapping for the specified
    */
-  public boolean containsKey(Object key) {
+  @Override
+public boolean containsKey(Object key) {
     return map.containsKey(key);
   }
   
@@ -170,7 +179,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    * @return <tt>true</tt> if this map maps one or more keys to the
    *         specified value.
   */
-  public boolean containsValue(Object value) {
+  @Override
+public boolean containsValue(Object value) {
     return map.containsValue(value);
   }
   
@@ -182,7 +192,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    * @return the value to which this map maps the specified key, or
    *         <tt>null</tt> if the map contains no mapping for this key.
    */
-  public Object get(Object key) {
+  @Override
+public Object get(Object key) {
     return map.get(key);
   }
   
@@ -204,7 +215,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    * @throws UnsupportedOperationException if the <tt>put</tt> operation is
    *            not supported by this map.
    */
-  public Object put(Object key, Object value) {
+  @Override
+public Object put(Object key, Object value) {
     throw new UnsupportedOperationException("put not supported by immutablemap");
   }
   
@@ -219,7 +231,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    * @return previous value associated with specified key, or <tt>null</tt>
    *         if there was no mapping for key.
    */
-  public Object remove(Object key) {
+  @Override
+public Object remove(Object key) {
     throw new UnsupportedOperationException("remove not supported by immutablemap");
   }
   
@@ -229,7 +242,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    *
    * @param t Mappings to be stored in this map.
    */
-  public void putAll(Map t) {
+  @Override
+public void putAll(Map t) {
     throw new UnsupportedOperationException("putall not supported by immutablemap");
   }
   
@@ -239,7 +253,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    * @throws UnsupportedOperationException clear is not supported by this
    *       map.
    */
-  public void clear() {
+  @Override
+public void clear() {
     throw new UnsupportedOperationException("clear not supported by immutablemap");
   }
   
@@ -255,7 +270,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    *
    * @return a set view of the keys contained in this map.
    */
-  public Set keySet() {
+  @Override
+public Set keySet() {
     return map.keySet();
   }
   
@@ -272,7 +288,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    *
    * @return a collection view of the values contained in this map.
    */
-  public Collection values() {
+  @Override
+public Collection values() {
     return map.values();
   }
   
@@ -289,7 +306,8 @@ public class ImmutableSortedMap implements SortedMap, Serializable {
    *
    * @return a set view of the mappings contained in this map.
    */
-  public Set entrySet() {
+  @Override
+public Set entrySet() {
     return map.entrySet();
   }
 }

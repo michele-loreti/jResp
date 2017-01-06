@@ -56,7 +56,8 @@ public class ProcessingThread extends Thread {
     this.queue = queue;
   }
 
-  public void run() {
+  @Override
+public void run() {
     running = true;
     while (running) {
       try {
@@ -69,7 +70,8 @@ public class ProcessingThread extends Thread {
     }
   }
 
-  @SuppressWarnings("deprecation")
+  @Override
+@SuppressWarnings("deprecation")
   public void destroy() {
     running = false;
     interrupt();

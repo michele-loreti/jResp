@@ -37,8 +37,6 @@ advised of the possibility of such damage.
 package rice.pastry.testing;
 
 import java.io.*;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.util.*;
 
 import rice.Destructable;
@@ -56,7 +54,6 @@ import rice.pastry.direct.*;
 import rice.pastry.leafset.LeafSet;
 import rice.pastry.routing.*;
 import rice.pastry.standard.RandomNodeIdFactory;
-import rice.selector.SelectorManager;
 import rice.selector.TimerTask;
 import rice.tutorial.direct.MyMsg;
 
@@ -153,13 +150,15 @@ public class RoutingTableTest {
   public void startLoggerTask() {
     env.getSelectorManager().getTimer().schedule(new TimerTask() {
       int ctr = 0;
-      public void run() {
+      @Override
+	public void run() {
         testRoutingTables(ctr++);
       }    
     },reportRate,reportRate);
     
     env.getSelectorManager().getTimer().schedule(new TimerTask() {
-      public void run() {
+      @Override
+	public void run() {
         env.destroy();
       }    
     },testTime);  
@@ -170,7 +169,8 @@ public class RoutingTableTest {
     }
     
     int ctr = 0;
-    public void run() {
+    @Override
+	public void run() {
       try {
         createNode();
       } catch (Exception ie) {
@@ -273,7 +273,8 @@ public class RoutingTableTest {
      * @param o DESCRIBE THE PARAMETER
      * @return DESCRIBE THE RETURN VALUE
      */
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
       if (!(o instanceof TestScribeContent)) {
         return false;
       }
@@ -287,7 +288,8 @@ public class RoutingTableTest {
      *
      * @return DESCRIBE THE RETURN VALUE
      */
-    public String toString() {
+    @Override
+	public String toString() {
       return "TestScribeContent(" + topic + ", " + num + ")";
     }
   }
@@ -298,7 +300,7 @@ public class RoutingTableTest {
     if (nodes.size() > 0) {
       PastryNode bootNode = null;
       while(bootNode == null || !bootNode.isReady()) {
-        bootNode = (PastryNode)nodes.get(env.getRandomSource().nextInt(nodes.size())); 
+        bootNode = nodes.get(env.getRandomSource().nextInt(nodes.size())); 
         bootHandle = bootNode.getLocalHandle();
       }
     }
@@ -307,14 +309,16 @@ public class RoutingTableTest {
 
     node.addObserver(new Observer() {
     
-      public void update(Observable o, Object arg) {
+      @Override
+	public void update(Observable o, Object arg) {
         System.out.println("Observing "+o+" "+arg);
       }    
     });
         
     // this will add "magic" to the node such that if it is destroyed, then it will automatically create its replacement
     node.addDestructable(new Destructable() {          
-      public void destroy() {
+      @Override
+	public void destroy() {
 //        System.out.println("Destructable called.");
         nodes.remove(node);
         apps.remove(node);
@@ -347,7 +351,8 @@ public class RoutingTableTest {
 //        System.out.println("Adding observer to "+node);
       node.addObserver(new Observer() {
 
-      public void update(Observable o, Object arg) {
+      @Override
+	public void update(Observable o, Object arg) {
 //        System.out.println("observer.update("+arg+")");
         if (arg instanceof Boolean) {
           if (!((Boolean) arg).booleanValue()) return;
@@ -375,7 +380,8 @@ public class RoutingTableTest {
       env.getSelectorManager().getTimer().schedule(new TimerTask() {
         {
           node.addDestructable(new Destructable() {          
-            public void destroy() {
+            @Override
+			public void destroy() {
               cancel();
             }          
           });
@@ -438,9 +444,10 @@ public class RoutingTableTest {
     ArrayList<PastryNode> nds = new ArrayList<PastryNode>(nodes);
     Collections.sort(nds,new Comparator<PastryNode>() {
     
-      public int compare(PastryNode one, PastryNode two) {
-        PastryNode n1 = (PastryNode)one;
-        PastryNode n2 = (PastryNode)two;
+      @Override
+	public int compare(PastryNode one, PastryNode two) {
+        PastryNode n1 = one;
+        PastryNode n2 = two;
         return n1.getId().compareTo(n2.getId());
       }
     
@@ -527,9 +534,9 @@ public class RoutingTableTest {
     double acc = 0;
     RandomSource rand = env.getRandomSource();
     for (int i = 0; i < 1000000; i++) {
-      PastryNode node = (PastryNode)nodes.get(rand.nextInt(nodes.size()));
+      PastryNode node = nodes.get(rand.nextInt(nodes.size()));
       RoutingTable rt = node.getRoutingTable();
-      PastryNode that = (PastryNode)nodes.get(rand.nextInt(nodes.size()));
+      PastryNode that = nodes.get(rand.nextInt(nodes.size()));
       if ((that != node) && that.isReady() && node.isReady()) {
         NodeHandle thatHandle = that.getLocalHandle();        
         int latency = calcLatency(node,thatHandle);
@@ -590,12 +597,12 @@ public class RoutingTableTest {
     int[] ctrs = new int[5];
     RandomSource rand = env.getRandomSource();
     for (int i = 0; i < 1000000; i++) {
-      PastryNode node = (PastryNode)nodes.get(rand.nextInt(nodes.size()));
+      PastryNode node = nodes.get(rand.nextInt(nodes.size()));
       if (!node.isReady()) continue;
       PastryNode temp = DirectPastryNode.setCurrentNode(node);
       RoutingTable rt = node.getRoutingTable();
       Iterator i2 = nodes.iterator();
-      PastryNode that = (PastryNode)nodes.get(rand.nextInt(nodes.size()));
+      PastryNode that = nodes.get(rand.nextInt(nodes.size()));
       
         if (!that.isReady()) continue;
         NodeHandle thatHandle = that.getLocalHandle();
@@ -776,7 +783,8 @@ public class RoutingTableTest {
     /**
      * Called when we receive a message.
      */
-    public void deliver(Id id, Message message) {
+    @Override
+	public void deliver(Id id, Message message) {
       if (logHeavy)
         System.out.println(this+" received "+message);
     }
@@ -785,21 +793,24 @@ public class RoutingTableTest {
      * Called when you hear about a new neighbor.
      * Don't worry about this method for now.
      */
-    public void update(rice.p2p.commonapi.NodeHandle handle, boolean joined) {
+    @Override
+	public void update(rice.p2p.commonapi.NodeHandle handle, boolean joined) {
     }
     
     /**
      * Called a message travels along your path.
      * Don't worry about this method for now.
      */
-    @SuppressWarnings("deprecation")
+    @Override
+	@SuppressWarnings("deprecation")
     public boolean forward(RouteMessage message) {
       if (logHeavy)
         System.out.println(this+"forwarding "+message.getMessage());
       return true;
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
       return "MyApp "+endpoint.getId();
     }
   }
@@ -851,7 +862,8 @@ public class RoutingTableTest {
      * @param content DESCRIBE THE PARAMETER
      * @return DESCRIBE THE RETURN VALUE
      */
-    public boolean anycast(Topic topic, ScribeContent content) {
+    @Override
+	public boolean anycast(Topic topic, ScribeContent content) {
       return acceptAnycast;
     }
 
@@ -861,7 +873,8 @@ public class RoutingTableTest {
      * @param topic DESCRIBE THE PARAMETER
      * @param content DESCRIBE THE PARAMETER
      */
-    public void deliver(Topic topic, ScribeContent content) {
+    @Override
+	public void deliver(Topic topic, ScribeContent content) {
 
     }
 
@@ -871,7 +884,8 @@ public class RoutingTableTest {
      * @param topic DESCRIBE THE PARAMETER
      * @param child DESCRIBE THE PARAMETER
      */
-    public void childAdded(Topic topic, rice.p2p.commonapi.NodeHandle child) {
+    @Override
+	public void childAdded(Topic topic, rice.p2p.commonapi.NodeHandle child) {
      // System.out.println("CHILD ADDED AT " + scribe.getId());
     }
 
@@ -881,11 +895,13 @@ public class RoutingTableTest {
      * @param topic DESCRIBE THE PARAMETER
      * @param child DESCRIBE THE PARAMETER
      */
-    public void childRemoved(Topic topic, rice.p2p.commonapi.NodeHandle child) {
+    @Override
+	public void childRemoved(Topic topic, rice.p2p.commonapi.NodeHandle child) {
      // System.out.println("CHILD REMOVED AT " + scribe.getId());
     }
 
-    public void subscribeFailed(Topic topic) {
+    @Override
+	public void subscribeFailed(Topic topic) {
       subscribeFailed = true;
     }
 
@@ -936,7 +952,8 @@ public class RoutingTableTest {
             // Loads pastry settings, and sets up the Environment for simulation
             Environment env = Environment.directEnvironment();
             env.addDestructable(new Destructable() {            
-              public void destroy() {
+              @Override
+			public void destroy() {
                 synchronized(lock) {
                   lock.notify();
                 }

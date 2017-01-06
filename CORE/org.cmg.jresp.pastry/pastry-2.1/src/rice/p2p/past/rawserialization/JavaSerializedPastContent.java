@@ -55,7 +55,8 @@ public class JavaSerializedPastContent implements RawPastContent {
     this.content = content;
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     try {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -74,11 +75,13 @@ public class JavaSerializedPastContent implements RawPastContent {
     }    
   }
 
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "JSPC ["+content+"]"; 
   }
 
@@ -86,19 +89,23 @@ public class JavaSerializedPastContent implements RawPastContent {
     return content;
   }
 
-  public PastContent checkInsert(Id id, PastContent existingContent) throws PastException {
+  @Override
+public PastContent checkInsert(Id id, PastContent existingContent) throws PastException {
     return content.checkInsert(id, existingContent);
   }
 
-  public PastContentHandle getHandle(Past local) {
+  @Override
+public PastContentHandle getHandle(Past local) {
     return content.getHandle(local);
   }
 
-  public Id getId() {
+  @Override
+public Id getId() {
     return content.getId();
   }
 
-  public boolean isMutable() {
+  @Override
+public boolean isMutable() {
     return content.isMutable();
   }
 }

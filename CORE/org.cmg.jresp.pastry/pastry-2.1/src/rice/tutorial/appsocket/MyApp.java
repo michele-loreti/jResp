@@ -89,7 +89,8 @@ public class MyApp implements Application {
       /**
        * When we accept a new socket.
        */
-      public void receiveSocket(AppSocket socket) {
+      @Override
+	public void receiveSocket(AppSocket socket) {
         // this code reuses "this" AppSocketReceiver, and registers for reading only, and a timeout of 30000. 
         socket.register(true, false, 30000, this);
         
@@ -100,7 +101,8 @@ public class MyApp implements Application {
       /**
        * Called when the socket is ready for reading or writing.
        */
-      public void receiveSelectResult(AppSocket socket, boolean canRead, boolean canWrite) {
+      @Override
+	public void receiveSelectResult(AppSocket socket, boolean canRead, boolean canWrite) {
         in.clear();
         try {
           // read from the socket into ins
@@ -123,7 +125,8 @@ public class MyApp implements Application {
       /**
        * Called if we have a problem.
        */
-      public void receiveException(AppSocket socket, Exception e) {
+      @Override
+	public void receiveException(AppSocket socket, Exception e) {
         e.printStackTrace();
       }    
     });
@@ -149,7 +152,8 @@ public class MyApp implements Application {
       /**
        * Called when the socket comes available.
        */
-      public void receiveSocket(AppSocket socket) {
+      @Override
+	public void receiveSocket(AppSocket socket) {
         // register for writing
         socket.register(false, true, 30000, this);
       }    
@@ -157,14 +161,16 @@ public class MyApp implements Application {
       /**
        * Called if there is a problem.
        */
-      public void receiveException(AppSocket socket, Exception e) {
+      @Override
+	public void receiveException(AppSocket socket, Exception e) {
         e.printStackTrace();
       }
       
       /**
        * Example of how to write some bytes
        */
-      public void receiveSelectResult(AppSocket socket, boolean canRead, boolean canWrite) {   
+      @Override
+	public void receiveSelectResult(AppSocket socket, boolean canRead, boolean canWrite) {   
         try {
           long ret = socket.write(out);        
           // see if we are done
@@ -185,7 +191,8 @@ public class MyApp implements Application {
   /**
    * Called when we receive a message.
    */
-  public void deliver(Id id, Message message) {
+  @Override
+public void deliver(Id id, Message message) {
     System.out.println(this+" received "+message);
   }
 
@@ -193,18 +200,21 @@ public class MyApp implements Application {
    * Called when you hear about a new neighbor.
    * Don't worry about this method for now.
    */
-  public void update(NodeHandle handle, boolean joined) {
+  @Override
+public void update(NodeHandle handle, boolean joined) {
   }
   
   /**
    * Called a message travels along your path.
    * Don't worry about this method for now.
    */
-  public boolean forward(RouteMessage message) {
+  @Override
+public boolean forward(RouteMessage message) {
     return true;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "MyApp "+endpoint.getId();
   }
 

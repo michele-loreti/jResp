@@ -40,12 +40,7 @@ import rice.environment.Environment;
 import rice.pastry.*;
 import rice.pastry.direct.*;
 import rice.pastry.standard.*;
-import rice.pastry.join.*;
-import rice.pastry.routing.*;
-
 import java.util.*;
-import java.io.*;
-import java.lang.*;
 
 /**
  * SinglePingTest

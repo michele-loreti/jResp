@@ -38,7 +38,6 @@ package rice.pastry.standard;
 
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
-import rice.environment.random.RandomSource;
 import rice.pastry.*;
 
 import java.security.*;
@@ -75,7 +74,8 @@ public class RandomNodeIdFactory implements NodeIdFactory {
    * @return the new nodeId
    */
 
-  public Id generateNodeId() {
+  @Override
+public Id generateNodeId() {
 
     //byte raw[] = new byte[NodeId.nodeIdBitLength >> 3];
     //rng.nextBytes(raw);

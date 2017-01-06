@@ -72,23 +72,27 @@ public class SocketWrapperSocket<Identifier, SubIdentifier> implements P2PSocket
     this.errorHandler = errorHandler;
   }
   
-  public Identifier getIdentifier() {
+  @Override
+public Identifier getIdentifier() {
     return identifier;
   }
-  public void close() {    
+  @Override
+public void close() {    
     if (logger.level <= Logger.FINER) {
       logger.logException("Closing "+this, new Exception("Stack Trace"));
     } else if (logger.level <= Logger.FINE) logger.log("Closing "+this);
     socket.close();
   }
 
-  public long read(ByteBuffer dsts) throws IOException {
+  @Override
+public long read(ByteBuffer dsts) throws IOException {
     long ret = socket.read(dsts);
     if (logger.level <= Logger.FINEST) logger.log(this+"read():"+ret);
     return ret;
   }
   
-  public void register(boolean wantToRead, boolean wantToWrite,
+  @Override
+public void register(boolean wantToRead, boolean wantToWrite,
       final P2PSocketReceiver<Identifier> receiver) {
 //    logger.log(this+"register("+wantToRead+","+wantToWrite+","+receiver+")");
     if (logger.level <= Logger.FINEST) logger.log(this+"register("+wantToRead+","+wantToWrite+","+receiver+")");
@@ -119,7 +123,8 @@ public class SocketWrapperSocket<Identifier, SubIdentifier> implements P2PSocket
 //    });
   }
 
-  public void receiveSelectResult(P2PSocket<SubIdentifier> socket, boolean canRead,
+  @Override
+public void receiveSelectResult(P2PSocket<SubIdentifier> socket, boolean canRead,
       boolean canWrite) throws IOException {
 //    logger.log(this+"rsr("+socket+","+canRead+","+canWrite+")");
     if (logger.level <= Logger.FINEST) logger.log(this+"rsr("+socket+","+canRead+","+canWrite+")");
@@ -155,7 +160,8 @@ public class SocketWrapperSocket<Identifier, SubIdentifier> implements P2PSocket
 //    receiver.receiveSelectResult(SocketWrapperSocket.this, canRead, canWrite);
   }
 
-  public void receiveException(P2PSocket<SubIdentifier> socket, Exception e) {
+  @Override
+public void receiveException(P2PSocket<SubIdentifier> socket, Exception e) {
 //    logger.log(this+".receiveException("+e+")");
     if (writer != null) {
       if (writer == reader) {
@@ -180,11 +186,13 @@ public class SocketWrapperSocket<Identifier, SubIdentifier> implements P2PSocket
   }    
 
   
-  public void shutdownOutput() {
+  @Override
+public void shutdownOutput() {
     socket.shutdownOutput();
   }
 
-  public long write(ByteBuffer srcs) throws IOException {
+  @Override
+public long write(ByteBuffer srcs) throws IOException {
     long ret = socket.write(srcs);
     if (logger.level <= Logger.FINEST) logger.log(this+"write():"+ret);
     return ret;
@@ -196,7 +204,8 @@ public class SocketWrapperSocket<Identifier, SubIdentifier> implements P2PSocket
     return identifier+"-"+socket;
   }
 
-  public Map<String, Object> getOptions() {
+  @Override
+public Map<String, Object> getOptions() {
     return options;
   }
 }

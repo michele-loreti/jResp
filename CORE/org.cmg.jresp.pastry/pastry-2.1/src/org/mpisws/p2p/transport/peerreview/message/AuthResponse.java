@@ -67,7 +67,8 @@ public class AuthResponse<Identifier extends RawSerializable> implements PeerRev
     this.authTo = authTo;
   }
   
-  public short getType() {
+  @Override
+public short getType() {
     return MSG_AUTHREQ;
   }
 
@@ -77,7 +78,8 @@ public class AuthResponse<Identifier extends RawSerializable> implements PeerRev
     authTo = new Authenticator(buf,hashSize,signatureSize);
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     subject.serialize(buf);
     authFrom.serialize(buf);
     authTo.serialize(buf);

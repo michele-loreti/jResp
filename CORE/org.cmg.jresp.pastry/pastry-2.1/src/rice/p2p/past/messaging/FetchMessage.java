@@ -39,7 +39,6 @@ package rice.p2p.past.messaging;
 
 import java.io.IOException;
 
-import rice.*;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
 import rice.p2p.past.*;
@@ -117,16 +116,19 @@ public class FetchMessage extends ContinuationMessage {
    *
    * @return A string representing this message
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "[FetchMessage for " + handle + " cached? " + cached + "]";
   }
 
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE; 
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)0); // version    
     if (response != null && response instanceof RawPastContent) {
       super.serialize(buf, false); 

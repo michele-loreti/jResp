@@ -94,7 +94,8 @@ public class ExponentialBackoffScheduledMessage extends ScheduledMessage {
     timer.schedule(myTask,time);          
   }
   
-  public boolean cancel() {
+  @Override
+public boolean cancel() {
     super.cancel();
     if (myTask!=null) {
       myTask.cancel();
@@ -105,7 +106,8 @@ public class ExponentialBackoffScheduledMessage extends ScheduledMessage {
     return temp;
   }
   
-  public void run() {
+  @Override
+public void run() {
     if (!cancelled) {
       if (myTask!=null) {
         lastTime = myTask.scheduledExecutionTime();
@@ -120,12 +122,14 @@ public class ExponentialBackoffScheduledMessage extends ScheduledMessage {
     }
   }
   
-  public long scheduledExecutionTime() {
+  @Override
+public long scheduledExecutionTime() {
     return lastTime;        
   }
   
   class EBTimerTask extends TimerTask {
-    public void run() {
+    @Override
+	public void run() {
       ExponentialBackoffScheduledMessage.this.run();
     }
   }

@@ -103,7 +103,8 @@ public interface Continuation<R, E extends Exception> {
      *
      * @param result The exception which was caused.
      */
-    public void receiveException(E result) {
+    @Override
+	public void receiveException(E result) {
       parent.receiveException(result);
     }
   }
@@ -137,7 +138,8 @@ public interface Continuation<R, E extends Exception> {
      *
      * @param result The result
      */
-    public void receiveResult(R result) {
+    @Override
+	public void receiveResult(R result) {
       parent.receiveResult(result);
     }
   }
@@ -174,7 +176,8 @@ public interface Continuation<R, E extends Exception> {
      *
      * @param result The result
      */
-    public void receiveResult(Object result) {
+    @Override
+	public void receiveResult(Object result) {
     }
 
     /**
@@ -183,7 +186,8 @@ public interface Continuation<R, E extends Exception> {
      *
      * @param result The exception which was caused.
      */
-    public void receiveException(Exception result) {
+    @Override
+	public void receiveException(Exception result) {
       if (logger.level <= Logger.WARNING) logger.logException(
           "ERROR - Received exception " + result + " during task " + name, result);
     }
@@ -201,7 +205,8 @@ public interface Continuation<R, E extends Exception> {
      *
      * @param result The exception which was caused.
      */
-    public void receiveException(Exception result) {
+    @Override
+	public void receiveException(Exception result) {
       receiveResult(result);
     }
   }
@@ -219,13 +224,15 @@ public interface Continuation<R, E extends Exception> {
     protected Object result;
     protected boolean done = false;
 
-    public synchronized void receiveResult(Object o) {
+    @Override
+	public synchronized void receiveResult(Object o) {
       result = o;
       done = true;
       notify();
     }
 
-    public synchronized void receiveException(Exception e) {
+    @Override
+	public synchronized void receiveException(Exception e) {
       exception = e;
       done = true;
       notify();
@@ -277,7 +284,8 @@ public interface Continuation<R, E extends Exception> {
       e = new ExternalContinuation<R,E>();
     }
     
-    public void run() {
+    @Override
+	public void run() {
       try {
         execute(e);
       } catch (Exception exc) {
@@ -312,7 +320,8 @@ public interface Continuation<R, E extends Exception> {
   public abstract class ExternalRunnable extends ExternalContinuationRunnable {
     protected abstract Object execute() throws Exception;
     
-    protected void execute(Continuation c) throws Exception {
+    @Override
+	protected void execute(Continuation c) throws Exception {
       c.receiveResult(execute());
     }
   }
@@ -359,8 +368,10 @@ public interface Continuation<R, E extends Exception> {
      */
     public Continuation getSubContinuation(final int index) {
       return new Continuation() {
-        public void receiveResult(Object o) { receive(index, o); }
-        public void receiveException(Exception e) { receive(index, e); }
+        @Override
+		public void receiveResult(Object o) { receive(index, o); }
+        @Override
+		public void receiveException(Exception e) { receive(index, e); }
       };
     }
     
@@ -449,7 +460,8 @@ public interface Continuation<R, E extends Exception> {
      *
      * @param result The result
      */
-    public void receiveResult(Object result) {
+    @Override
+	public void receiveResult(Object result) {
       parent.receiveResult(result);
     }
     
@@ -460,7 +472,8 @@ public interface Continuation<R, E extends Exception> {
      *
      * @param result The exception which was caused.
      */
-    public void receiveException(Exception result) {
+    @Override
+	public void receiveException(Exception result) {
       parent.receiveException(result);
     }
     
@@ -469,7 +482,8 @@ public interface Continuation<R, E extends Exception> {
      *
      * @return The name
      */
-    public String toString() {
+    @Override
+	public String toString() {
       return name;
     }
   }

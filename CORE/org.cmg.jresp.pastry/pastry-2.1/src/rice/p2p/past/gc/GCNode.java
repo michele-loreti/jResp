@@ -77,14 +77,17 @@ public class GCNode implements Node {
    * @return The endpoint specific to this applicationk, which can be used
    * for message sending/receiving.
    */
-  public Endpoint registerApplication(Application application, String instance) {
+  @Deprecated
+@Override
+public Endpoint registerApplication(Application application, String instance) {
     
     GCEndpoint gce = new GCEndpoint(node.buildEndpoint(application, instance));
     gce.register();
     return gce;
   }
   
-  public Endpoint buildEndpoint(Application application, String instance) {
+  @Override
+public Endpoint buildEndpoint(Application application, String instance) {
     return new GCEndpoint(node.buildEndpoint(application, instance));
   }
   
@@ -115,7 +118,8 @@ public class GCNode implements Node {
    *
    * @return A handle to the local node
    */
-  public NodeHandle getLocalNodeHandle() {
+  @Override
+public NodeHandle getLocalNodeHandle() {
     return node.getLocalNodeHandle();
   }
   
@@ -124,7 +128,8 @@ public class GCNode implements Node {
    *
    * @return This node's Id
    */
-  public Id getId() {
+  @Override
+public Id getId() {
     return node.getId();
   }
   
@@ -133,7 +138,8 @@ public class GCNode implements Node {
    *
    * @return A factory for creating Ids.
    */
-  public IdFactory getIdFactory() {
+  @Override
+public IdFactory getIdFactory() {
     return new GCIdFactory(node.getIdFactory());
   }
   
@@ -142,18 +148,21 @@ public class GCNode implements Node {
    *
    * @return A string
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "{GCNode " + node + "}";
   }
 
   /* (non-Javadoc)
    * @see rice.p2p.commonapi.Node#getEnvironment()
    */
-  public Environment getEnvironment() {
+  @Override
+public Environment getEnvironment() {
     return node.getEnvironment();
   }
 
-  public String printRouteState() {
+  @Override
+public String printRouteState() {
     return node.printRouteState();
   }
 }

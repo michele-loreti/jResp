@@ -40,11 +40,9 @@ package rice.p2p.scribe.messaging;
 import java.io.IOException;
 import java.util.List;
 
-import rice.*;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
 import rice.p2p.scribe.*;
-import rice.p2p.scribe.rawserialization.ScribeContentDeserializer;
 
 /**
  * @(#) AbstractSubscribeMessage.java
@@ -97,7 +95,8 @@ public abstract class AbstractSubscribeMessage implements RawMessage /*extends S
     return id;
   }
   
-  public int getPriority() {
+  @Override
+public int getPriority() {
     return MEDIUM_HIGH_PRIORITY;
   }
 
@@ -115,7 +114,8 @@ public abstract class AbstractSubscribeMessage implements RawMessage /*extends S
     return topics;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     String s = source + ","+id;
     if (topics.size() <= 3) {
       for (Topic topic : topics) {
@@ -136,7 +136,8 @@ public abstract class AbstractSubscribeMessage implements RawMessage /*extends S
     id = buf.readInt();    
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     source.serialize(buf);
     buf.writeInt(id);
   }  

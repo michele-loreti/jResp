@@ -40,7 +40,6 @@ package rice.p2p.scribe.messaging;
 import java.io.IOException;
 import java.util.*;
 
-import rice.*;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
 import rice.p2p.scribe.*;
@@ -137,7 +136,7 @@ public class AnycastMessage extends ScribeMessage {
       return null;
     }
 
-    return (NodeHandle) toVisit.getFirst();
+    return toVisit.getFirst();
   }
 
   /**
@@ -151,7 +150,7 @@ public class AnycastMessage extends ScribeMessage {
       return null;
     }
     
-    return (NodeHandle) toVisit.removeFirst();
+    return toVisit.removeFirst();
   }
   
   public NodeHandle peekLastToVisit() {
@@ -212,7 +211,8 @@ public class AnycastMessage extends ScribeMessage {
     }
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return "Anycast["+getTopic()+" "+content+"]";
   }
   
@@ -257,11 +257,13 @@ public class AnycastMessage extends ScribeMessage {
   }
   
   /** *************** Raw Serialization ************************************** */
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE; 
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
 //  super.serialize(buf); // note, can't make this a hierarchy, because of the super() must be first line rule in java
     buf.writeByte((byte)1); // version
     serializeHelper(buf);
@@ -280,13 +282,13 @@ public class AnycastMessage extends ScribeMessage {
     buf.writeInt(toVisit.size());
     Iterator<NodeHandle> i = toVisit.iterator();
     while(i.hasNext()) {
-      ((NodeHandle)i.next()).serialize(buf); 
+      i.next().serialize(buf); 
     }
     
     buf.writeInt(visited.size());
     i = visited.iterator();
     while(i.hasNext()) {
-      ((NodeHandle)i.next()).serialize(buf); 
+      i.next().serialize(buf); 
     }
     
     if (content == null) {

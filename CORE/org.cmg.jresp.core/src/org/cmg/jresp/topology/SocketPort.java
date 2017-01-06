@@ -15,7 +15,6 @@ package org.cmg.jresp.topology;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.DatagramPacket;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
@@ -79,7 +78,7 @@ public class SocketPort extends AbstractPort {
 	public SocketPort(String hostName, int tcpPort, int udpPort, String multicastGroup) throws IOException {
 		super();
 		this.tcpPort = tcpPort;
-		this.ssocket = new ServerSocket(tcpPort, 10, Inet4Address.getByName(hostName));
+		this.ssocket = new ServerSocket(tcpPort, 10, InetAddress.getByName(hostName));
 		this.gson = RESPFactory.getGSon();
 		this.udpPort = udpPort;
 		this.group = InetAddress.getByName(multicastGroup);
@@ -121,6 +120,7 @@ public class SocketPort extends AbstractPort {
 		}
 	}
 
+	@Override
 	public SocketPortAddress getAddress() {
 		return new SocketPortAddress(ssocket.getInetAddress(), tcpPort);
 	}

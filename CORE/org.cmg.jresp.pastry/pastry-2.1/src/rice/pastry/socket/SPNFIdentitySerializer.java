@@ -48,7 +48,6 @@ import org.mpisws.p2p.transport.sourceroute.SourceRoute;
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
 import rice.pastry.Id;
-import rice.pastry.NodeHandle;
 import rice.pastry.NodeHandleFactoryListener;
 import rice.pastry.PastryNode;
 
@@ -64,7 +63,8 @@ public class SPNFIdentitySerializer implements
     this.factory = factory;
   }
 
-  public void serialize(OutputBuffer buf,
+  @Override
+public void serialize(OutputBuffer buf,
       TransportLayerNodeHandle<MultiInetSocketAddress> i)
       throws IOException {
     // SocketNodeHandle handle = (SocketNodeHandle)i;
@@ -79,35 +79,40 @@ public class SPNFIdentitySerializer implements
   /**
    * This is different from the normal deserializer b/c we already have the address
    */
-  public TransportLayerNodeHandle<MultiInetSocketAddress> deserialize(
+  @Override
+public TransportLayerNodeHandle<MultiInetSocketAddress> deserialize(
       InputBuffer buf, SourceRoute<MultiInetSocketAddress> i)
       throws IOException {
     long epoch = buf.readLong();
     Id nid = Id.build(buf);
     
     SocketNodeHandle ret = buildSNH(buf, i.getLastHop(), epoch, nid);
-    return (TransportLayerNodeHandle<MultiInetSocketAddress>) factory.coalesce(ret);
+    return factory.coalesce(ret);
   }
   
   protected SocketNodeHandle buildSNH(InputBuffer buf, MultiInetSocketAddress i, long epoch, Id nid) throws IOException {
     return new SocketNodeHandle(i, epoch, nid, pn);
   }
 
-  public MultiInetSocketAddress translateDown(
+  @Override
+public MultiInetSocketAddress translateDown(
       TransportLayerNodeHandle<MultiInetSocketAddress> i) {
     return i.getAddress();
   }
 
-  public MultiInetSocketAddress translateUp(SourceRoute<MultiInetSocketAddress> i) {
+  @Override
+public MultiInetSocketAddress translateUp(SourceRoute<MultiInetSocketAddress> i) {
     return i.getLastHop();
   }
 
   Map<SerializerListener<TransportLayerNodeHandle<MultiInetSocketAddress>>, NodeHandleFactoryListener<SocketNodeHandle>> listeners = 
     new HashMap<SerializerListener<TransportLayerNodeHandle<MultiInetSocketAddress>>, NodeHandleFactoryListener<SocketNodeHandle>>();
-  public void addSerializerListener(final 
+  @Override
+public void addSerializerListener(final 
       SerializerListener<TransportLayerNodeHandle<MultiInetSocketAddress>> listener) {
     NodeHandleFactoryListener<SocketNodeHandle> foo = new NodeHandleFactoryListener<SocketNodeHandle>() {
-      public void nodeHandleFound(SocketNodeHandle nodeHandle) {
+      @Override
+	public void nodeHandleFound(SocketNodeHandle nodeHandle) {
         listener.nodeHandleFound(nodeHandle);
       }      
     };
@@ -115,7 +120,8 @@ public class SPNFIdentitySerializer implements
     factory.addNodeHandleFactoryListener(foo);
   }
 
-  public void removeSerializerListener(final 
+  @Override
+public void removeSerializerListener(final 
       SerializerListener<TransportLayerNodeHandle<MultiInetSocketAddress>> listener) {
     factory.removeNodeHandleFactoryListener(listeners.get(listener));
   }

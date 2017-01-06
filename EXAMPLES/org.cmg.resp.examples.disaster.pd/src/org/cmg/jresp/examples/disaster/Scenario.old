@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2012 Concurrency and Mobility Group.
- * Universitˆ di Firenze
+ * Universitï¿½ di Firenze
  *	
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -21,13 +21,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.cmg.resp.comp.NodeConnection;
-import org.cmg.resp.knowledge.AbstractActuator;
-import org.cmg.resp.knowledge.AbstractSensor;
-import org.cmg.resp.knowledge.ActualTemplateField;
-import org.cmg.resp.knowledge.FormalTemplateField;
-import org.cmg.resp.knowledge.Template;
-import org.cmg.resp.knowledge.Tuple;
+import org.cmg.jresp.comp.NodeConnection;
+import org.cmg.jresp.knowledge.AbstractActuator;
+import org.cmg.jresp.knowledge.AbstractSensor;
+import org.cmg.jresp.knowledge.ActualTemplateField;
+import org.cmg.jresp.knowledge.FormalTemplateField;
+import org.cmg.jresp.knowledge.Template;
+import org.cmg.jresp.knowledge.Tuple;
 
 
 /**
@@ -216,15 +216,15 @@ public class Scenario extends Observable {
 				int multisampleLevel = 8; // In quanti punti viene divisa la traiettoria
 				Point2D.Double newpos = new Point2D.Double(x,y); // Nuova posizione del robot
 				Point2D.Double[] multisampling = multisample (position, newpos, multisampleLevel); // Vettore multisampling
-				for (int j=1; j<multisampleLevel; j++){ // Parte da 1, perchè 0 = pos attuale
+				for (int j=1; j<multisampleLevel; j++){ // Parte da 1, perchï¿½ 0 = pos attuale
 					collisionNum = shapesContains(multisampling[j]);
-					if (collisionNum>=0) { // Se è >=0 ci sono state collisioni
+					if (collisionNum>=0) { // Se ï¿½ >=0 ci sono state collisioni
 						robots[i].collision=true;
 						robots[i].setPosition(multisampling[j-1]); // Ultima posizione senza collisioni
 						break;
 					}
 				}
-				if (collisionNum==-1) { // Se è -1 non ci sono state collisioni
+				if (collisionNum==-1) { // Se ï¿½ -1 non ci sono state collisioni
 					robots[i].collision=false;
 					robots[i].setPosition(newpos);
 				}
@@ -245,7 +245,7 @@ public class Scenario extends Observable {
 		return multi;
 	}
 	
-	// Controlla se un punto è dentro un ostacolo
+	// Controlla se un punto ï¿½ dentro un ostacolo
 	public int shapesContains (Point2D.Double p){
 		int result=-1;
 		for( int i=0 ; i<numberOfObstacles ; i++ ) { // per tutte le shape
@@ -397,7 +397,7 @@ public class Scenario extends Observable {
 
 	public class Robot {
 		
-		private boolean collision; // true se c'è stata una collisione
+		private boolean collision; // true se c'ï¿½ stata una collisione
 		
 		private static final double VICTIM_SENSOR_RANGE = 15;
 
@@ -443,7 +443,7 @@ public class Scenario extends Observable {
 			updateDistanceSensor();
 		}
 		
-		public boolean OutOfNest(){ // se un robot NON è dentro la starting zone
+		public boolean OutOfNest(){ // se un robot NON ï¿½ dentro la starting zone
 			if (this.position != null) {
 			return !(122<position.x && position.x<427 && 400<=position.y && position.y<=700);
 			}

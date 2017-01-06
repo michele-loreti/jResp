@@ -45,7 +45,6 @@ import rice.p2p.commonapi.rawserialization.MessageDeserializer;
 import rice.pastry.*;
 import rice.pastry.messaging.*;
 import rice.pastry.standard.*;
-import rice.pastry.transport.PMessageReceipt;
 import rice.pastry.routing.*;
 import rice.pastry.leafset.*;
 
@@ -84,13 +83,15 @@ public abstract class PastryAppl /*implements Observer*/
 //  LinkedList undeliveredMessages = new LinkedList();
   
   private class LeafSetObserver implements NodeSetListener {
-    public void nodeSetUpdate(NodeSetEventSource nodeSetEventSource, NodeHandle handle, boolean added) {
+    @Override
+	public void nodeSetUpdate(NodeSetEventSource nodeSetEventSource, NodeHandle handle, boolean added) {
       leafSetChange(handle, added);
     }
   }
 
   private class RouteSetObserver implements NodeSetListener {
-    public void nodeSetUpdate(NodeSetEventSource nodeSetEventSource, NodeHandle handle, boolean added) {
+    @Override
+	public void nodeSetUpdate(NodeSetEventSource nodeSetEventSource, NodeHandle handle, boolean added) {
       routeSetChange(handle, added);
     }
   }
@@ -355,20 +356,24 @@ public abstract class PastryAppl /*implements Observer*/
     
     final MessageReceipt ret = new MessageReceipt(){
       
-      public boolean cancel() {
+      @Override
+	public boolean cancel() {
         if (logger.level <= Logger.FINE) logger.log("routeMsg("+key+","+msg+","+deliverAckToMe+").cancel()");
         return rm.cancel();
       }
     
-      public Message getMessage() {
+      @Override
+	public Message getMessage() {
         return msg;
       }
     
-      public Id getId() {
+      @Override
+	public Id getId() {
         return key;
       }
     
-      public NodeHandle getHint() {
+      @Override
+	public NodeHandle getHint() {
         return null;
       }    
     };
@@ -376,11 +381,13 @@ public abstract class PastryAppl /*implements Observer*/
     // NOTE: Installing this anyway if the LogLevel is high enough is kind of wild, but really useful for debugging
     if ((deliverAckToMe != null) || (logger.level <= Logger.FINE)) {
       rm.setRouteMessageNotification(new RouteMessageNotification() {
-        public void sendSuccess(rice.pastry.routing.RouteMessage message, rice.pastry.NodeHandle nextHop) {
+        @Override
+		public void sendSuccess(rice.pastry.routing.RouteMessage message, rice.pastry.NodeHandle nextHop) {
           if (logger.level <= Logger.FINE) logger.log("routeMsg("+key+","+msg+","+deliverAckToMe+").sendSuccess():"+nextHop);
           if (deliverAckToMe != null) deliverAckToMe.sent(ret);
         }    
-        public void sendFailed(rice.pastry.routing.RouteMessage message, Exception e) {
+        @Override
+		public void sendFailed(rice.pastry.routing.RouteMessage message, Exception e) {
           if (logger.level <= Logger.FINE) logger.log("routeMsg("+key+","+msg+","+deliverAckToMe+").sendFailed("+e+")");
           if (deliverAckToMe != null) deliverAckToMe.sendFailed(ret, e);
         }

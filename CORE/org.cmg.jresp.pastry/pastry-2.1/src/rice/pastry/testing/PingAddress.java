@@ -37,11 +37,6 @@ advised of the possibility of such damage.
 
 package rice.pastry.testing;
 
-import rice.pastry.*;
-import rice.pastry.messaging.*;
-
-import java.util.*;
-
 /**
  * PingAddress
  *

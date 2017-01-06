@@ -123,12 +123,12 @@ public class ScribeTutorial {
 
 		// for the first app subscribe then start the publishtask
 		Iterator<MyScribeClient> i = apps.iterator();
-		MyScribeClient app = (MyScribeClient) i.next();
+		MyScribeClient app = i.next();
 		app.subscribe();
 		app.startPublishTask();
 		// for all the rest just subscribe
 		while (i.hasNext()) {
-			app = (MyScribeClient) i.next();
+			app = i.next();
 			app.subscribe();
 		}
 
@@ -149,10 +149,10 @@ public class ScribeTutorial {
 		Hashtable<NodeHandle, MyScribeClient> appTable = new Hashtable<NodeHandle, MyScribeClient>();
 		Iterator<MyScribeClient> i = apps.iterator();
 		while (i.hasNext()) {
-			MyScribeClient app = (MyScribeClient) i.next();
+			MyScribeClient app = i.next();
 			appTable.put(app.endpoint.getLocalNodeHandle(), app);
 		}
-		NodeHandle seed = ((MyScribeClient) apps.get(0)).endpoint.getLocalNodeHandle();
+		NodeHandle seed = apps.get(0).endpoint.getLocalNodeHandle();
 
 		// get the root
 		NodeHandle root = getRoot(seed, appTable);
@@ -165,7 +165,7 @@ public class ScribeTutorial {
 	 * Recursively crawl up the tree to find the root.
 	 */
 	public static NodeHandle getRoot(NodeHandle seed, Hashtable<NodeHandle, MyScribeClient> appTable) {
-		MyScribeClient app = (MyScribeClient) appTable.get(seed);
+		MyScribeClient app = appTable.get(seed);
 		if (app.isRoot())
 			return seed;
 		NodeHandle nextSeed = app.getParent();
@@ -186,7 +186,7 @@ public class ScribeTutorial {
 		System.out.println(s);
 
 		// recursively print all children
-		MyScribeClient app = (MyScribeClient) appTable.get(curNode);
+		MyScribeClient app = appTable.get(curNode);
 		NodeHandle[] children = app.getChildren();
 		for (int curChild = 0; curChild < children.length; curChild++) {
 			recursivelyPrintChildren(children[curChild], recursionDepth + 1, appTable);

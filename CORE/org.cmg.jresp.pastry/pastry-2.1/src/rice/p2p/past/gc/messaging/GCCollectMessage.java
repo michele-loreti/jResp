@@ -78,7 +78,8 @@ public class GCCollectMessage extends PastMessage {
    *
    * @param c The continuation to return the reponse to.
    */
-  public void returnResponse(Continuation c, Environment env, String instance) {
+  @Override
+public void returnResponse(Continuation c, Environment env, String instance) {
     c.receiveException(new PastException("Should not be called!"));
   }
   
@@ -87,15 +88,18 @@ public class GCCollectMessage extends PastMessage {
    *
    * @return A string representing this message
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "[GCCollectMessage]";
   }
   
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE; 
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     throw new RuntimeException("serialize() not supported in MessageLostMessage"); 
   }
 }

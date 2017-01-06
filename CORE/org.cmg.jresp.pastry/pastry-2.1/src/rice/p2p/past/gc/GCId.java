@@ -102,7 +102,8 @@ public class GCId implements Id {
    * @param cw the clockwise id
    * @return true if this is between ccw (inclusive) and cw (exclusive), false otherwise
    */
-  public boolean isBetween(Id ccw, Id cw) {
+  @Override
+public boolean isBetween(Id ccw, Id cw) {
     return id.isBetween(((GCId) ccw).getId(), ((GCId) cw).getId());
   }
   
@@ -114,7 +115,8 @@ public class GCId implements Id {
    * @param nid The id to compare to
    * @return true if clockwise, false otherwise.
    */
-  public boolean clockwise(Id nid) {
+  @Override
+public boolean clockwise(Id nid) {
     return id.clockwise(((GCId) nid).getId());
   }
   
@@ -124,7 +126,8 @@ public class GCId implements Id {
    * @param offset the distance to add
    * @return the new Id
    */
-  public Id addToId(Distance offset) {
+  @Override
+public Id addToId(Distance offset) {
     return new GCId(id.addToId(offset), expiration);
   }
   
@@ -134,7 +137,8 @@ public class GCId implements Id {
    * @param nid the other node id.
    * @return the distance between this and nid.
    */
-  public Distance distanceFromId(Id nid) {
+  @Override
+public Distance distanceFromId(Id nid) {
     return id.distanceFromId(((GCId) nid).getId());
   }
   
@@ -144,7 +148,8 @@ public class GCId implements Id {
    * @param nid the other node id.
    * @return the distance between this and nid.
    */
-  public Distance longDistanceFromId(Id nid) {
+  @Override
+public Distance longDistanceFromId(Id nid) {
     return id.longDistanceFromId(((GCId) nid).getId());
   }
   
@@ -153,7 +158,8 @@ public class GCId implements Id {
    *
    * @return A byte[] representing this Id
    */
-  public byte[] toByteArray() {
+  @Override
+public byte[] toByteArray() {
     byte[] result = new byte[getByteArrayLength()];
     
     toByteArray(result, 0);
@@ -166,7 +172,8 @@ public class GCId implements Id {
    *
    * @return A byte[] representing this Id
    */
-  public void toByteArray(byte[] array, int offset) {
+  @Override
+public void toByteArray(byte[] array, int offset) {
     id.toByteArray(array, offset);
     MathUtils.longToByteArray(expiration, array, offset+id.getByteArrayLength());
   }
@@ -176,7 +183,8 @@ public class GCId implements Id {
    *
    * @return The length of the byte[] representing this Id
    */
-  public int getByteArrayLength() {
+  @Override
+public int getByteArrayLength() {
     return id.getByteArrayLength() + 8;
   }
   
@@ -186,7 +194,8 @@ public class GCId implements Id {
    * @param o The object to compare to
    * @return Whether or not this is object is equal
    */
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     if (! (o instanceof GCId))
       return false;
     
@@ -198,7 +207,8 @@ public class GCId implements Id {
    *
    * @return hashCode
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return id.hashCode();
   }
   
@@ -207,7 +217,8 @@ public class GCId implements Id {
    *
    * @return A string with all of this Id
    */
-  public String toString() {
+  @Override
+public String toString() {
     return id + "-" + expiration;
   }
   
@@ -216,7 +227,8 @@ public class GCId implements Id {
    *
    * @return A string with all of this Id
    */
-  public String toStringFull() {
+  @Override
+public String toStringFull() {
     return id.toStringFull() + "-" + expiration;
   }
   
@@ -225,16 +237,19 @@ public class GCId implements Id {
    *
    * @return The comparison
    */
-  public int compareTo(Id o) {
+  @Override
+public int compareTo(Id o) {
     return id.compareTo(((GCId) o).id);
   }
 
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     // to be peeked
     buf.writeShort(getType());
     buf.writeLong(expiration);

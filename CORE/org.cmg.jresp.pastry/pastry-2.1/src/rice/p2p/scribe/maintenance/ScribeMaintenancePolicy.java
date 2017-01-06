@@ -38,17 +38,13 @@ advised of the possibility of such damage.
 package rice.p2p.scribe.maintenance;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
-import rice.p2p.commonapi.Endpoint;
 import rice.p2p.commonapi.NodeHandle;
-import rice.p2p.scribe.Scribe;
-import rice.p2p.scribe.ScribeContent;
 import rice.p2p.scribe.Topic;
 import rice.p2p.scribe.messaging.SubscribeMessage;
 import rice.p2p.scribe.rawserialization.RawScribeContent;
@@ -124,7 +120,8 @@ public interface ScribeMaintenancePolicy {
       logger = environment.getLogManager().getLogger(DefaultScribeMaintenancePolicy.class, null);
     }
 
-    public void doMaintenance(MaintainableScribe scribe) {
+    @Override
+	public void doMaintenance(MaintainableScribe scribe) {
       HashMap<NodeHandle, List<Topic>> manifest = new HashMap<NodeHandle, List<Topic>>();
       
       // for each topic, make sure our parent is still alive      
@@ -171,18 +168,21 @@ public interface ScribeMaintenancePolicy {
       }      
     }    
     
-    public void noLongerRoot(MaintainableScribe scribe, List<Topic> topics) {
+    @Override
+	public void noLongerRoot(MaintainableScribe scribe, List<Topic> topics) {
       scribe.subscribe(topics,null,implicitSubscribe(Collections.unmodifiableList(topics)),null);
     }
 
-    public void nodeFaulty(MaintainableScribe scribe, NodeHandle handle,
+    @Override
+	public void nodeFaulty(MaintainableScribe scribe, NodeHandle handle,
         List<Topic> nodeWasParent, List<Topic> nodeWasChild) {      
 //      if (wasParentOfTopics.size() > 1) logger.log(o+" declared dead "+wasParentOfTopics.size());
       scribe.subscribe(nodeWasParent,null,implicitSubscribe(Collections.unmodifiableList(nodeWasParent)),null);
 
     }
 
-    public void subscribeFailed(MaintainableScribe scribe, List<Topic> failedTopics) {
+    @Override
+	public void subscribeFailed(MaintainableScribe scribe, List<Topic> failedTopics) {
 //      logger.log("subscribeFailed("+failedTopics.iterator().next()+")");          
       scribe.subscribe(failedTopics, null, implicitSubscribe(Collections.unmodifiableList(failedTopics)), null);
     }
@@ -195,7 +195,8 @@ public interface ScribeMaintenancePolicy {
      * @param topics the topics we are implicitly subscribing to
      * @return the ScribeContent to put into the SubscribeMessage (null is ok)
      */
-    public RawScribeContent implicitSubscribe(List<Topic> topics) {
+    @Override
+	public RawScribeContent implicitSubscribe(List<Topic> topics) {
       return null;
     }
   }

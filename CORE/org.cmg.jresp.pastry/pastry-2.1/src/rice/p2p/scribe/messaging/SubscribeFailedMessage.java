@@ -39,15 +39,12 @@ package rice.p2p.scribe.messaging;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import rice.*;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
 import rice.p2p.scribe.*;
-import rice.p2p.scribe.rawserialization.ScribeContentDeserializer;
 
 /**
  * @(#) SubscribeFailedMessage.java
@@ -73,11 +70,13 @@ public class SubscribeFailedMessage extends AbstractSubscribeMessage {
   }
 
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE; 
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)1); // version
     
     super.serialize(buf);

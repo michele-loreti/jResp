@@ -37,7 +37,6 @@ advised of the possibility of such damage.
 package rice.pastry.socket;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +49,6 @@ import rice.environment.logging.Logger;
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
 import rice.pastry.Id;
-import rice.pastry.NodeHandle;
 import rice.pastry.PastryNode;
 import rice.pastry.dist.DistNodeHandle;
 import rice.pastry.messaging.Message;
@@ -69,7 +67,8 @@ public class SocketNodeHandle extends DistNodeHandle<MultiInetSocketAddress> {
   }
 
 
-  public long getEpoch() {
+  @Override
+public long getEpoch() {
     return epoch;
   }
 
@@ -89,7 +88,8 @@ public class SocketNodeHandle extends DistNodeHandle<MultiInetSocketAddress> {
    *
    * @return true if the node is alive, false otherwise.
    */
-  public int getLiveness() {
+  @Override
+public int getLiveness() {
     if (isLocal()) {
       return LIVENESS_ALIVE;
     } else {
@@ -98,7 +98,7 @@ public class SocketNodeHandle extends DistNodeHandle<MultiInetSocketAddress> {
 //      if (localEaddr.addressEquals(eaddress)) {
 //        return LIVENESS_ALIVE;        
 //      }
-      return ((PastryNode)localnode).getLivenessProvider().getLiveness(this, null);
+      return localnode.getLivenessProvider().getLiveness(this, null);
     }
   }
   
@@ -121,11 +121,13 @@ public class SocketNodeHandle extends DistNodeHandle<MultiInetSocketAddress> {
 //    return eaddress.getAddress(addressList);
 //  }
   
-  public MultiInetSocketAddress getAddress() {
+  @Override
+public MultiInetSocketAddress getAddress() {
     return eaddress;
   }
     
-  public InetSocketAddress getInetSocketAddress() {
+  @Override
+public InetSocketAddress getInetSocketAddress() {
     return eaddress.getAddress(0);
   }
     
@@ -137,9 +139,10 @@ public class SocketNodeHandle extends DistNodeHandle<MultiInetSocketAddress> {
    *
    * @return true if node is currently alive.
    */
-  public boolean checkLiveness() {
+  @Override
+public boolean checkLiveness() {
     if (logger.level <= Logger.FINE) logger.log(this+".checkLiveness()");
-    ((PastryNode)localnode).getLivenessProvider().checkLiveness(this, null);
+    localnode.getLivenessProvider().checkLiveness(this, null);
 //    SocketPastryNode spn = (SocketPastryNode) getLocalNode();
 //    
 //    if (spn != null)
@@ -165,7 +168,9 @@ public class SocketNodeHandle extends DistNodeHandle<MultiInetSocketAddress> {
    * @deprecated use PastryNode.send(msg, nh)
    * @param msg Message to be delivered, may or may not be routeMessage.
    */
-  public void receiveMessage(Message msg) {
+  @Deprecated
+@Override
+public void receiveMessage(Message msg) {
     assertLocalNode();
     Map<String, Object> options = new HashMap<String, Object>(1);
     options.put(PriorityTransportLayer.OPTION_PRIORITY, msg.getPriority());
@@ -192,7 +197,8 @@ public class SocketNodeHandle extends DistNodeHandle<MultiInetSocketAddress> {
    *
    * @return A String representation of the node handle.
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "[SNH: " + nodeId + "/" + eaddress + "]";
 //    if (getLocalNode() == null) {
 //      return "[SNH: " + nodeId + "/" + eaddress + "]";
@@ -212,7 +218,8 @@ public class SocketNodeHandle extends DistNodeHandle<MultiInetSocketAddress> {
    * @param obj the other nodehandle .
    * @return true if they are equal, false otherwise.
    */
-  public boolean equals(Object obj) {
+  @Override
+public boolean equals(Object obj) {
     if (! (obj instanceof SocketNodeHandle)) 
       return false;
 
@@ -235,7 +242,8 @@ public class SocketNodeHandle extends DistNodeHandle<MultiInetSocketAddress> {
    *
    * @return a hash code.
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     int hash = ((int)epoch) ^ getNodeId().hashCode() ^ eaddress.hashCode();
 //    System.out.println(this+" hash:"+hash);
     return hash;
@@ -250,8 +258,10 @@ public class SocketNodeHandle extends DistNodeHandle<MultiInetSocketAddress> {
    * @deprecated use PastryNode.proximity(nh)
    * @return the proximity metric value
    */
-  public int proximity() {
-    return ((PastryNode)localnode).getProxProvider().proximity(this, null);
+  @Deprecated
+@Override
+public int proximity() {
+    return localnode.getProxProvider().proximity(this, null);
   }
 
   /**
@@ -261,9 +271,10 @@ public class SocketNodeHandle extends DistNodeHandle<MultiInetSocketAddress> {
    *
    * @return true if node is currently alive.
    */
-  public boolean ping() {
+  @Override
+public boolean ping() {
     if (localnode.getLocalHandle().equals(this)) return false;
-    ((PastryNode)localnode).getLivenessProvider().checkLiveness(this, null);
+    localnode.getLivenessProvider().checkLiveness(this, null);
 //    final SocketPastryNode spn = (SocketPastryNode) getLocalNode();
 //    
 ////    Runnable runnable = new Runnable() {    
@@ -289,7 +300,8 @@ public class SocketNodeHandle extends DistNodeHandle<MultiInetSocketAddress> {
    * @param o DESCRIBE THE PARAMETER
    * @param obj DESCRIBE THE PARAMETER
    */
-  public void update(Observable o, Object obj) {
+  @Override
+public void update(Observable o, Object obj) {
   }
 
 
@@ -328,7 +340,8 @@ public class SocketNodeHandle extends DistNodeHandle<MultiInetSocketAddress> {
     return new SocketNodeHandle(eaddr, epoch, nid, local);
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     eaddress.serialize(buf);
     buf.writeLong(epoch);
     nodeId.serialize(buf);

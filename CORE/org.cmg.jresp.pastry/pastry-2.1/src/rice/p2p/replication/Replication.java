@@ -37,8 +37,6 @@ advised of the possibility of such damage.
 
 package rice.p2p.replication;
 
-import rice.p2p.commonapi.*;
-
 /**
  * @(#) Replication.java
  *

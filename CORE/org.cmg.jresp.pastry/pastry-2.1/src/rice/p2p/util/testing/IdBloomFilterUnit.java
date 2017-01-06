@@ -38,7 +38,6 @@ package rice.p2p.util.testing;
 
 import rice.environment.Environment;
 import rice.environment.random.RandomSource;
-import rice.environment.random.simple.SimpleRandomSource;
 import rice.p2p.commonapi.*;
 import rice.p2p.multiring.*;
 import rice.p2p.past.gc.*;
@@ -70,7 +69,7 @@ public class IdBloomFilterUnit {
     Iterator<Id> i = set.getIterator();
     
     while (i.hasNext()) {
-      if (! filter.check((Id) i.next()))
+      if (! filter.check(i.next()))
         System.out.println("FAILURE: Element did not exist!");
     }
     System.out.println("Done2: " + System.currentTimeMillis());
@@ -97,7 +96,7 @@ public class IdBloomFilterUnit {
     Iterator<Id> i2 = set2.getIterator();
     
     while (i2.hasNext()) {
-      if (! filter2.check((Id) i2.next()))
+      if (! filter2.check(i2.next()))
         System.out.println("FAILURE: Element did not exist!");
     }
     

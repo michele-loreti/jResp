@@ -43,7 +43,6 @@ import org.mpisws.p2p.transport.util.Serializer;
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
 import rice.p2p.commonapi.rawserialization.RawSerializable;
-import rice.p2p.util.rawserialization.SimpleInputBuffer;
 
 public class EvtInit<Handle extends RawSerializable> extends HistoryEvent {
   Handle handle;
@@ -52,7 +51,8 @@ public class EvtInit<Handle extends RawSerializable> extends HistoryEvent {
     this.handle = handle;
   }
   
-  public short getType() {
+  @Override
+public short getType() {
     return EVT_INIT;
   }
   

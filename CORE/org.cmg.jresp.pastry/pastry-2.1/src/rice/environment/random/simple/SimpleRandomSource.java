@@ -80,7 +80,7 @@ public class SimpleRandomSource implements RandomSource {
       try {
         byte[] foo = InetAddress.getLocalHost().getAddress();
         for (int ctr = 0; ctr < foo.length; ctr++) {
-          int i = (int)foo[ctr];
+          int i = foo[ctr];
           i <<= (ctr*8);
           time ^= i; 
         }
@@ -102,55 +102,63 @@ public class SimpleRandomSource implements RandomSource {
     rnd = new Random(seed);    
   }
   
-  public boolean nextBoolean() {
+  @Override
+public boolean nextBoolean() {
     boolean ret = rnd.nextBoolean();
     if (logger != null) 
       if (logger.level <= Logger.FINER) logger.log("nextBoolean = "+ret);
     return ret;
   }
   
-  public void nextBytes(byte[] bytes) {
+  @Override
+public void nextBytes(byte[] bytes) {
     rnd.nextBytes(bytes);
     if (logger != null) 
       if (logger.level <= Logger.FINER) logger.log("nextBytes["+bytes.length+"] = "+bytes);
   }
   
-  public double nextDouble() {
+  @Override
+public double nextDouble() {
     double ret = rnd.nextDouble();
     if (logger != null) 
       if (logger.level <= Logger.FINER) logger.log("nextDouble = "+ret);
     return ret;
   }
   
-  public float nextFloat() {
+  @Override
+public float nextFloat() {
     float ret = rnd.nextFloat();
     if (logger != null) 
       if (logger.level <= Logger.FINER) logger.log("nextFloat = "+ret);
     return ret;
   }
   
-  public double nextGaussian() {
+  @Override
+public double nextGaussian() {
     double ret = rnd.nextGaussian();
     if (logger != null) 
       if (logger.level <= Logger.FINER) logger.log("nextGaussian = "+ret);
     return ret;
   }
   
-  public int nextInt() {
+  @Override
+public int nextInt() {
     int ret = rnd.nextInt();
     if (logger != null) 
       if (logger.level <= Logger.FINER) logger.log("nextInt = "+ret);
     return ret;
   }
   
-  public int nextInt(int max) {
+  @Override
+public int nextInt(int max) {
     int ret = rnd.nextInt(max);
     if (logger != null) 
       if (logger.level <= Logger.FINER) logger.log("nextInt2 = "+ret);
     return ret;
   }
   
-  public long nextLong() {
+  @Override
+public long nextLong() {
     long ret = rnd.nextLong();
     if (logger != null) 
       if (logger.level <= Logger.FINER) logger.log("nextLong = "+ret);

@@ -76,7 +76,8 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
     final AttachableCancellable ret = new AttachableCancellable();
     
     Runnable r = new Runnable() {
-      public void run() {
+      @Override
+	public void run() {
         if (ret.isCancelled()) return;
         PastryNode pn = new PastryNode(Id.build(), spnf.getEnvironment());
     
@@ -100,7 +101,8 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
   /**
    * Call this to find some nodes outside your firewall.
    */
-  public Cancellable findExternalNodes(final InetSocketAddress local,
+  @Override
+public Cancellable findExternalNodes(final InetSocketAddress local,
       final Collection<InetSocketAddress> probeAddresses,
       final Continuation<Collection<InetSocketAddress>, IOException> deliverResultToMe) {
     if (logger.level <= Logger.FINER) logger.log("findExternalAddress("+local+","+probeAddresses+","+deliverResultToMe+")");
@@ -113,12 +115,14 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
     // getInetSocketAddressLookup verifyies that we are on the selector
     ret.attach(getInetSocketAddressLookup(local, new Continuation<InetSocketAddressLookup, IOException>() {
     
-      public void receiveResult(InetSocketAddressLookup lookup) {
+      @Override
+	public void receiveResult(InetSocketAddressLookup lookup) {
         // we're on the selector now, and we have our TL
         findExternalNodesHelper(lookup, ret, local, probeList, deliverResultToMe);
       }
       
-      public void receiveException(IOException exception) {
+      @Override
+	public void receiveException(IOException exception) {
         // we couldn't even get a transport layer, DOA        
         if (logger.level <= Logger.INFO) logger.log("findExternalAddress("+local+","+probeAddresses+","+deliverResultToMe+").receiveException("+exception+")");
         deliverResultToMe.receiveException(exception);
@@ -146,7 +150,8 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
     InetSocketAddress target = probeList.remove(spnf.getEnvironment().getRandomSource().nextInt(probeList.size())); 
     
     ret.attach(lookup.getExternalNodes(target, new Continuation<Collection<InetSocketAddress>, IOException>() {          
-      public void receiveResult(final Collection<InetSocketAddress> result) {              
+      @Override
+	public void receiveResult(final Collection<InetSocketAddress> result) {              
         if (logger.level <= Logger.INFO) logger.log("findExternalNodesHelper("+lookup+","+local+","+probeList+").success:"+result);
 
         // success!
@@ -155,7 +160,8 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
         
         // lookup.destroy() uses an invoke
         environment.getSelectorManager().invoke(new Runnable() {        
-          public void run() {
+          @Override
+		public void run() {
             //if (logger.level <= Logger.INFO) 
 //              logger.log("findExternalNodesHelper("+lookup+","+local+","+probeList+").success:"+result);
             deliverResultToMe.receiveResult(result);
@@ -163,7 +169,8 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
         });
       }
     
-      public void receiveException(final IOException exception) {
+      @Override
+	public void receiveException(final IOException exception) {
         if (logger.level <= Logger.INFO) logger.log("findExternalNodesHelper("+lookup+","+local+","+probeList+").receiveException("+exception+")");
         
         // see if we can try anyone else
@@ -172,7 +179,8 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
 
           // lookup.destroy() uses an invoke
           environment.getSelectorManager().invoke(new Runnable() {        
-            public void run() {
+            @Override
+			public void run() {
               deliverResultToMe.receiveException(exception);
             }        
           });
@@ -188,7 +196,8 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
   /**
    * Call this to determine your external address.
    */
-  public Cancellable findExternalAddress(final InetSocketAddress local,
+  @Override
+public Cancellable findExternalAddress(final InetSocketAddress local,
       final Collection<InetSocketAddress> probeAddresses,
       final Continuation<InetAddress, IOException> deliverResultToMe) {
     if (logger.level <= Logger.FINER) logger.log("findExternalAddress("+local+","+probeAddresses+","+deliverResultToMe+")");
@@ -201,12 +210,14 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
     // getInetSocketAddressLookup verifyies that we are on the selector
     ret.attach(getInetSocketAddressLookup(local, new Continuation<InetSocketAddressLookup, IOException>() {
     
-      public void receiveResult(InetSocketAddressLookup lookup) {
+      @Override
+	public void receiveResult(InetSocketAddressLookup lookup) {
         // we're on the selector now, and we have our TL
         findExternalAddressHelper(lookup, ret, local, probeList, deliverResultToMe);
       }
       
-      public void receiveException(IOException exception) {
+      @Override
+	public void receiveException(IOException exception) {
         // we couldn't even get a transport layer, DOA        
         if (logger.level <= Logger.INFO) logger.log("findExternalAddress("+local+","+probeAddresses+","+deliverResultToMe+").receiveException("+exception+")");
         deliverResultToMe.receiveException(exception);
@@ -234,7 +245,8 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
     InetSocketAddress target = probeList.remove(spnf.getEnvironment().getRandomSource().nextInt(probeList.size())); 
     
     ret.attach(lookup.getMyInetAddress(target, new Continuation<InetSocketAddress, IOException>() {          
-      public void receiveResult(final InetSocketAddress result) {              
+      @Override
+	public void receiveResult(final InetSocketAddress result) {              
         if (logger.level <= Logger.INFO) logger.log("findExternalAddressHelper("+lookup+","+local+","+probeList+").success:"+result);
 
         // success!
@@ -243,13 +255,15 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
         
         // lookup.destroy() uses an invoke
         environment.getSelectorManager().invoke(new Runnable() {        
-          public void run() {
+          @Override
+		public void run() {
             deliverResultToMe.receiveResult(result.getAddress());
           }        
         });
       }
     
-      public void receiveException(final IOException exception) {
+      @Override
+	public void receiveException(final IOException exception) {
         if (logger.level <= Logger.INFO) logger.log("findExternalAddressHelper("+lookup+","+local+","+probeList+").receiveException("+exception+")");
         
         // see if we can try anyone else
@@ -258,7 +272,8 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
 
           // lookup.destroy() uses an invoke
           environment.getSelectorManager().invoke(new Runnable() {        
-            public void run() {
+            @Override
+			public void run() {
               deliverResultToMe.receiveException(exception);
             }        
           });
@@ -275,7 +290,8 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
   /**
    * Call this to determine if your connectivity is good.
    */
-  public Cancellable verifyConnectivity(final MultiInetSocketAddress local,
+  @Override
+public Cancellable verifyConnectivity(final MultiInetSocketAddress local,
       final Collection<InetSocketAddress> probeAddresses,
       final ConnectivityResult deliverResultToMe) {
     final ArrayList<InetSocketAddress> probeList = new ArrayList<InetSocketAddress>(probeAddresses);
@@ -299,11 +315,13 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
     // getInetSocketAddressLookup verifies that we are on the selector
     ret.attach(getInetSocketAddressLookup(local.getInnermostAddress(), new Continuation<InetSocketAddressLookup, IOException>() {
     
-      public void receiveResult(final InetSocketAddressLookup lookup) {
+      @Override
+	public void receiveResult(final InetSocketAddressLookup lookup) {
         // we're on the selector now, and we have our TL
         ret.attach(new Cancellable() {
         
-          public boolean cancel() {
+          @Override
+		public boolean cancel() {
             lookup.destroy();            
             return true;
           }
@@ -315,7 +333,8 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
           boolean udpSuccess = false;
           boolean tcpSuccess = false;
           
-          public void udpSuccess(final InetSocketAddress from, final Map<String, Object> options) {
+          @Override
+		public void udpSuccess(final InetSocketAddress from, final Map<String, Object> options) {
             udpSuccess = true;
             if (tcpSuccess) {
               ret.cancel();
@@ -325,13 +344,15 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
             
             // lookup.destroy() uses an invoke
             environment.getSelectorManager().invoke(new Runnable() {        
-              public void run() {
+              @Override
+			public void run() {
                 deliverResultToMe.udpSuccess(from, options);
               }        
             });
           }
         
-          public void tcpSuccess(final InetSocketAddress from, final Map<String, Object> options) {
+          @Override
+		public void tcpSuccess(final InetSocketAddress from, final Map<String, Object> options) {
             tcpSuccess = true;
             if (udpSuccess) {
               ret.cancel();
@@ -341,14 +362,16 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
             
             // lookup.destroy() uses an invoke
             environment.getSelectorManager().invoke(new Runnable() {        
-              public void run() {
+              @Override
+			public void run() {
                 deliverResultToMe.tcpSuccess(from, options);
               }        
             });
 
           }
                 
-          public void receiveException(final Exception exception) {
+          @Override
+		public void receiveException(final Exception exception) {
             // see if we can try anyone else
             if (probeList.isEmpty()) {
               lookup.destroy();
@@ -356,7 +379,8 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
               
               // lookup.destroy() uses an invoke
               environment.getSelectorManager().invoke(new Runnable() {        
-                public void run() {
+                @Override
+				public void run() {
                   deliverResultToMe.receiveException(exception);
                 }        
               });
@@ -370,7 +394,8 @@ public class ConnectivityVerifierImpl implements ConnectivityVerifier {
         });
       }
       
-      public void receiveException(IOException exception) {
+      @Override
+	public void receiveException(IOException exception) {
         // we couldn't even get a transport layer, DOA        
         if (logger.level <= Logger.INFO) logger.log("verifyConnectivity("+local+","+probeAddresses+"). couldn't get tl "+exception);
         deliverResultToMe.receiveException(exception);

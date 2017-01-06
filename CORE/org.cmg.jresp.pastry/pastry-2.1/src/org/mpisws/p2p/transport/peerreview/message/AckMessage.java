@@ -37,10 +37,6 @@ advised of the possibility of such damage.
 package org.mpisws.p2p.transport.peerreview.message;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Map;
-
-import org.mpisws.p2p.transport.peerreview.PeerReviewConstants;
 import org.mpisws.p2p.transport.peerreview.infostore.Evidence;
 import org.mpisws.p2p.transport.util.Serializer;
 
@@ -78,15 +74,18 @@ public class AckMessage<Identifier extends RawSerializable> implements PeerRevie
     this.signature = signature;
   }
   
-  public short getType() {
+  @Override
+public short getType() {
     return MSG_ACK;
   }
   
-  public short getEvidenceType() {
+  @Override
+public short getEvidenceType() {
     return RESP_SEND;
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     nodeId.serialize(buf);
     buf.writeLong(sendEntrySeq);
     buf.writeLong(recvEntrySeq);

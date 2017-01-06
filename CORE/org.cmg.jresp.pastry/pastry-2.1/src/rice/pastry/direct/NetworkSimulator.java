@@ -36,18 +36,13 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package rice.pastry.direct;
 
-import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.direct.Delivery;
 import org.mpisws.p2p.transport.direct.DirectTransportLayer;
 import org.mpisws.p2p.transport.direct.GenericNetworkSimulator;
 import org.mpisws.p2p.transport.liveness.LivenessProvider;
-import org.mpisws.p2p.transport.proximity.ProximityProvider;
-
 import rice.environment.Environment;
 import rice.p2p.commonapi.CancellableTask;
-import rice.p2p.commonapi.rawserialization.RawMessage;
 import rice.pastry.*;
-import rice.pastry.messaging.*;
 
 /**
  * Interface to an object which is simulating the network.

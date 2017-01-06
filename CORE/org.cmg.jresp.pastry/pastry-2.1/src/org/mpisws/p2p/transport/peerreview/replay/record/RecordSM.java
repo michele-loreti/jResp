@@ -83,7 +83,7 @@ public class RecordSM extends SelectorManager {
       TimerTask next = null;
       synchronized (this) {
         if (timerQueue.size() > 0) {
-          next = (TimerTask) timerQueue.peek();
+          next = timerQueue.peek();
           if (next.scheduledExecutionTime() <= now) {
             timerQueue.poll(); // remove the event
             simTime.setTime(next.scheduledExecutionTime()); // set the time

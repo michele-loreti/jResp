@@ -62,7 +62,8 @@ public class AuthRequest<Identifier extends RawSerializable> implements PeerRevi
     this.subject = subject;
   }
   
-  public short getType() {
+  @Override
+public short getType() {
     return MSG_AUTHREQ;
   }
 
@@ -71,7 +72,8 @@ public class AuthRequest<Identifier extends RawSerializable> implements PeerRevi
     subject = serializer.deserialize(buf);
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeLong(timestamp);
     subject.serialize(buf);
   }

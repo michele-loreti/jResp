@@ -38,7 +38,6 @@ package rice.p2p.util.testing;
 
 import rice.environment.Environment;
 import rice.environment.random.RandomSource;
-import rice.environment.random.simple.SimpleRandomSource;
 import rice.p2p.commonapi.*;
 import rice.p2p.multiring.*;
 import rice.p2p.past.gc.*;
@@ -135,7 +134,7 @@ public class IdBloomFilterReplicationTest {
       Iterator<Id> i = remote.getIterator();
       
       while (i.hasNext()) {
-        Id next = (Id) i.next();
+        Id next = i.next();
         
         if (! filter.check(next)) {
           local.addId(next);

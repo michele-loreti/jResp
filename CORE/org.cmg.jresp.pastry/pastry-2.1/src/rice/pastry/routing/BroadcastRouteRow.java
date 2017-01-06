@@ -104,7 +104,8 @@ public class BroadcastRouteRow extends PRawMessage implements Serializable {
     return row;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     String s = "";
 
     s += "BroadcastRouteRow(of " + fromNode.getNodeId() + ")";
@@ -121,11 +122,13 @@ public class BroadcastRouteRow extends PRawMessage implements Serializable {
   }
   
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)0); // version
     fromNode.serialize(buf);
     buf.writeByte((byte) row.length);

@@ -46,7 +46,6 @@ import org.mpisws.p2p.transport.bandwidthmeasure.BandwidthMeasuringTransportLaye
 
 import rice.environment.Environment;
 import rice.p2p.commonapi.Application;
-import rice.p2p.commonapi.Endpoint;
 import rice.p2p.commonapi.Id;
 import rice.p2p.commonapi.Message;
 import rice.p2p.commonapi.NodeHandle;
@@ -64,22 +63,26 @@ public class BandwidthMeasuringTLTest implements Application {
 
   static class MyMsg implements Message {
 
-    public int getPriority() {
+    @Override
+	public int getPriority() {
       return 0;
     }
     
   }
   
-  public void deliver(Id id, Message message) {
+  @Override
+public void deliver(Id id, Message message) {
 //    System.out.println("Deliver. "+message);
   }
 
-  public boolean forward(RouteMessage message) {
+  @Override
+public boolean forward(RouteMessage message) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public void update(NodeHandle handle, boolean joined) {
+  @Override
+public void update(NodeHandle handle, boolean joined) {
     // TODO Auto-generated method stub
     
   }

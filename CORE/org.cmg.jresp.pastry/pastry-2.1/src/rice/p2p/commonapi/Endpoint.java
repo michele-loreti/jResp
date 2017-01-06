@@ -41,9 +41,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import org.mpisws.p2p.transport.MessageCallback;
-import org.mpisws.p2p.transport.MessageRequestHandle;
-
 import rice.*;
 import rice.environment.Environment;
 import rice.p2p.commonapi.appsocket.AppSocketReceiver;
@@ -338,7 +335,8 @@ public interface Endpoint extends NodeHandleReader {
   
   public NodeHandleSet readNodeHandleSet(InputBuffer buf, short type) throws IOException;
   
-  public NodeHandle readNodeHandle(InputBuffer buf) throws IOException;
+  @Override
+public NodeHandle readNodeHandle(InputBuffer buf) throws IOException;
   
   /**
    * Call this after you have set up your Endpoint:

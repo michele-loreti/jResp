@@ -71,27 +71,32 @@ public class ReplaySocket<Identifier extends RawSerializable> implements P2PSock
     this.options = options;
   }
 
-  public Identifier getIdentifier() {
+  @Override
+public Identifier getIdentifier() {
     return identifier;
   }
 
-  public Map<String, Object> getOptions() {
+  @Override
+public Map<String, Object> getOptions() {
     return options;
   }
 
-  public long read(ByteBuffer dst) throws IOException {
+  @Override
+public long read(ByteBuffer dst) throws IOException {
 //    if (closed) throw new ClosedChannelException("Socket already closed.");
     return verifier.readSocket(socketId, dst);
   }
 
-  public long write(ByteBuffer src) throws IOException {
+  @Override
+public long write(ByteBuffer src) throws IOException {
 //    if (closed || outputClosed) throw new ClosedChannelException("Socket already closed.");
     return verifier.writeSocket(socketId, src);
   }
 
   P2PSocketReceiver<Identifier> reader;
   P2PSocketReceiver<Identifier> writer;
-  public void register(boolean wantToRead, boolean wantToWrite, P2PSocketReceiver<Identifier> receiver) {
+  @Override
+public void register(boolean wantToRead, boolean wantToWrite, P2PSocketReceiver<Identifier> receiver) {
     if (closed) {
       receiver.receiveException(this, new ClosedChannelException("Socket "+this+" already closed."));
       return;
@@ -149,7 +154,8 @@ public class ReplaySocket<Identifier extends RawSerializable> implements P2PSock
     }     
   }
 
-  public void close() {
+  @Override
+public void close() {
     closed = true;
     
     verifier.close(socketId);
@@ -165,7 +171,8 @@ public class ReplaySocket<Identifier extends RawSerializable> implements P2PSock
     deliverSocketToMe = null;
   }
   
-  public void shutdownOutput() {
+  @Override
+public void shutdownOutput() {
     outputShutdown = true;
     
     verifier.shutdownOutput(socketId);
@@ -194,7 +201,8 @@ public class ReplaySocket<Identifier extends RawSerializable> implements P2PSock
     }
   }
   
-  public boolean cancel() {
+  @Override
+public boolean cancel() {
     throw new RuntimeException("Not implemented.");
   }
 

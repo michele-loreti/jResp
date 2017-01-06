@@ -43,7 +43,6 @@ import java.io.*;
 
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
 import rice.p2p.util.rawserialization.JavaSerializationException;
-import rice.pastry.messaging.*;
 
 /**
  * Wrapper that converts rice.pastry.messaging.Message to rice.pastry.messageing.PRawMessage
@@ -63,11 +62,13 @@ public class PJavaSerializedMessage extends PRawMessage {
 //    constructionStack = new Exception("Stack Trace: msg:"+msg);
   }
 
-  public short getType() {
+  @Override
+public short getType() {
     return 0;
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     try {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       ObjectOutputStream oos = new ObjectOutputStream(baos);

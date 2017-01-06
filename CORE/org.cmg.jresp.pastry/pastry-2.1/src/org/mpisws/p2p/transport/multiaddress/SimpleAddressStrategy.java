@@ -45,7 +45,8 @@ public class SimpleAddressStrategy implements AddressStrategy {
    *
    * @return The address
    */
-  public InetSocketAddress getAddress(MultiInetSocketAddress local, MultiInetSocketAddress remote) {   
+  @Override
+public InetSocketAddress getAddress(MultiInetSocketAddress local, MultiInetSocketAddress remote) {   
     // start from the outside address, and return the first one not equal to the local address (sans port)
     
     try {

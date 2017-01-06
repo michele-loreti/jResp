@@ -42,7 +42,6 @@ package rice.environment.time.simulated;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import rice.Destructable;
 import rice.environment.logging.*;
 import rice.environment.params.Parameters;
 import rice.environment.time.TimeSource;
@@ -86,7 +85,8 @@ public class DirectTimeSource implements TimeSource {
     
   }
   
-  public long currentTimeMillis() {
+  @Override
+public long currentTimeMillis() {
     return time;
   }
   
@@ -115,7 +115,8 @@ public class DirectTimeSource implements TimeSource {
     boolean done = false;
     boolean interrupted = false;
     
-    public void run() {
+    @Override
+	public void run() {
       synchronized(selectorManager) {
         done = true;
         selectorManager.notifyAll();
@@ -130,7 +131,8 @@ public class DirectTimeSource implements TimeSource {
     
   }
   
-  public void sleep(long delay) throws InterruptedException {
+  @Override
+public void sleep(long delay) throws InterruptedException {
     synchronized(selectorManager) { // to prevent an out of order acquisition
       // we only lock on the selector
       BlockingTimerTask btt = new BlockingTimerTask();
@@ -164,7 +166,8 @@ public class DirectTimeSource implements TimeSource {
   /**
    * TODO: Get the synchronization on this correct
    */
-  public void destroy() {
+  @Override
+public void destroy() {
     for (BlockingTimerTask btt : new ArrayList<BlockingTimerTask>(pendingTimers)) {
       btt.interrupt();
     }

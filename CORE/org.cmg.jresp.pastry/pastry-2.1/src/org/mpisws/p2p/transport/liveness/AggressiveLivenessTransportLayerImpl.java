@@ -41,13 +41,8 @@ import java.nio.ByteBuffer;
 import java.util.Map;
 
 import org.mpisws.p2p.transport.ErrorHandler;
-import org.mpisws.p2p.transport.MessageCallback;
-import org.mpisws.p2p.transport.MessageRequestHandle;
 import org.mpisws.p2p.transport.P2PSocket;
 import org.mpisws.p2p.transport.TransportLayer;
-import org.mpisws.p2p.transport.liveness.LivenessTransportLayerImpl.EntityManager;
-import org.mpisws.p2p.transport.liveness.LivenessTransportLayerImpl.LSocket;
-
 import rice.environment.Environment;
 
 /**
@@ -66,7 +61,8 @@ public class AggressiveLivenessTransportLayerImpl<Identifier> extends
     super(tl, env, errorHandler, checkDeadThrottle);
   }
 
-  public P2PSocket<Identifier> getLSocket(P2PSocket<Identifier> s, EntityManager manager) {
+  @Override
+public P2PSocket<Identifier> getLSocket(P2PSocket<Identifier> s, EntityManager manager) {
     ALSocket sock = new ALSocket(manager, s, manager.identifier.get());
     synchronized(manager.sockets) {
       manager.sockets.add(sock);
@@ -81,7 +77,8 @@ public class AggressiveLivenessTransportLayerImpl<Identifier> extends
       super(manager, socket, hardRef);
     }
     
-    public void receiveSelectResult(P2PSocket<Identifier> socket, boolean canRead, boolean canWrite) throws IOException {
+    @Override
+	public void receiveSelectResult(P2PSocket<Identifier> socket, boolean canRead, boolean canWrite) throws IOException {
       super.receiveSelectResult(socket, canRead, canWrite);
       cancelLivenessCheck(manager, socket.getOptions());
     }

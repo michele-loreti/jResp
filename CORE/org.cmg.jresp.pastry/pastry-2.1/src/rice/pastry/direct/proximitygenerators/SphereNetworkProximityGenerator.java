@@ -50,7 +50,8 @@ public class SphereNetworkProximityGenerator implements ProximityGenerator {
   }
 
 
-  public NodeRecord generateNodeRecord() {
+  @Override
+public NodeRecord generateNodeRecord() {
     return new SphereNodeRecord(); 
   }
   
@@ -89,11 +90,13 @@ public class SphereNetworkProximityGenerator implements ProximityGenerator {
      * @param nr DESCRIBE THE PARAMETER
      * @return DESCRIBE THE RETURN VALUE
      */
-    public float proximity(NodeRecord that) {
-      return (float)Math.round(networkDelay(that)*2.0);
+    @Override
+	public float proximity(NodeRecord that) {
+      return Math.round(networkDelay(that)*2.0);
     }
     
-    public float networkDelay(NodeRecord that) {
+    @Override
+	public float networkDelay(NodeRecord that) {
       SphereNodeRecord nr = (SphereNodeRecord)that;
       double ret = (radius * Math.acos(Math.cos(phi - nr.phi) * Math.cos(theta) * Math.cos(nr.theta) +
         Math.sin(theta) * Math.sin(nr.theta)));
@@ -103,7 +106,8 @@ public class SphereNetworkProximityGenerator implements ProximityGenerator {
       return (float)ret;
     }
 
-    public void markDead() {
+    @Override
+	public void markDead() {
     }
   }
   
@@ -120,7 +124,8 @@ public class SphereNetworkProximityGenerator implements ProximityGenerator {
     new SphereNetworkProximityGenerator(Environment.directEnvironment().getParameters().getInt("pastry_direct_max_diameter")).test();    
   }
   
-  public void setRandom(RandomSource random) {
+  @Override
+public void setRandom(RandomSource random) {
     this.random = random;
   }  
 }

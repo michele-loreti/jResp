@@ -99,7 +99,8 @@ public class MultiringNodeHandle extends NodeHandle implements Observer  {
    *
    * @return The corresponding node's id.
    */
-  public Id getId() {
+  @Override
+public Id getId() {
     return RingId.build(ringId, handle.getId());
   }
   
@@ -108,7 +109,8 @@ public class MultiringNodeHandle extends NodeHandle implements Observer  {
    *
    * @return Whether or not this node is currently alive
    */
-  public boolean isAlive() {
+  @Override
+public boolean isAlive() {
     return handle.isAlive();
   }
   
@@ -117,7 +119,9 @@ public class MultiringNodeHandle extends NodeHandle implements Observer  {
    * @deprecated use Node.proximity(NodeHandle)
    * @return The current proximity value of this node
    */
-  @SuppressWarnings("deprecation")
+  @Deprecated
+@Override
+@SuppressWarnings("deprecation")
   public int proximity() {
     return handle.proximity();
   }
@@ -128,7 +132,8 @@ public class MultiringNodeHandle extends NodeHandle implements Observer  {
    * @param o the updated object
    * @param obj The paramter
    */
-  public void update(Observable o, Object obj) {
+  @Override
+public void update(Observable o, Object obj) {
     setChanged();
     notifyObservers(obj);
   }
@@ -138,7 +143,8 @@ public class MultiringNodeHandle extends NodeHandle implements Observer  {
    *
    * @return A string
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "{MNH " + handle.toString() +"@"+ringId+"}";
   }
   
@@ -148,7 +154,8 @@ public class MultiringNodeHandle extends NodeHandle implements Observer  {
    * @param o The object to compare to
    * @return Whether or not this is object is equal
    */
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     if (! (o instanceof MultiringNodeHandle))
       return false;
     
@@ -160,7 +167,8 @@ public class MultiringNodeHandle extends NodeHandle implements Observer  {
    *
    * @return hashCode
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return (handle.hashCode() + ringId.hashCode());
   }
   
@@ -184,7 +192,8 @@ public class MultiringNodeHandle extends NodeHandle implements Observer  {
    *
    * @return Whether or not the node is currently alive
    */
-  public boolean checkLiveness() {
+  @Override
+public boolean checkLiveness() {
     return handle.checkLiveness();
   }
 
@@ -194,7 +203,8 @@ public class MultiringNodeHandle extends NodeHandle implements Observer  {
     handle.addObserver(this);
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeShort(ringId.getType());
     ringId.serialize(buf);
     handle.serialize(buf);

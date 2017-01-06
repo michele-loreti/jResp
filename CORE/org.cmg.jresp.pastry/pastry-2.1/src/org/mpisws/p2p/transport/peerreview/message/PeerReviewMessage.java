@@ -36,16 +36,9 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package org.mpisws.p2p.transport.peerreview.message;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Map;
-
-import org.mpisws.p2p.transport.peerreview.PeerReview;
 import org.mpisws.p2p.transport.peerreview.PeerReviewConstants;
 
-import rice.p2p.commonapi.rawserialization.OutputBuffer;
 import rice.p2p.commonapi.rawserialization.RawSerializable;
-import rice.p2p.util.rawserialization.SimpleOutputBuffer;
 
 public interface PeerReviewMessage extends PeerReviewConstants, RawSerializable {
 

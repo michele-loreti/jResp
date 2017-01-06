@@ -36,11 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package rice.pastry.join;
 
-import rice.pastry.*;
-import rice.pastry.messaging.*;
-
-import java.io.*;
-
 /**
  * The address of the join receiver at a pastry node.
  * 

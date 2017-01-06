@@ -46,11 +46,13 @@ import rice.p2p.past.gc.rawserialization.RawGCPastContent;
 
 public class RawAggregateFactory implements AggregateFactory {
 
-  public Aggregate buildAggregate(GCPastContent[] components, Id[] pointers) {
+  @Override
+public Aggregate buildAggregate(GCPastContent[] components, Id[] pointers) {
     return new RawAggregate(components, pointers);
   }
 
-  public Aggregate buildAggregate(RawGCPastContent[] components, Id[] pointers) {
+  @Override
+public Aggregate buildAggregate(RawGCPastContent[] components, Id[] pointers) {
     return new RawAggregate(components, pointers);
   }
 }

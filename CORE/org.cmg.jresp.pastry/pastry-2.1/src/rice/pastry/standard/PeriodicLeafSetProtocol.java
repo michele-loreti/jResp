@@ -103,7 +103,8 @@ public class PeriodicLeafSetProtocol extends PastryAppl implements ReadyStrategy
       super(pn); 
     }
     
-    public Message deserialize(InputBuffer buf, short type, int priority, NodeHandle sender) throws IOException {
+    @Override
+	public Message deserialize(InputBuffer buf, short type, int priority, NodeHandle sender) throws IOException {
       switch (type) {
         case RequestLeafSet.TYPE:
           return new RequestLeafSet(sender, buf);
@@ -148,7 +149,7 @@ public class PeriodicLeafSetProtocol extends PastryAppl implements ReadyStrategy
     this.leafSet = ls;
     Iterator<NodeHandle> i = this.leafSet.asList().iterator();
     while(i.hasNext()) {
-      NodeHandle nh = (NodeHandle)i.next(); 
+      NodeHandle nh = i.next(); 
       nh.addObserver(this, 50);
     }
 
@@ -170,7 +171,7 @@ public class PeriodicLeafSetProtocol extends PastryAppl implements ReadyStrategy
 
   private void updateRecBLS(NodeHandle from, long time) {
     if (time == 0) return;
-    Long oldTime = (Long) lastTimeReceivedBLS.get(from);
+    Long oldTime = lastTimeReceivedBLS.get(from);
     if ((oldTime == null) || (oldTime.longValue() < time)) {
       lastTimeReceivedBLS.put(from, new Long(time));      
       long leaseTime = time+LEASE_PERIOD-timeSource.currentTimeMillis();
@@ -193,7 +194,8 @@ public class PeriodicLeafSetProtocol extends PastryAppl implements ReadyStrategy
    * 
    * @param msg the message.
    */
-  public void receiveMessage(Message msg) {
+  @Override
+public void receiveMessage(Message msg) {
     if (msg instanceof BroadcastLeafSet) {
       // receive a leafset from another node
       BroadcastLeafSet bls = (BroadcastLeafSet) msg;
@@ -313,7 +315,8 @@ public class PeriodicLeafSetProtocol extends PastryAppl implements ReadyStrategy
   // Ready Strategy
   boolean hasSetStrategy = false;
 
-  public void start() {
+  @Override
+public void start() {
     if (!hasSetStrategy) {
       if (logger.level <= Logger.INFO) logger.log("PLSP.start(): Setting self as ReadyStrategy");
       localNode.setReadyStrategy(this);
@@ -324,7 +327,8 @@ public class PeriodicLeafSetProtocol extends PastryAppl implements ReadyStrategy
     }
   }
   
-  public void stop() {
+  @Override
+public void stop() {
     if (hasSetStrategy) {
       if (logger.level <= Logger.INFO) logger.log("PLSP.start(): Removing self as ReadyStrategy");
       hasSetStrategy = false; 
@@ -337,7 +341,8 @@ public class PeriodicLeafSetProtocol extends PastryAppl implements ReadyStrategy
    */
   NodeHandle lastLeft;
   NodeHandle lastRight;
-  public void nodeSetUpdate(NodeSetEventSource nodeSetEventSource, NodeHandle handle, boolean added) {
+  @Override
+public void nodeSetUpdate(NodeSetEventSource nodeSetEventSource, NodeHandle handle, boolean added) {
 //    if ((!added) && (
 //      handle == lastLeft ||
 //      handle == lastRight
@@ -376,7 +381,8 @@ public class PeriodicLeafSetProtocol extends PastryAppl implements ReadyStrategy
   }
   
   boolean ready = false;
-  public void setReady(boolean r) {
+  @Override
+public void setReady(boolean r) {
     if (ready != r) {
       synchronized(thePastryNode) {
         ready = r; 
@@ -389,7 +395,8 @@ public class PeriodicLeafSetProtocol extends PastryAppl implements ReadyStrategy
    * 
    *
    */
-  public boolean isReady() {
+  @Override
+public boolean isReady() {
     // check to see if we've heard from the left/right neighbors recently enough
     boolean shouldBeReady = shouldBeReady(); // temp
 //    if (!shouldBeReady) {      
@@ -444,7 +451,7 @@ public class PeriodicLeafSetProtocol extends PastryAppl implements ReadyStrategy
     long leaseOffset = curTime-LEASE_PERIOD;
 
     if (nh != null) {
-      Long time = (Long) lastTimeReceivedBLS.get(nh);
+      Long time = lastTimeReceivedBLS.get(nh);
       if (time == null
           || (time.longValue() < leaseOffset)) {
         // we don't have a lease
@@ -460,7 +467,7 @@ public class PeriodicLeafSetProtocol extends PastryAppl implements ReadyStrategy
    * @return true if we sent it, false if we didn't because of throttled
    */
   private boolean sendBLS(NodeHandle sendTo, boolean checkLiveness) {
-    Long time = (Long) lastTimeSentBLS.get(sendTo);
+    Long time = lastTimeSentBLS.get(sendTo);
     long currentTime = timeSource.currentTimeMillis();
     if (time == null
         || (time.longValue() < (currentTime - BLS_THROTTLE))) {
@@ -511,19 +518,22 @@ public class PeriodicLeafSetProtocol extends PastryAppl implements ReadyStrategy
    * Should not be called becasue we are overriding the receiveMessage()
    * interface anyway.
    */
-  public void messageForAppl(Message msg) {
+  @Override
+public void messageForAppl(Message msg) {
     throw new RuntimeException("Should not be called.");
   }
 
   /**
    * We always want to receive messages.
    */
-  public boolean deliverWhenNotReady() {
+  @Override
+public boolean deliverWhenNotReady() {
     return true;
   }
 
   boolean destroyed = false;
-  public void destroy() {
+  @Override
+public void destroy() {
     if (logger.level <= Logger.INFO)
       logger.log("PLSP: destroy() called");
     destroyed = true;
@@ -557,11 +567,12 @@ public class PeriodicLeafSetProtocol extends PastryAppl implements ReadyStrategy
   /**
    * Only remove the item if you did not give a lease.
    */
-  public void update(final Observable o, final Object arg) {
+  @Override
+public void update(final Observable o, final Object arg) {
     if (destroyed) return;
 //    logger.log("update("+o+","+arg+")");
     if (o instanceof NodeHandle) {      
-      if (arg == NodeHandle.DECLARED_DEAD) {
+      if (arg == rice.p2p.commonapi.NodeHandle.DECLARED_DEAD) {
         removeFromLeafsetIfPossible((NodeHandle)o);
       }
       return;
@@ -581,7 +592,7 @@ public class PeriodicLeafSetProtocol extends PastryAppl implements ReadyStrategy
 
   public void removeFromLeafsetIfPossible(final NodeHandle nh) {
     if (nh.isAlive()) return;
-    Long l_time = (Long)lastTimeRenewedLease.get(nh);
+    Long l_time = lastTimeRenewedLease.get(nh);
     if (l_time == null) {
       // there is no lease on record
       leafSet.remove(nh);

@@ -40,9 +40,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Map;
 
-import rice.p2p.commonapi.Cancellable;
-import rice.p2p.commonapi.appsocket.AppSocket;
-
 /**
  * A socket in the layered transport layer.
  * 

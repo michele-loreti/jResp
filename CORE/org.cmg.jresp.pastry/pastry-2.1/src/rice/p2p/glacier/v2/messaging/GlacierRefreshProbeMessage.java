@@ -38,10 +38,8 @@ package rice.p2p.glacier.v2.messaging;
 
 import java.io.IOException;
 
-import rice.*;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
-import rice.p2p.glacier.*;
 
 public class GlacierRefreshProbeMessage extends GlacierMessage {
   public static final short TYPE = 11;
@@ -58,16 +56,19 @@ public class GlacierRefreshProbeMessage extends GlacierMessage {
     return requestedId;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return "[GlacierRefreshProbe #"+getUID()+" for " + requestedId + "]";
   }
   
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE; 
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)0); // version    
     super.serialize(buf); 
     buf.writeShort(requestedId.getType());

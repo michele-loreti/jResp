@@ -49,15 +49,11 @@ import java.util.Date;
 
 import javax.swing.text.DateFormatter;
 
-import rice.environment.Environment;
 import rice.environment.logging.AbstractLogManager;
-import rice.environment.logging.LogManager;
 import rice.environment.logging.Logger;
-import rice.environment.logging.simple.SimpleLogManager;
 import rice.environment.logging.simple.SimpleLogger;
 import rice.environment.params.Parameters;
 import rice.environment.time.TimeSource;
-import rice.p2p.commonapi.CancellableTask;
 import rice.selector.SelectorManager;
 import rice.selector.TimerTask;
 
@@ -151,13 +147,15 @@ public class RotatingLogManager extends AbstractLogManager {
   }
 
   private class LogRotationTask extends TimerTask {
-    public void run() {
+    @Override
+	public void run() {
       rotate();
     }
   }
 
   private class LogSizeRotationTask extends TimerTask {
-    public void run() {
+    @Override
+	public void run() {
       synchronized (RotatingLogManager.this) {
         if (new File(params.getString("log_rotate_filename")).length() >= params.getLong("log_rotate_max_size"))
           rotate();
@@ -165,7 +163,8 @@ public class RotatingLogManager extends AbstractLogManager {
     }
   }
   
-  public PrintStream getPrintStream() {
+  @Override
+public PrintStream getPrintStream() {
     synchronized (this) {
       if (enabled) {
           return ps;
@@ -175,7 +174,8 @@ public class RotatingLogManager extends AbstractLogManager {
     }
   }
 
-  protected Logger constructLogger(String clazz, int level, boolean useDefault) {
+  @Override
+protected Logger constructLogger(String clazz, int level, boolean useDefault) {
     return new SimpleLogger(clazz, this, level, useDefault);
   }
 }

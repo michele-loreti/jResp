@@ -58,10 +58,8 @@ import org.mpisws.p2p.transport.peerreview.history.logentry.EvtSign;
 import org.mpisws.p2p.transport.peerreview.message.UserDataMessage;
 import org.mpisws.p2p.transport.util.Serializer;
 
-import rice.environment.logging.LogManager;
 import rice.environment.logging.Logger;
 import rice.p2p.commonapi.rawserialization.RawSerializable;
-import rice.p2p.util.MathUtils;
 import rice.p2p.util.rawserialization.SimpleInputBuffer;
 import rice.p2p.util.rawserialization.SimpleOutputBuffer;
 import rice.p2p.util.tuples.Tuple;
@@ -92,7 +90,8 @@ public class EvidenceToolImpl<Handle extends RawSerializable, Identifier extends
    * if the former doesn't hold, it returns INVALID
    * if the latter doesn't hold, it returns CERT_MISSING, and returns the nodeID of the node whose certificate we need to request
    */
-  public Tuple<Integer, Identifier> checkSnippet(LogSnippet snippet) {
+  @Override
+public Tuple<Integer, Identifier> checkSnippet(LogSnippet snippet) {
     for (SnippetEntry entry : snippet.entries) {
       if (entry.isHash && entry.type != EVT_CHECKPOINT && entry.type != EVT_SENDSIGN && entry.type != EVT_SEND) {
         if (logger.level <= Logger.WARNING) logger.log("Malformed statement: Entry of type #"+entry.type+" is hashed");
@@ -185,7 +184,8 @@ public class EvidenceToolImpl<Handle extends RawSerializable, Identifier extends
    * the corresponding witnesses, and it delivers any new messages to the local
    * node that may be in the snippet (e.g. after an investigation)
    */
-  public boolean checkSnippetSignatures(LogSnippet snippet,
+  @Override
+public boolean checkSnippetSignatures(LogSnippet snippet,
       Handle subjectHandle, AuthenticatorStore<Identifier> authStoreOrNull,
       byte flags, CommitmentProtocol<Handle, Identifier> commitmentProtocol, 
       byte[] keyNodeHash, long keyNodeMaxSeq) {

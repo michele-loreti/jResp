@@ -69,7 +69,8 @@ public class LeafSetPilotStrategy<Identifier extends RendezvousContact> implemen
     leafSet.addNodeSetListener(this);
   }
 
-  public void nodeSetUpdate(NodeSetEventSource nodeSetEventSource, NodeHandle handle, boolean added) {
+  @Override
+public void nodeSetUpdate(NodeSetEventSource nodeSetEventSource, NodeHandle handle, boolean added) {
     if (logger.level <= Logger.FINER) logger.log("nodeSetUpdate("+handle+")");
 //    if (logger.level <= Logger.FINE) logger.log("nodeSetUpdate("+handle+")");
     Identifier nh = (Identifier)handle;
@@ -82,12 +83,14 @@ public class LeafSetPilotStrategy<Identifier extends RendezvousContact> implemen
     }
   }
 
-  public void pilotOpening(Identifier i) {
+  @Override
+public void pilotOpening(Identifier i) {
     // TODO Auto-generated method stub
     
   }
 
-  public void pilotClosed(Identifier i) {
+  @Override
+public void pilotClosed(Identifier i) {
     if (leafSet.contains((NodeHandle)i)) {
       manager.openPilot(i, null);
     }

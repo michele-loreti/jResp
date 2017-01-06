@@ -39,8 +39,6 @@ package org.mpisws.p2p.transport.sourceroute;
 import java.io.IOException;
 import java.util.List;
 
-import org.mpisws.p2p.transport.multiaddress.MultiInetSocketAddress;
-
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 
 public interface SourceRouteFactory<Identifier> {

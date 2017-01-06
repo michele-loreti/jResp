@@ -63,12 +63,14 @@ public class TimerWeakHashMap<K,V> extends WeakHashMap<K, V> {
     public HardLinkTimerTask(Object hardLink) {
       this.hardLink = hardLink;
     }
-    public void run() {
+    @Override
+	public void run() {
       // do nothing, just expire, taking the hard link away with you
     }
   }
 
-  public V put(K key, V val) {
+  @Override
+public V put(K key, V val) {
     refresh(key);
     return super.put(key, val);
   }

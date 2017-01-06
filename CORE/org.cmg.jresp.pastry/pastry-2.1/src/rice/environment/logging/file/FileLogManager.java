@@ -128,7 +128,8 @@ public class FileLogManager extends SimpleLogManager {
     return newPS;
   }
   
-  public LogManager clone(String detail) {
+  @Override
+public LogManager clone(String detail) {
     PrintStream newPS = this.ps;
     boolean append = !params.getBoolean("fileLogManager_overwrite_existing_log_file");
     if (params.getBoolean("fileLogManager_multipleFiles")) {

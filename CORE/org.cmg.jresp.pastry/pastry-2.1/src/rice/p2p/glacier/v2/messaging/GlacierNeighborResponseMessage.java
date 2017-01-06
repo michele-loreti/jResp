@@ -38,7 +38,6 @@ package rice.p2p.glacier.v2.messaging;
 
 import java.io.IOException;
 
-import rice.*;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
 
@@ -73,16 +72,19 @@ public class GlacierNeighborResponseMessage extends GlacierMessage {
     return lastSeen[index];
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return "[GlacierNeighborResponse with "+numNeighbors()+" keys]";
   }
   
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE; 
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)0); // version    
     super.serialize(buf);
     buf.writeInt(lastSeen.length);

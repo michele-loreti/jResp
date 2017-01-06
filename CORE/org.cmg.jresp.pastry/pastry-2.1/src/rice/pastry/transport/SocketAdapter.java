@@ -41,14 +41,10 @@ import java.nio.ByteBuffer;
 
 import org.mpisws.p2p.transport.P2PSocket;
 import org.mpisws.p2p.transport.P2PSocketReceiver;
-import org.mpisws.p2p.transport.multiaddress.MultiInetSocketAddress;
-
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
 import rice.p2p.commonapi.appsocket.AppSocket;
 import rice.p2p.commonapi.appsocket.AppSocketReceiver;
-import rice.pastry.NodeHandle;
-import rice.pastry.socket.TransportLayerNodeHandle;
 
 public class SocketAdapter<Identifier> implements AppSocket, P2PSocketReceiver<Identifier> {
   P2PSocket<Identifier> internal;
@@ -61,11 +57,13 @@ public class SocketAdapter<Identifier> implements AppSocket, P2PSocketReceiver<I
     this.environment = env;
   }
 
-  public void close() {
+  @Override
+public void close() {
     internal.close();
   }
   
-  public long read(ByteBuffer[] dsts, int offset, int length) throws IOException {
+  @Override
+public long read(ByteBuffer[] dsts, int offset, int length) throws IOException {
     long ret = 0;
     for (int i = offset; i < offset+length; i++) {
       ret += internal.read(dsts[i]);
@@ -75,7 +73,8 @@ public class SocketAdapter<Identifier> implements AppSocket, P2PSocketReceiver<I
 
   AppSocketReceiver reader = null;
   AppSocketReceiver writer = null;
-  public void register(boolean wantToRead, boolean wantToWrite, int timeout, AppSocketReceiver receiver) {
+  @Override
+public void register(boolean wantToRead, boolean wantToWrite, int timeout, AppSocketReceiver receiver) {
     if (wantToRead) {
       if (reader != null && reader != receiver) throw new IllegalStateException("Already registered "+reader+" for reading. Can't register "+receiver);
       reader = receiver;
@@ -89,7 +88,8 @@ public class SocketAdapter<Identifier> implements AppSocket, P2PSocketReceiver<I
     internal.register(wantToRead, wantToWrite, this);
   }
 
-  public void receiveException(P2PSocket<Identifier> s, Exception e) {
+  @Override
+public void receiveException(P2PSocket<Identifier> s, Exception e) {
     if (writer != null) {
       if (writer == reader) {
         AppSocketReceiver temp = writer;
@@ -110,7 +110,8 @@ public class SocketAdapter<Identifier> implements AppSocket, P2PSocketReceiver<I
     }
   }
 
-  public void receiveSelectResult(P2PSocket<Identifier> s,
+  @Override
+public void receiveSelectResult(P2PSocket<Identifier> s,
       boolean canRead, boolean canWrite) throws IOException {
     if (logger.level <= Logger.FINEST) logger.log(this+"rsr("+internal+","+canRead+","+canWrite+")");
     if (canRead && canWrite && (reader == writer)) {      
@@ -142,11 +143,13 @@ public class SocketAdapter<Identifier> implements AppSocket, P2PSocketReceiver<I
     }
   }
 
-  public void shutdownOutput() {
+  @Override
+public void shutdownOutput() {
     internal.shutdownOutput();    
   }
 
-  public long write(ByteBuffer[] srcs, int offset, int length) throws IOException {
+  @Override
+public long write(ByteBuffer[] srcs, int offset, int length) throws IOException {
     long ret = 0;
     for (int i = offset; i < offset+length; i++) {
       ret += internal.write(srcs[i]);
@@ -154,15 +157,18 @@ public class SocketAdapter<Identifier> implements AppSocket, P2PSocketReceiver<I
     return ret;
   }
 
-  public long read(ByteBuffer dst) throws IOException {
+  @Override
+public long read(ByteBuffer dst) throws IOException {
     return internal.read(dst);
   }
 
-  public long write(ByteBuffer src) throws IOException {
+  @Override
+public long write(ByteBuffer src) throws IOException {
     return internal.write(src);
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "SA["+internal+"]";
   }
 }

@@ -137,7 +137,8 @@ public class SocketInputBuffer implements InputBuffer {
     });    
   }
   
-  public int bytesRemaining() {
+  @Override
+public int bytesRemaining() {
     return UNKNOWN;
   }
 
@@ -199,47 +200,58 @@ public class SocketInputBuffer implements InputBuffer {
   }
 
 
-  public int read(byte[] b, int off, int len) throws IOException {
+  @Override
+public int read(byte[] b, int off, int len) throws IOException {
     return dis.read(b, off, len);
   }
 
-  public int read(byte[] b) throws IOException {
+  @Override
+public int read(byte[] b) throws IOException {
     return dis.read(b);
   }
 
-  public byte readByte() throws IOException {
+  @Override
+public byte readByte() throws IOException {
     return dis.readByte();
   }  
   
-  public boolean readBoolean() throws IOException {
+  @Override
+public boolean readBoolean() throws IOException {
     return dis.readBoolean();
   }
 
-  public char readChar() throws IOException {
+  @Override
+public char readChar() throws IOException {
     return dis.readChar();
   }
 
-  public double readDouble() throws IOException {
+  @Override
+public double readDouble() throws IOException {
     return dis.readDouble();
   }
 
-  public float readFloat() throws IOException {
+  @Override
+public float readFloat() throws IOException {
     return dis.readFloat();    
   }
 
-  public int readInt() throws IOException {
+  @Override
+public int readInt() throws IOException {
     return dis.readInt();
   }
 
-  public long readLong() throws IOException {
+  @Override
+public long readLong() throws IOException {
     return dis.readLong();
   }
 
-  public short readShort() throws IOException {
+  @Override
+public short readShort() throws IOException {
     return dis.readShort();
   }
 
-  public String readUTF() throws IOException {
+  @Override
+public String readUTF() throws IOException {
     return dis.readUTF();
   }
 

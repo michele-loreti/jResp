@@ -36,13 +36,8 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package org.mpisws.p2p.transport.sourceroute.manager;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Map;
-
 import org.mpisws.p2p.transport.ErrorHandler;
 import org.mpisws.p2p.transport.P2PSocket;
-import org.mpisws.p2p.transport.P2PSocketReceiver;
 import org.mpisws.p2p.transport.sourceroute.SourceRoute;
 import org.mpisws.p2p.transport.util.SocketWrapperSocket;
 

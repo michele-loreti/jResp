@@ -53,19 +53,23 @@ public class MessageInfoImpl implements MessageInfo {
     this.priority = priority;
   }
 
-  public ByteBuffer getMessage() {
+  @Override
+public ByteBuffer getMessage() {
     return message;
   }
 
-  public Map<String, Object> getOptions() {
+  @Override
+public Map<String, Object> getOptions() {
     return options;
   }
 
-  public int getPriroity() {
+  @Override
+public int getPriroity() {
     return priority;
   }
 
-  public int getSize() {
+  @Override
+public int getSize() {
     // the 4 is the size header
     return message.remaining()+4;
   }

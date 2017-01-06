@@ -39,13 +39,10 @@ package org.mpisws.p2p.filetransfer;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,8 +59,6 @@ import rice.p2p.commonapi.appsocket.AppSocket;
 import rice.p2p.commonapi.appsocket.AppSocketReceiver;
 import rice.p2p.util.MathUtils;
 import rice.p2p.util.SortedLinkedList;
-import rice.p2p.util.rawserialization.SimpleInputBuffer;
-import rice.p2p.util.rawserialization.SimpleOutputBuffer;
 import rice.selector.SelectorManager;
 
 /**
@@ -185,7 +180,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
     receiveException(socket,new ClosedChannelException("Underlying socket was closed."));
   }
   
-  public void receiveException(AppSocket socket, Exception e) {
+  @Override
+public void receiveException(AppSocket socket, Exception e) {
     // warn user
     synchronized(queue) {
       if (failed) return;
@@ -234,7 +230,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
     if (selectorManager.isSelectorThread()) {
       scheduleToWriteIfNeeded();
     } else {
-      selectorManager.invoke(new Runnable() { public void run() {scheduleToWriteIfNeeded();}});
+      selectorManager.invoke(new Runnable() { @Override
+	public void run() {scheduleToWriteIfNeeded();}});
     }
   }
   
@@ -314,13 +311,15 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
   }
 
   ArrayList<FileTransferListener> listeners = new ArrayList<FileTransferListener>();
-  public void addListener(FileTransferListener listener) {
+  @Override
+public void addListener(FileTransferListener listener) {
     synchronized(listeners) {
       listeners.add(listener);
     }
   }
 
-  public void removeListener(FileTransferListener listener) {
+  @Override
+public void removeListener(FileTransferListener listener) {
     synchronized(listeners) {
       listeners.remove(listener);
     }
@@ -399,12 +398,14 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
     }
   }
 
-  public FileReceipt sendFile(File f, ByteBuffer metadata, byte priority,
+  @Override
+public FileReceipt sendFile(File f, ByteBuffer metadata, byte priority,
       Continuation<FileReceipt, Exception> c) throws IOException  {
     return sendFile(f,metadata,priority,0,f.length(),c);
   }
 
-  public FileReceipt sendFile(File f, ByteBuffer metadataBB, byte priority, long offset, long length,
+  @Override
+public FileReceipt sendFile(File f, ByteBuffer metadataBB, byte priority, long offset, long length,
       Continuation<FileReceipt, Exception> c) throws IOException {
     if (f == null || !f.exists() || f.isDirectory()) throw new IllegalArgumentException("File f must be non-null, exist, and must not be a directory. "+f);
     byte[] metadata = new byte[metadataBB.remaining()];
@@ -413,7 +414,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
     return ret;
   }
 
-  public BBReceipt sendMsg(ByteBuffer bb, byte priority,
+  @Override
+public BBReceipt sendMsg(ByteBuffer bb, byte priority,
       Continuation<BBReceipt, Exception> c) {
     if (bb == null) throw new IllegalArgumentException("ByteBuffer bb must be non-null");
     BBReceiptImpl ret = new BBReceiptImpl(bb,priority,getUid(),c);
@@ -446,11 +448,13 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       outgoingData.put(uid, this);
     }
     
-    public byte getPriority() {
+    @Override
+	public byte getPriority() {
       return priority;
     }
 
-    public int getUID() {
+    @Override
+	public int getUID() {
       return uid;
     }
 
@@ -466,7 +470,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
     
     abstract void complete(MessageWrapper wrapper);
     
-    public boolean cancel() {
+    @Override
+	public boolean cancel() {
       cancelled = true;
       // TODO: remove from table
       outgoingData.remove(uid);
@@ -532,7 +537,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       enqueue(outstanding);
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
       return "Outgoing msg<"+uid+"> size:"+getSize()+" priority:"+priority+" msg:"+msg;
     }
     
@@ -542,7 +548,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       super.failed();
     }
     
-    void complete(MessageWrapper wrapper) {
+    @Override
+	void complete(MessageWrapper wrapper) {
       // advance msg's pointer as necessary
 //      logger.log("complete part "+this);
         msg.position(chunkBuffer.position());
@@ -584,12 +591,14 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
 //      notifyListenersSendMsgComplete(this);
     }
     
-    public byte[] getBytes() {
+    @Override
+	public byte[] getBytes() {
       return msgBytes;
     }
 
 
-    public long getSize() {
+    @Override
+	public long getSize() {
       return msg.limit()-initialPosition;
     }
     
@@ -698,7 +707,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       super.failed();
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
       return "Outgoing file<"+uid+"> "+metadata.length+" size:"+getSize()+" priority:"+priority+" "+f;
     }
 
@@ -717,12 +727,14 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
         ptr+=amtToRead;
         Continuation<Object, Exception> c = new Continuation<Object, Exception>() {
           
-          public void receiveResult(Object result) {
+          @Override
+		public void receiveResult(Object result) {
             // this is handled in MessageWrapperImpl.complete()
         
           }
         
-          public void receiveException(Exception exception) {
+          @Override
+		public void receiveException(Exception exception) {
             if (deliverAckToMe != null) deliverAckToMe.receiveException(exception);          
             FileTransferImpl.this.sendCancel(uid);
             return;
@@ -770,12 +782,14 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       }
       Continuation<Object, Exception> c2 = new Continuation<Object, Exception>() {
         
-        public void receiveResult(Object result) {
+        @Override
+		public void receiveResult(Object result) {
           outgoingData.remove(uid);
           if (deliverAckToMe != null) deliverAckToMe.receiveResult(FileReceiptImpl.this);
         }
       
-        public void receiveException(Exception exception) {
+        @Override
+		public void receiveException(Exception exception) {
           if (logger.level <= Logger.WARNING) logger.logException("Error closing file <"+uid+"> "+file+" "+metadata.length, exception);
         }
       
@@ -789,7 +803,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       });                          
     }
     
-    void complete(MessageWrapper wrapper) {
+    @Override
+	void complete(MessageWrapper wrapper) {
       // notify listener
       notifyListenersSendFileProgress(this,ptr-initialPosition, length);
       
@@ -841,11 +856,13 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
 //      if (deliverAckToMe != null) deliverAckToMe.receiveResult(this);      
     }
     
-    public long getSize() {
+    @Override
+	public long getSize() {
       return length;
     }
 
-    public File getFile() {
+    @Override
+	public File getFile() {
       return f;
     }
 
@@ -853,11 +870,13 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       return length;
     }
 
-    public ByteBuffer getMetadata() {
+    @Override
+	public ByteBuffer getMetadata() {
       return ByteBuffer.wrap(metadata);
     }
 
-    public long getOffset() {
+    @Override
+	public long getOffset() {
       return initialPosition;
     }
     
@@ -884,7 +903,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       // requests are complete
       Continuation<Object, Exception> c = new Continuation<Object, Exception>() {
       
-        public void receiveResult(Object result) {
+        @Override
+		public void receiveResult(Object result) {
           for (WorkRequest<Object> wr : outstandingWRs) {
             wr.cancel();
           }
@@ -895,7 +915,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
           FileReceiptImpl.this.superCancel();
         }
       
-        public void receiveException(Exception exception) {
+        @Override
+		public void receiveException(Exception exception) {
           // TODO Auto-generated method stub
       
         }      
@@ -947,14 +968,16 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       this.message = message;
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
       return "Part "+seq+" of "+receipt;
     }
     
     /**
      * Called due to a queue overflow.
      */
-    public void drop() {
+    @Override
+	public void drop() {
       receipt.failed();
     }
 
@@ -986,7 +1009,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
     /**
      * Defines the ordering in the queue
      */
-    public int compareTo(MessageWrapper that) {
+    @Override
+	public int compareTo(MessageWrapper that) {
       if (this.receipt.priority == that.getPriority()) {
         if (this.receipt.uid == that.getUid()) {
           return (int)(this.seq-that.getSeq());
@@ -999,7 +1023,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
     /**
      * @return true if should keep writing
      */
-    public boolean receiveSelectResult(AppSocket socket) throws IOException {
+    @Override
+	public boolean receiveSelectResult(AppSocket socket) throws IOException {
       if (logger.level <= Logger.FINEST) logger.log(this+".receiveSelectResult("+socket+")");
 //      if (socket == null) logger.log("Starting to write "+this+" on "+socket);
       
@@ -1032,24 +1057,29 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       return FileTransferImpl.this.complete(this); 
     }
     
-    public void complete() {
+    @Override
+	public void complete() {
       receipt.complete(this);
     }
 
-    public byte getPriority() {
+    @Override
+	public byte getPriority() {
       return receipt.getPriority();
     }
 
-    public long getSeq() {
+    @Override
+	public long getSeq() {
       return seq;
     }
 
-    public int getUid() {
+    @Override
+	public int getUid() {
       return receipt.getUID();
     }
   }
 
-  public void receiveSelectResult(AppSocket socket, boolean canRead, boolean canWrite) {
+  @Override
+public void receiveSelectResult(AppSocket socket, boolean canRead, boolean canWrite) {
 //    if (canRead || !canWrite) throw new IllegalStateException(this+" Expected only to write. canRead:"+canRead+" canWrite:"+canWrite+" socket:"+socket);
     
     if (canWrite) {  
@@ -1127,7 +1157,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
     byte[] bytes = new byte[5];
     ByteBuffer buf = ByteBuffer.wrap(bytes);
     
-    public boolean read(AppSocket socket) throws IOException {
+    @Override
+	public boolean read(AppSocket socket) throws IOException {
       // read the 
       long bytesRead = socket.read(buf);
       if (bytesRead < 0) {
@@ -1195,7 +1226,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       this.uid = uid;
     }
     
-    public boolean read(AppSocket socket) throws IOException {
+    @Override
+	public boolean read(AppSocket socket) throws IOException {
       // read the 
       long bytesRead = socket.read(buf);
       if (bytesRead < 0) {
@@ -1224,7 +1256,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       this.uid = uid;
     }
     
-    public boolean read(AppSocket socket) throws IOException {
+    @Override
+	public boolean read(AppSocket socket) throws IOException {
       // read the 
       long bytesRead = socket.read(buf);
       if (bytesRead < 0) {
@@ -1265,7 +1298,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       buf.limit(nameSize);      
     }
     
-    public boolean read(AppSocket socket) throws IOException {
+    @Override
+	public boolean read(AppSocket socket) throws IOException {
       // read the 
       long bytesRead = socket.read(buf);
       if (bytesRead < 0) {
@@ -1296,7 +1330,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       this.uid = uid;
     }
     
-    public boolean read(AppSocket socket) throws IOException {
+    @Override
+	public boolean read(AppSocket socket) throws IOException {
       // read the 
       long bytesRead = socket.read(buf);
       if (bytesRead < 0) {
@@ -1351,18 +1386,21 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       curReader.limit(0);
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
       return "Incoming msg<"+uid+"> of length"+bytes.length;
     }
 
-    public boolean read(AppSocket socket, int numToRead) throws IOException {
+    @Override
+	public boolean read(AppSocket socket, int numToRead) throws IOException {
       if (curReader.hasRemaining()) throw new IllegalStateException("curReader has "+curReader.remaining()+" bytes remaining. "+numToRead);
       curReader.limit(curReader.position()+numToRead);
       reader = this;
       return read(socket);
     }
 
-    public boolean read(AppSocket socket) throws IOException {
+    @Override
+	public boolean read(AppSocket socket) throws IOException {
       long ret = socket.read(curReader);
       if (ret < 0) {
         socketClosed();
@@ -1394,30 +1432,36 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       callback.messageReceived(ByteBuffer.wrap(getBytes()));
     }
 
-    public byte[] getBytes() {
+    @Override
+	public byte[] getBytes() {
       return bytes;
     }
 
-    public byte getPriority() {
+    @Override
+	public byte getPriority() {
       throw new RuntimeException("Unknown priority.  Don't call this on the receiving side.");
     }
 
-    public long getSize() {
+    @Override
+	public long getSize() {
       return bytes.length;
     }
 
-    public int getUID() {
+    @Override
+	public int getUID() {
       return uid;
     }
 
-    public boolean cancel() {
+    @Override
+	public boolean cancel() {
       if (requestedCancel) return false;
       requestedCancel = true;
       return requestCancel(uid);
     }
     
     // called when actually cancelled
-    public void cancelled(DataReader reader) {
+    @Override
+	public void cancelled(DataReader reader) {
       notifyListenersSenderCancelled(reader);
     }
   }
@@ -1456,18 +1500,21 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       curReader = ByteBuffer.wrap(bytes);   
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
       return "Incoming file<"+uid+"> "+metadata.length+" off:"+offset+" length:"+length+" "+f;
     }
     
-    public boolean read(AppSocket socket, int numToRead) throws IOException {
+    @Override
+	public boolean read(AppSocket socket, int numToRead) throws IOException {
       if (curReader.position() != 0) throw new IllegalStateException("curReader has "+curReader.remaining()+" bytes remaining. "+numToRead);
       curReader.limit(numToRead);
       reader = this;
       return read(socket);
     }
 
-    public boolean read(AppSocket socket) throws IOException {
+    @Override
+	public boolean read(AppSocket socket) throws IOException {
       long ret = socket.read(curReader);
       if (ret < 0) {
         socketClosed();
@@ -1495,7 +1542,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       // note, that it is required that these are in order
       WorkRequest<Long> wr = new WorkRequest<Long>(new Continuation<Long, Exception>() {
       
-        public void receiveResult(Long myPtrL) {
+        @Override
+		public void receiveResult(Long myPtrL) {
           decrementFileChunksInMemory();
           if (cancelled) return;
           // notify listeners
@@ -1505,7 +1553,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
           if (myPtr == offset+length) FileDataReader.this.complete();
         }
       
-        public void receiveException(Exception exception) {
+        @Override
+		public void receiveException(Exception exception) {
           if (logger.level <= Logger.WARNING) logger.logException("Error writing file "+f+" "+metadata.length, exception);
           FileDataReader.this.cancel();
           decrementFileChunksInMemory();
@@ -1545,25 +1594,30 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       return bytes;
     }
 
-    public byte getPriority() {
+    @Override
+	public byte getPriority() {
       throw new RuntimeException("Unknown priority.  Don't call this on the receiving side.");
     }
 
-    public long getSize() {
+    @Override
+	public long getSize() {
       return bytes.length;
     }
 
-    public int getUID() {
+    @Override
+	public int getUID() {
       return uid;
     }
 
-    public boolean cancel() {
+    @Override
+	public boolean cancel() {
       if (requestedCancel) return false;
       requestedCancel = true;      
       return requestCancel(uid);
     }
 
-    public File getFile() {
+    @Override
+	public File getFile() {
       return f;
     }
 
@@ -1571,28 +1625,33 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       return length;
     }
 
-    public ByteBuffer getMetadata() {
+    @Override
+	public ByteBuffer getMetadata() {
       return ByteBuffer.wrap(metadata);
     }
 
-    public long getOffset() {
+    @Override
+	public long getOffset() {
       return offset;
     }
     
     // called when actually cancelled
-    public void cancelled(final DataReader reader) {
+    @Override
+	public void cancelled(final DataReader reader) {
       cancelled = true;
       
       // Don't close the file on the wrong thread.
       WorkRequest<RandomAccessFile> wr = new WorkRequest<RandomAccessFile>(new Continuation<RandomAccessFile, Exception>() {
       
-        public void receiveResult(RandomAccessFile result) {
+        @Override
+		public void receiveResult(RandomAccessFile result) {
           if (logger.level <= Logger.INFO) logger.log("File Cancelled<"+uid+"> "+f+","+offset+","+(ptr-offset)+","+length);
           fileAllocater.fileCancelled(ByteBuffer.wrap(metadata), f, offset, ptr-offset, length, exception);
           notifyListenersSenderCancelled(reader);
         }
       
-        public void receiveException(Exception exception) {
+        @Override
+		public void receiveException(Exception exception) {
           if (logger.level <= Logger.WARNING) logger.logException("Error closing file "+file, exception);
         }      
       },environment.getSelectorManager()) {
@@ -1608,7 +1667,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
     }
   }
   
-  public void receiveSocket(AppSocket socket) {
+  @Override
+public void receiveSocket(AppSocket socket) {
     throw new RuntimeException("Not Implemented, shouldn't be called.");
   }
 
@@ -1645,28 +1705,35 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
       msg.clear();
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
       if (msgType == MSG_CANCEL) return "Cancel msg <"+uid+">";
       if (msgType == MSG_CANCEL_REQUEST) return "Cancel request <"+uid+">";
       return "Unknown message";
     }
     
-    public void complete() {
+    @Override
+	public void complete() {
       // TODO Auto-generated method stub      
     }
-    public void drop() {
+    @Override
+	public void drop() {
       // TODO Auto-generated method stub      
     }
-    public byte getPriority() {
+    @Override
+	public byte getPriority() {
       return CANCEL_PRIORITY;
     }
-    public long getSeq() {
+    @Override
+	public long getSeq() {
       return Integer.MIN_VALUE;
     }
-    public int getUid() {
+    @Override
+	public int getUid() {
       return uid;
     }
-    public int compareTo(MessageWrapper that) {
+    @Override
+	public int compareTo(MessageWrapper that) {
       if (this.getPriority() == that.getPriority()) {
         if (this.uid == that.getUid()) {
           return (int)(this.getSeq()-that.getSeq());
@@ -1679,7 +1746,8 @@ public class FileTransferImpl implements FileTransfer, AppSocketReceiver {
     /**
      * @return true if should keep writing
      */
-    public boolean receiveSelectResult(AppSocket socket) throws IOException {
+    @Override
+	public boolean receiveSelectResult(AppSocket socket) throws IOException {
       if (logger.level <= Logger.FINEST) logger.log(this+".receiveSelectResult("+socket+")");
 //      if (socket == null) logger.log("Starting to write "+this+" on "+socket);
       

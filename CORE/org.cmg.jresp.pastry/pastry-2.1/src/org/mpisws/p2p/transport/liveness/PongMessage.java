@@ -65,7 +65,8 @@ public class PongMessage {
     this(buf.readLong());
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return "PongMessage<"+sentTime+">";
   }
 

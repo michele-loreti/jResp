@@ -138,7 +138,8 @@ public class LeafSetTest {
       this.ls = ls;
     }
 
-    public void nodeSetUpdate(NodeSetEventSource set, NodeHandle handle, boolean added) {
+    @Override
+	public void nodeSetUpdate(NodeSetEventSource set, NodeHandle handle, boolean added) {
       SimilarSet caller;
       if (set instanceof SimilarSet) {
         caller = (SimilarSet) set;
@@ -343,26 +344,32 @@ public class LeafSetTest {
       this.id = id;
     }
 
-    public Id getNodeId() {
+    @Override
+	public Id getNodeId() {
       return id;
     }
 
-    public int getLiveness() {
+    @Override
+	public int getLiveness() {
       return LIVENESS_ALIVE;
     }
 
     /**
      * @deprecated
      */
-    public int proximity() {
+    @Deprecated
+	@Override
+	public int proximity() {
       return 1;
     }
 
-    public boolean ping() {
+    @Override
+	public boolean ping() {
       return true;
     }
 
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
       if (obj instanceof TestNodeHandle) {
         return ((TestNodeHandle) obj).id.equals(id);
       }
@@ -370,25 +377,31 @@ public class LeafSetTest {
       return false;
     }
 
-    public int hashCode() {
+    @Override
+	public int hashCode() {
       return id.hashCode();
     }
 
     /**
      * @deprecated
      */
-    public void receiveMessage(Message m) {
+    @Deprecated
+	@Override
+	public void receiveMessage(Message m) {
     };
 
-    public int compareTo(TestNodeHandle o) {
-      return id.compareTo(((TestNodeHandle) o).id);
+    @Override
+	public int compareTo(TestNodeHandle o) {
+      return id.compareTo(o.id);
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
       return id.toString();
     }
 
-    public void serialize(OutputBuffer buf) throws IOException {
+    @Override
+	public void serialize(OutputBuffer buf) throws IOException {
       throw new RuntimeException("not implemented.");        
     }
   }

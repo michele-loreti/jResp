@@ -38,7 +38,6 @@ package org.mpisws.p2p.transport.peerreview.replay;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -58,12 +57,9 @@ import org.mpisws.p2p.transport.peerreview.history.SecureHistory;
 import org.mpisws.p2p.transport.peerreview.identity.IdentityTransport;
 import org.mpisws.p2p.transport.peerreview.replay.EventCallback;
 import org.mpisws.p2p.transport.peerreview.replay.playback.ReplaySM;
-import org.mpisws.p2p.transport.util.Serializer;
-
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
 import rice.environment.random.RandomSource;
-import rice.environment.time.simulated.DirectTimeSource;
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 import rice.p2p.commonapi.rawserialization.RawSerializable;
 import rice.p2p.util.rawserialization.SimpleInputBuffer;
@@ -190,7 +186,8 @@ public class VerifierImpl<Handle extends RawSerializable, Identifier extends Raw
     }    
   }
   
-  public boolean verifiedOK() { 
+  @Override
+public boolean verifiedOK() { 
     return !foundFault; 
   };
 
@@ -199,8 +196,9 @@ public class VerifierImpl<Handle extends RawSerializable, Identifier extends Raw
     return next;
   }
   
-  public void setApplication(PeerReviewCallback app) {
-    this.app = (PeerReviewCallback<Handle, Identifier>)app;
+  @Override
+public void setApplication(PeerReviewCallback app) {
+    this.app = app;
   }
     
   /**
@@ -225,7 +223,8 @@ public class VerifierImpl<Handle extends RawSerializable, Identifier extends Raw
    * is that we can stop calling this if there is more important work to do, e.g. 
    * handle foreground requests 
    */
-  public boolean makeProgress() {
+  @Override
+public boolean makeProgress() {
     if (logger.level <= Logger.FINE) logger.log("makeProgress()");
     if (foundFault || next == null)
       return false;
@@ -304,7 +303,7 @@ public class VerifierImpl<Handle extends RawSerializable, Identifier extends Raw
         /* The next event is going to be a SIGN; skip it, since it's irrelevant here */
 
         fetchNextEvent();
-        if (next == null || (next.getType() != EVT_SIGN) || (next.getSizeInFile() != (int)(transport.getHashSizeBytes()+transport.getSignatureSizeBytes()))) {
+        if (next == null || (next.getType() != EVT_SIGN) || (next.getSizeInFile() != transport.getHashSizeBytes()+transport.getSignatureSizeBytes())) {
           if (logger.level <= Logger.WARNING) logger.log("Replay: RECV event not followed by SIGN; marking as invalid");
           foundFault = true;
           return false;
@@ -479,7 +478,8 @@ public class VerifierImpl<Handle extends RawSerializable, Identifier extends Raw
   /**
    * Called by the state machine when it wants to send a message 
    */
-  public MessageRequestHandle<Handle, ByteBuffer> sendMessage(
+  @Override
+public MessageRequestHandle<Handle, ByteBuffer> sendMessage(
       Handle target, ByteBuffer message, MessageCallback<Handle, ByteBuffer> deliverAckToMe, 
       Map<String, Object> options) {
     try {
@@ -683,13 +683,15 @@ public class VerifierImpl<Handle extends RawSerializable, Identifier extends Raw
     }
   }
   
-  public long getNextEventTime() {
+  @Override
+public long getNextEventTime() {
 //    logger.log("getNextEventTime() "+next);
     if (next == null) return -1;
     return next.getSeq()/1000000;
   }
   
-  public boolean isSuccess() {
+  @Override
+public boolean isSuccess() {
     if (initialized && verifiedOK()) {
       if (next == null) return true;
     }
@@ -748,7 +750,8 @@ public class VerifierImpl<Handle extends RawSerializable, Identifier extends Raw
   
   Map<Integer, ReplaySocket<Handle>> sockets = new HashMap<Integer, ReplaySocket<Handle>>();
 
-  public SocketRequestHandle<Handle> openSocket(final Handle i, SocketCallback<Handle> deliverSocketToMe, final Map<String, Object> options) {
+  @Override
+public SocketRequestHandle<Handle> openSocket(final Handle i, SocketCallback<Handle> deliverSocketToMe, final Map<String, Object> options) {
     try {
       int socketId = openSocket(i);
 //      logger.log("openSocket("+i+"):"+socketId);
@@ -759,15 +762,18 @@ public class VerifierImpl<Handle extends RawSerializable, Identifier extends Raw
     } catch (IOException ioe) {      
       SocketRequestHandle<Handle> ret = new SocketRequestHandle<Handle>(){
 
-        public Handle getIdentifier() {
+        @Override
+		public Handle getIdentifier() {
           return i;
         }
 
-        public Map<String, Object> getOptions() {
+        @Override
+		public Map<String, Object> getOptions() {
           return options;
         }
 
-        public boolean cancel() {
+        @Override
+		public boolean cancel() {
           return true;
         }      
       };
@@ -1025,31 +1031,38 @@ public class VerifierImpl<Handle extends RawSerializable, Identifier extends Raw
     fetchNextEvent();
   }
 
-  public Environment getEnvironment() {
+  @Override
+public Environment getEnvironment() {
     return environment;
   }
 
-  public void acceptMessages(boolean b) {
+  @Override
+public void acceptMessages(boolean b) {
     throw new RuntimeException("implement");
   }
 
-  public void acceptSockets(boolean b) {
+  @Override
+public void acceptSockets(boolean b) {
     throw new RuntimeException("implement");
   }
 
-  public Handle getLocalIdentifier() {
+  @Override
+public Handle getLocalIdentifier() {
     return localHandle;
   }
 
-  public void setCallback(TransportLayerCallback<Handle, ByteBuffer> callback) {
+  @Override
+public void setCallback(TransportLayerCallback<Handle, ByteBuffer> callback) {
     this.app = (PeerReviewCallback<Handle, Identifier>)callback;
   }
 
-  public void setErrorHandler(ErrorHandler<Handle> handler) {
+  @Override
+public void setErrorHandler(ErrorHandler<Handle> handler) {
     throw new RuntimeException("implement");
   }
 
-  public void destroy() {
+  @Override
+public void destroy() {
     throw new RuntimeException("implement");
   }
 

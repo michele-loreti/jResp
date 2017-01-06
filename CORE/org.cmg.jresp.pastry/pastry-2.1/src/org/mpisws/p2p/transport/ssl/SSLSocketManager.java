@@ -56,7 +56,6 @@ import org.mpisws.p2p.transport.util.OptionsFactory;
 import rice.Continuation;
 import rice.Executable;
 import rice.environment.logging.Logger;
-import static javax.net.ssl.SSLEngineResult.HandshakeStatus.*;
 
 public class SSLSocketManager<Identifier> implements P2PSocket<Identifier>,
     P2PSocketReceiver<Identifier> {
@@ -139,7 +138,8 @@ public class SSLSocketManager<Identifier> implements P2PSocket<Identifier>,
     handshakeWrap();
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return "SSLSocket to "+(name == null ? "unknown" : name)+" at "+socket.toString();
   }
   
@@ -151,7 +151,8 @@ public class SSLSocketManager<Identifier> implements P2PSocket<Identifier>,
 
   boolean handshakeFail = false;
   
-  public void receiveSelectResult(P2PSocket<Identifier> socket,
+  @Override
+public void receiveSelectResult(P2PSocket<Identifier> socket,
       boolean canRead, boolean canWrite) throws IOException {
     if (handshakeFail) return;
 //    logger.log("receive select result r:"+canRead+" w:"+canWrite);
@@ -340,7 +341,8 @@ public class SSLSocketManager<Identifier> implements P2PSocket<Identifier>,
       runningTaskLock = true;
       sslTL.environment.getProcessor().process(new Executable<Object, Exception>() {
         
-        public Object execute() throws Exception {
+        @Override
+		public Object execute() throws Exception {
           // TODO Auto-generated method 
           Runnable runnable;
           while ((runnable = engine.getDelegatedTask()) != null) {
@@ -356,10 +358,12 @@ public class SSLSocketManager<Identifier> implements P2PSocket<Identifier>,
           return null;
         }
       },new Continuation<Object, Exception>() {
-        public void receiveException(Exception exception) {
+        @Override
+		public void receiveException(Exception exception) {
           exception.printStackTrace();
         };
-        public void receiveResult(Object result) {          
+        @Override
+		public void receiveResult(Object result) {          
 //          logger.log("Done executing, calling go2");          
           runningTaskLock = false;
           continueHandshaking();
@@ -373,7 +377,8 @@ public class SSLSocketManager<Identifier> implements P2PSocket<Identifier>,
     return (engine.isOutboundDone() && engine.isInboundDone());
   }
 
-  public void register(boolean wantToRead, boolean wantToWrite,
+  @Override
+public void register(boolean wantToRead, boolean wantToWrite,
       P2PSocketReceiver<Identifier> receiver) {
     if (wantToRead) {
       // try to read, decrypt
@@ -408,7 +413,8 @@ public class SSLSocketManager<Identifier> implements P2PSocket<Identifier>,
   P2PSocketReceiver<Identifier> registeredToRead;
   P2PSocketReceiver<Identifier> registeredToWrite;
   
-  public long read(ByteBuffer dsts) throws IOException {
+  @Override
+public long read(ByteBuffer dsts) throws IOException {
 //    if (closed && readMe.isEmpty() && unwrapMe.isEmpty()) return -1;
     
     long start = dsts.position();
@@ -442,7 +448,8 @@ public class SSLSocketManager<Identifier> implements P2PSocket<Identifier>,
     return dsts.position()-start;
   }
 
-  public long write(ByteBuffer srcs) throws IOException {
+  @Override
+public long write(ByteBuffer srcs) throws IOException {
 //    logger.log("write "+srcs);
     ByteBuffer outgoing = ByteBuffer.allocate(netBufferMax);
     SSLEngineResult tempResult = engine.wrap(srcs, outgoing);
@@ -455,23 +462,28 @@ public class SSLSocketManager<Identifier> implements P2PSocket<Identifier>,
     return tempResult.bytesConsumed();
   }
 
-  public void close() {
+  @Override
+public void close() {
     socket.close();
   }
 
-  public Identifier getIdentifier() {
+  @Override
+public Identifier getIdentifier() {
     return socket.getIdentifier();
   }
 
-  public Map<String, Object> getOptions() {
+  @Override
+public Map<String, Object> getOptions() {
     return options;
   }
 
-  public void shutdownOutput() {
+  @Override
+public void shutdownOutput() {
     engine.closeOutbound();
   }
 
-  public void receiveException(P2PSocket<Identifier> socket, Exception ioe) {
+  @Override
+public void receiveException(P2PSocket<Identifier> socket, Exception ioe) {
     c.receiveException(ioe);
   }
 }

@@ -40,8 +40,6 @@ package rice.pastry.testing;
 import rice.pastry.*;
 import rice.pastry.messaging.*;
 
-import java.util.*;
-
 /**
  * PingMessageNew
  *
@@ -64,7 +62,8 @@ public class PingMessageNew extends Message {
   target = tgt;
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
   String s="";
   s += "ping from " + getSender().getNodeId() + " to " + target;
   return s;

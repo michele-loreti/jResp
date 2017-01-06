@@ -46,7 +46,6 @@ import java.util.*;
 
 import javax.swing.text.DateFormatter;
 
-import rice.environment.logging.simple.SimpleLogger;
 import rice.environment.params.ParameterChangeListener;
 import rice.environment.params.Parameters;
 import rice.environment.time.TimeSource;
@@ -125,7 +124,8 @@ public abstract class AbstractLogManager implements LogManager {
     this.globalLogLevel = parseVal("loglevel");
 
     params.addChangeListener(new ParameterChangeListener() {
-      public void parameterChange(String paramName, String newVal) {
+      @Override
+	public void parameterChange(String paramName, String newVal) {
         if (paramName.equals("logging_enable")) {
             enabled = Boolean.valueOf(newVal).booleanValue();
         } else if (paramName.equals("loglevel")) {            
@@ -149,7 +149,7 @@ public abstract class AbstractLogManager implements LogManager {
               // b) set the level 
               Iterator<String> i = loggers.keySet().iterator();
               while(i.hasNext()) {
-                String name = (String)i.next();
+                String name = i.next();
                 if (name.startsWith(loggerName)) {
 //              if (loggers.containsKey(loggerName)) { // perhaps we haven't even created such a logger yet
                   HeirarchyLogger hl = (HeirarchyLogger)loggers.get(name);
@@ -162,7 +162,7 @@ public abstract class AbstractLogManager implements LogManager {
               // b) set the level 
               Iterator<String> i = loggers.keySet().iterator();
               while(i.hasNext()) {
-                String name = (String)i.next();
+                String name = i.next();
                 if (name.startsWith(loggerName)) {
 //              if (loggers.containsKey(loggerName)) { // perhaps we haven't even created such a logger yet
                   HeirarchyLogger hl = (HeirarchyLogger)loggers.get(name);
@@ -198,7 +198,8 @@ public abstract class AbstractLogManager implements LogManager {
   /**
    * 
    */
-  @SuppressWarnings("unchecked")
+  @Override
+@SuppressWarnings("unchecked")
   public Logger getLogger(Class clazz, String instance) {
     // first we want to get the logger name
     String loggerName;
@@ -223,7 +224,7 @@ public abstract class AbstractLogManager implements LogManager {
     
     // see if this logger exists
     if (loggers.containsKey(loggerName)) {
-      return (Logger)loggers.get(loggerName);
+      return loggers.get(loggerName);
     }
     
     // OPTIMIZATION: parts is only built if needed, and it may have been needed earlier, or it may not have been
@@ -306,16 +307,20 @@ public abstract class AbstractLogManager implements LogManager {
   }
   
   private static class NullOutputStream extends OutputStream {
-    public void write(int arg0) throws IOException {
+    @Override
+	public void write(int arg0) throws IOException {
       // do nothing
     }
-    public void write(byte[] buf) throws IOException {
+    @Override
+	public void write(byte[] buf) throws IOException {
       // do nothing
     }
-    public void write(byte[] buf, int a, int b) throws IOException {
+    @Override
+	public void write(byte[] buf, int a, int b) throws IOException {
       // do nothing
     }
-    public void close() {
+    @Override
+	public void close() {
       // do nothing
     }
   }

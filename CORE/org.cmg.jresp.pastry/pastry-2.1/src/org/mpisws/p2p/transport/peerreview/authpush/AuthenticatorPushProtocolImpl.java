@@ -37,7 +37,6 @@ advised of the possibility of such damage.
 package org.mpisws.p2p.transport.peerreview.authpush;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -47,8 +46,6 @@ import java.util.Random;
 import java.util.Map.Entry;
 
 import org.mpisws.p2p.transport.peerreview.PeerReview;
-import org.mpisws.p2p.transport.peerreview.PeerReviewCallback;
-import org.mpisws.p2p.transport.peerreview.PeerReviewConstants;
 import org.mpisws.p2p.transport.peerreview.commitment.Authenticator;
 import org.mpisws.p2p.transport.peerreview.commitment.AuthenticatorStore;
 import org.mpisws.p2p.transport.peerreview.evidence.EvidenceTransferProtocol;
@@ -60,7 +57,6 @@ import rice.Continuation;
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
 import rice.p2p.commonapi.rawserialization.RawSerializable;
-import rice.p2p.util.rawserialization.SimpleOutputBuffer;
 
 /**
  * This protocol collects authenticators from incoming messages and, once in a
@@ -116,17 +112,20 @@ public class AuthenticatorPushProtocolImpl<Handle extends RawSerializable, Ident
   /* Start an authenticator push. We begin by determining the witness sets of all the nodes
   for which we have authenticators. */
 
-  public void push() {
+  @Override
+public void push() {
     if (logger.level <= Logger.FINE) logger.log("Authenticator push initiated with "+authOutStore.getNumSubjects()+" subjects");
 
     evidenceTransferProtocol.requestWitnesses(authOutStore.getSubjects(), 
         new Continuation<Map<Identifier,Collection<Handle>>, Exception>() {
 
-          public void receiveException(Exception exception) {
+          @Override
+		public void receiveException(Exception exception) {
             logger.logException("Error requesting witnesses "+authOutStore.getSubjects(), exception);
           }
 
-          public void receiveResult(Map<Identifier, Collection<Handle>> result) {
+          @Override
+		public void receiveResult(Map<Identifier, Collection<Handle>> result) {
             continuePush(result);
           }
         });
@@ -140,7 +139,8 @@ public class AuthenticatorPushProtocolImpl<Handle extends RawSerializable, Ident
    * NOTE: in the c++ impl, this was done via peerreview, now it's done via 
    * a continuation.
    */
-  public void continuePush(Map<Identifier, Collection<Handle>> subjectsToWitnesses) {
+  @Override
+public void continuePush(Map<Identifier, Collection<Handle>> subjectsToWitnesses) {
 
     if (logger.level <= Logger.FINE) logger.log("Continuing authenticator push with "+subjectsToWitnesses.size()+" subjects");
 
@@ -233,7 +233,8 @@ public class AuthenticatorPushProtocolImpl<Handle extends RawSerializable, Ident
    * the certificate from the sender, otherwise we check the auths' signatures
    * and put them into the authInStore.
    */
-  public void handleIncomingAuthenticators(Handle source, AuthPushMessage<Identifier> msg) {
+  @Override
+public void handleIncomingAuthenticators(Handle source, AuthPushMessage<Identifier> msg) {
     if (logger.level <= Logger.INFO) logger.log("Received authenticators from "+source);
     for (Entry<Identifier, List<Authenticator>> e : msg.authenticators.entrySet()) {
       Identifier id = e.getKey();
@@ -257,7 +258,8 @@ public class AuthenticatorPushProtocolImpl<Handle extends RawSerializable, Ident
    * When we receive a new certificate, we may be able to check some more
    * signatures on auths in the authPendingStore
    */
-  public void notifyCertificateAvailable(Identifier id) {
+  @Override
+public void notifyCertificateAvailable(Identifier id) {
     int numAuths = authPendingStore.numAuthenticatorsFor(id);
     if (numAuths > 0) {
       if (logger.level <= Logger.FINE)

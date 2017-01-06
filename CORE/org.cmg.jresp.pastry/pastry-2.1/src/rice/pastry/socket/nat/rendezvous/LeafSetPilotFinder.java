@@ -58,7 +58,8 @@ public class LeafSetPilotFinder implements
   }
 
 
-  public RendezvousSocketNodeHandle findPilot(RendezvousSocketNodeHandle dest) {
+  @Override
+public RendezvousSocketNodeHandle findPilot(RendezvousSocketNodeHandle dest) {
     if (dest.canContactDirect()) throw new IllegalArgumentException("Dest "+dest+ " is not firewalled.");
     
     if (leafSet.contains(dest)) {

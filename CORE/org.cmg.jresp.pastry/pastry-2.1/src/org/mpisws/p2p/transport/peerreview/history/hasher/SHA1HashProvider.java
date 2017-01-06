@@ -43,7 +43,6 @@ import java.security.NoSuchAlgorithmException;
 
 import org.mpisws.p2p.transport.peerreview.history.HashProvider;
 
-import rice.p2p.util.MathUtils;
 import rice.p2p.util.rawserialization.SimpleOutputBuffer;
 
 public class SHA1HashProvider implements HashProvider {
@@ -60,15 +59,18 @@ public class SHA1HashProvider implements HashProvider {
 
   }
   
-  public byte[] getEmptyHash() {
+  @Override
+public byte[] getEmptyHash() {
     return new byte[getHashSizeBytes()];
   }
 
-  public short getHashSizeBytes() {
+  @Override
+public short getHashSizeBytes() {
     return 20;
   }
 
-  public synchronized byte[] hash(long seq, short type, byte[] nodeHash, byte[] contentHash) {
+  @Override
+public synchronized byte[] hash(long seq, short type, byte[] nodeHash, byte[] contentHash) {
 //    System.out.println("Hashing "+seq+","+type+","+MathUtils.toBase64(nodeHash)+","+MathUtils.toBase64(contentHash));
     try {
       SimpleOutputBuffer sob = new SimpleOutputBuffer();
@@ -82,7 +84,8 @@ public class SHA1HashProvider implements HashProvider {
     }
   }
 
-  public synchronized byte[] hash(ByteBuffer... hashMe) {    
+  @Override
+public synchronized byte[] hash(ByteBuffer... hashMe) {    
 //    System.out.println("Hashing "+hashMe.length);
     
     for (ByteBuffer bb : hashMe) {

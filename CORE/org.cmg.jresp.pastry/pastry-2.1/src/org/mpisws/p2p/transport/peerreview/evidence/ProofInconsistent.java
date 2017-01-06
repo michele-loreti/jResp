@@ -81,7 +81,8 @@ public class ProofInconsistent implements PeerReviewConstants, Evidence {
     this.snippet = snippet;
   }
   
-  public short getEvidenceType() {
+  @Override
+public short getEvidenceType() {
     return PROOF_INCONSISTENT;
   }
   
@@ -100,7 +101,8 @@ public class ProofInconsistent implements PeerReviewConstants, Evidence {
     }
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     auth1.serialize(buf);
     if (snippet == null) {
       buf.writeByte(NO_SNIPPET);

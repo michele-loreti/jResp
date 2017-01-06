@@ -51,14 +51,16 @@ class MyContinuation implements Continuation<PastContent, Exception> {
   /**
    * Called when the result arrives.
    */
-  public void receiveResult(PastContent pc) {
+  @Override
+public void receiveResult(PastContent pc) {
     System.out.println("Received a "+pc);
   }
 
   /**
    * Called if there is an error.
    */
-  public void receiveException(Exception result) {
+  @Override
+public void receiveException(Exception result) {
     System.out.println("There was an error: "+result);      
   }
 }

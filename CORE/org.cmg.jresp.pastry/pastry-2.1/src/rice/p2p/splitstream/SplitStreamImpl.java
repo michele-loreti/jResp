@@ -87,7 +87,8 @@ public class SplitStreamImpl implements SplitStream {
    */
   public SplitStreamImpl(Node node, String instance) {
     this(node, instance, new SplitStreamScribePolicyFactory() {
-      public ScribePolicy getSplitStreamScribePolicy(Scribe scribe,
+      @Override
+	public ScribePolicy getSplitStreamScribePolicy(Scribe scribe,
           SplitStream splitstream) {
         return new SplitStreamScribePolicy(scribe, splitstream);
       }
@@ -110,7 +111,8 @@ public class SplitStreamImpl implements SplitStream {
     stripeBaseBitLength = p.getInt("p2p_splitStream_stripeBaseBitLength");
     this.scribe = new ScribeImpl(node, instance);
     scribe.setContentDeserializer(new ScribeContentDeserializer() {    
-      public ScribeContent deserializeScribeContent(InputBuffer buf,
+      @Override
+	public ScribeContent deserializeScribeContent(InputBuffer buf,
           Endpoint endpoint, short contentType) throws IOException {
         switch(contentType) {
           case SplitStreamContent.TYPE:
@@ -138,7 +140,8 @@ public class SplitStreamImpl implements SplitStream {
    * @param id The id of the channel to create
    * @return an instance of a Channel class.
    */
-  public Channel createChannel(ChannelId id) {
+  @Override
+public Channel createChannel(ChannelId id) {
     return attachChannel(id);
   }
 
@@ -155,8 +158,9 @@ public class SplitStreamImpl implements SplitStream {
    * @param id The id of the channel to create
    * @return An instance of Channel object.
    */
-  public Channel attachChannel(ChannelId id) {
-    Channel channel = (Channel) channels.get(id);
+  @Override
+public Channel attachChannel(ChannelId id) {
+    Channel channel = channels.get(id);
 
     if (channel == null) {
       channel = new Channel(id, scribe, instance, node.getIdFactory(),this.node.getId(), 
@@ -175,8 +179,9 @@ public class SplitStreamImpl implements SplitStream {
    *
    * @return All of the channels currently being received by this splitstream
    */
-  public Channel[] getChannels() {
-    return (Channel[]) channels.values().toArray(new Channel[0]);
+  @Override
+public Channel[] getChannels() {
+    return channels.values().toArray(new Channel[0]);
   }
 
   /**
@@ -188,15 +193,18 @@ public class SplitStreamImpl implements SplitStream {
     return (SplitStreamScribePolicy)(scribe.getPolicy());
   }
   
-  public int getStripeBaseBitLength() {
+  @Override
+public int getStripeBaseBitLength() {
     return stripeBaseBitLength;
   }
   
-  public Environment getEnvironment() {
+  @Override
+public Environment getEnvironment() {
     return scribe.getEnvironment();
   }
 
-  public void destroy() {
+  @Override
+public void destroy() {
     scribe.destroy();
   }
 }

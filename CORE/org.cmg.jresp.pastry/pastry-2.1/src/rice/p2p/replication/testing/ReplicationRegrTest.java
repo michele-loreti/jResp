@@ -106,7 +106,8 @@ public class ReplicationRegrTest extends CommonAPITest {
    * @param node The newly created node
    * @param num The number of this node
    */
-  protected void processNode(int num, Node node) {
+  @Override
+protected void processNode(int num, Node node) {
     clients[num] = new TestReplicationClient(node);
     replications[num] = new ReplicationImpl(node, clients[num], REPLICATION_FACTOR, INSTANCE);
   }
@@ -115,7 +116,8 @@ public class ReplicationRegrTest extends CommonAPITest {
    * Method which should run the test - this is called once all of the nodes have been created and
    * are ready.
    */
-  protected void runTest() {
+  @Override
+protected void runTest() {
     testBasic();
     testMaintenance();
   }
@@ -269,7 +271,8 @@ public class ReplicationRegrTest extends CommonAPITest {
      *
      * @param keySet set containing the keys that needs to be fetched
      */
-    public void fetch(IdSet keySet, NodeHandle hint) {
+    @Override
+	public void fetch(IdSet keySet, NodeHandle hint) {
       Iterator i = keySet.getIterator();
       
       while (i.hasNext()) {
@@ -288,7 +291,8 @@ public class ReplicationRegrTest extends CommonAPITest {
      * @param range the range of keys for which the local node is currently 
      *              responsible  
      */
-    public void setRange(IdRange range) {
+    @Override
+	public void setRange(IdRange range) {
       IdRange notRange = range.getComplementRange();
       IdSet set = storage.scan(notRange);
       
@@ -307,7 +311,8 @@ public class ReplicationRegrTest extends CommonAPITest {
      *
      * @param range the requested range
      */
-    public IdSet scan(IdRange range) {
+    @Override
+	public IdSet scan(IdRange range) {
       return storage.scan(range);
     }
     
@@ -315,7 +320,8 @@ public class ReplicationRegrTest extends CommonAPITest {
       storage.store(id, null, id, new ListenerContinuation("Insertion of id " + id, environment));
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
       return "TestRepClient "+node.toString();
     }
   }  

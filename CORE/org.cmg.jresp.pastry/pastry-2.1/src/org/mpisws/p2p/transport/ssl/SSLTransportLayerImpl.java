@@ -36,28 +36,15 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package org.mpisws.p2p.transport.ssl;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.security.KeyPair;
 import java.security.KeyStore;
-import java.security.KeyStoreSpi;
-import java.security.NoSuchAlgorithmException;
-import java.security.Principal;
-import java.security.PrivateKey;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.Arrays;
 import java.util.Map;
 
-import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509KeyManager;
-import javax.net.ssl.X509TrustManager;
-
 import org.mpisws.p2p.transport.ErrorHandler;
 import org.mpisws.p2p.transport.MessageCallback;
 import org.mpisws.p2p.transport.MessageRequestHandle;
@@ -138,25 +125,30 @@ public class SSLTransportLayerImpl<Identifier, MessageType> implements SSLTransp
     
   }
   
-  public SocketRequestHandle<Identifier> openSocket(Identifier i,
+  @Override
+public SocketRequestHandle<Identifier> openSocket(Identifier i,
       final SocketCallback<Identifier> deliverSocketToMe, Map<String, Object> options) {
     final SocketRequestHandleImpl<Identifier> ret = new SocketRequestHandleImpl<Identifier>(i,options,logger);
     ret.setSubCancellable(tl.openSocket(i, new SocketCallback<Identifier>() {
 
-      public void receiveException(SocketRequestHandle<Identifier> s,
+      @Override
+	public void receiveException(SocketRequestHandle<Identifier> s,
           Exception ex) {
         deliverSocketToMe.receiveException(s, ex);
       }
 
-      public void receiveResult(SocketRequestHandle<Identifier> cancellable,
+      @Override
+	public void receiveResult(SocketRequestHandle<Identifier> cancellable,
           P2PSocket<Identifier> sock) {
         getSocketManager(SSLTransportLayerImpl.this, sock, new Continuation<SSLSocketManager<Identifier>, Exception>() {
 
-          public void receiveException(Exception exception) {
+          @Override
+		public void receiveException(Exception exception) {
             deliverSocketToMe.receiveException(ret, exception);
           }
 
-          public void receiveResult(SSLSocketManager<Identifier> result) {
+          @Override
+		public void receiveResult(SSLSocketManager<Identifier> result) {
             deliverSocketToMe.receiveResult(ret, result);
           }}, false, clientAuth != CLIENT_AUTH_NONE);
       }
@@ -168,14 +160,17 @@ public class SSLTransportLayerImpl<Identifier, MessageType> implements SSLTransp
   /**
    * TODO: support resuming
    */
-  public void incomingSocket(final P2PSocket<Identifier> s) throws IOException {
+  @Override
+public void incomingSocket(final P2PSocket<Identifier> s) throws IOException {
     getSocketManager(this,s,new Continuation<SSLSocketManager<Identifier>, Exception>() {
 
-      public void receiveException(Exception exception) {
+      @Override
+	public void receiveException(Exception exception) {
         errorHandler.receivedException(s.getIdentifier(), exception);
       }
 
-      public void receiveResult(SSLSocketManager<Identifier> result) {
+      @Override
+	public void receiveResult(SSLSocketManager<Identifier> result) {
         try {
           callback.incomingSocket(result);
         } catch (IOException ioe) {
@@ -185,37 +180,45 @@ public class SSLTransportLayerImpl<Identifier, MessageType> implements SSLTransp
       }},true, clientAuth != CLIENT_AUTH_NONE);
   }
 
-  public void setCallback(TransportLayerCallback<Identifier, MessageType> callback) {
+  @Override
+public void setCallback(TransportLayerCallback<Identifier, MessageType> callback) {
     this.callback = callback;
   }
 
-  public void acceptMessages(boolean b) {
+  @Override
+public void acceptMessages(boolean b) {
     tl.acceptMessages(b);
   }
 
-  public void acceptSockets(boolean b) {
+  @Override
+public void acceptSockets(boolean b) {
     tl.acceptSockets(b);
   }
 
-  public void destroy() {
+  @Override
+public void destroy() {
     tl.destroy();
   }
 
-  public Identifier getLocalIdentifier() {
+  @Override
+public Identifier getLocalIdentifier() {
     return tl.getLocalIdentifier();
   }
 
-  public MessageRequestHandle<Identifier, MessageType> sendMessage(Identifier i,
+  @Override
+public MessageRequestHandle<Identifier, MessageType> sendMessage(Identifier i,
       MessageType m, MessageCallback<Identifier, MessageType> deliverAckToMe,
       Map<String, Object> options) {
     return tl.sendMessage(i, m, deliverAckToMe, options);
   }
 
-  public void setErrorHandler(ErrorHandler<Identifier> handler) {
+  @Override
+public void setErrorHandler(ErrorHandler<Identifier> handler) {
     this.errorHandler = handler;
   }
 
-  public void messageReceived(Identifier i, MessageType m,
+  @Override
+public void messageReceived(Identifier i, MessageType m,
       Map<String, Object> options) throws IOException {
     callback.messageReceived(i, m, options);
   }

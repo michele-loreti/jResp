@@ -39,7 +39,6 @@ package rice.p2p.util;
 
 import java.io.*;
 import java.security.*;
-import java.util.*;
 
 /**
 * @(#) EncryptedInputStream.java
@@ -106,7 +105,8 @@ public class EncryptedInputStream extends InputStream {
    * @return the next byte of data, or <code>-1</code> if the end of the
    *         stream is reached.
    */
-  public int read() throws IOException {
+  @Override
+public int read() throws IOException {
     if ((buffer != null) && (bufferLength < buffer.length)) {
       bufferLength++;
       
@@ -131,7 +131,8 @@ public class EncryptedInputStream extends InputStream {
    *             <code>-1</code> if there is no more data because the end of
    *             the stream has been reached.
    */
-  public int read(byte b[], int off, int len) throws IOException {
+  @Override
+public int read(byte b[], int off, int len) throws IOException {
     if ((buffer != null) && (bufferLength < buffer.length)) {
       int l = (len > available() ? available() : len);
       System.arraycopy(buffer, bufferLength, b, off, l);
@@ -165,7 +166,8 @@ public class EncryptedInputStream extends InputStream {
    *             without blocking.
    * @exception  IOException  if an I/O error occurs.
    */
-  public int available() throws IOException {
+  @Override
+public int available() throws IOException {
     if (buffer == null)
       return 0;
     else
@@ -178,7 +180,8 @@ public class EncryptedInputStream extends InputStream {
    *
    * @exception  IOException  if an I/O error occurs.
    */
-  public void close() throws IOException {
+  @Override
+public void close() throws IOException {
     stream.close();
   }
 }

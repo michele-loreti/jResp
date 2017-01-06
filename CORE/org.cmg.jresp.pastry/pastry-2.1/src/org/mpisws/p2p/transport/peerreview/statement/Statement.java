@@ -68,7 +68,8 @@ public abstract class Statement<Identifier extends RawSerializable> implements P
     evidence = evSerializer.deserialize(buf, buf.readByte(),isResponse());
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     originator.serialize(buf);
     subject.serialize(buf);
     buf.writeLong(evidenceSeq);

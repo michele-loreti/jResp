@@ -80,7 +80,8 @@ public class MultiInetSocketAddress implements Serializable {
    *
    * @return The hashCode
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     int result = 31173;
     for (int i = 0; i < address.length; i++) {
       result ^=  address[i].hashCode();
@@ -94,7 +95,8 @@ public class MultiInetSocketAddress implements Serializable {
    * @param o The source route to compare to
    * @return The equality
    */
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     if (o == null) return false;
     if (! (o instanceof MultiInetSocketAddress)) return false;
     MultiInetSocketAddress that = (MultiInetSocketAddress)o;
@@ -124,7 +126,8 @@ public class MultiInetSocketAddress implements Serializable {
    * @param path The path
    * @return THe string
    */
-  public String toString() {
+  @Override
+public String toString() {
     String s = "";
     for (int ctr = 0; ctr < address.length; ctr++) {
       s+=address[ctr];

@@ -38,8 +38,6 @@ package org.mpisws.p2p.transport.wire;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
@@ -97,7 +95,7 @@ public class SocketManager extends SelectionKeyHandler implements P2PSocket<Inet
     this.tcp = tcp;
     logger = tcp.logger;
     
-    channel = (SocketChannel) ((ServerSocketChannel) serverKey.channel()).accept();
+    channel = ((ServerSocketChannel) serverKey.channel()).accept();
     channel.socket().setSendBufferSize(tcp.SOCKET_BUFFER_SIZE);
     channel.socket().setReceiveBufferSize(tcp.SOCKET_BUFFER_SIZE);
     channel.socket().setTcpNoDelay(tcp.TCP_NO_DELAY);
@@ -167,7 +165,8 @@ public class SocketManager extends SelectionKeyHandler implements P2PSocket<Inet
          *
          * @param key The key which is connectable.
          */
-        public void connect(SelectionKey key) {
+        @Override
+		public void connect(SelectionKey key) {
           try {
             // unregister interest in connecting to this socket
             if (channel.finishConnect()) {
@@ -192,7 +191,8 @@ public class SocketManager extends SelectionKeyHandler implements P2PSocket<Inet
     }
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "SM "+addr+" "+channel; 
   }
   
@@ -222,7 +222,8 @@ public class SocketManager extends SelectionKeyHandler implements P2PSocket<Inet
    * cancelling the key and setting the key to be interested in nothing
    */
 //  Exception closeEx;
-  public void close() {
+  @Override
+public void close() {
 //    logger.logException("Closing " + this, new Exception("Stack Trace"));
 //    if (logger.level <= Logger.FINE) logger.log("close()");
     try {
@@ -250,7 +251,8 @@ public class SocketManager extends SelectionKeyHandler implements P2PSocket<Inet
       
       
       tcp.wire.environment.getSelectorManager().invoke(new Runnable() {
-        public void run() {
+        @Override
+		public void run() {
       // notify the writer/reader because an intermediate layer may have closed the socket, and they need to know
       if (writer != null) {
         if (writer == reader) {
@@ -298,7 +300,8 @@ public class SocketManager extends SelectionKeyHandler implements P2PSocket<Inet
    *
    * @param key The key in question
    */
-  public synchronized void modifyKey(SelectionKey key) {
+  @Override
+public synchronized void modifyKey(SelectionKey key) {
     int flag = 0;
     if (reader != null) {
       flag |= SelectionKey.OP_READ;
@@ -314,7 +317,8 @@ public class SocketManager extends SelectionKeyHandler implements P2PSocket<Inet
    *
    * @param key The selection key for this manager
    */
-  public void read(SelectionKey key) {
+  @Override
+public void read(SelectionKey key) {
     P2PSocketReceiver<InetSocketAddress> temp = null;
     synchronized(this) {
       if (reader == null) {
@@ -337,7 +341,8 @@ public class SocketManager extends SelectionKeyHandler implements P2PSocket<Inet
    *
    * @param key The selection key for this manager
    */
-  public void write(SelectionKey key) {
+  @Override
+public void write(SelectionKey key) {
     P2PSocketReceiver<InetSocketAddress> temp = null;
     synchronized(this) {
       if (writer == null) {
@@ -358,7 +363,8 @@ public class SocketManager extends SelectionKeyHandler implements P2PSocket<Inet
 
 //  Exception regWriteEx;
 //  long regWriteExTime;
-  public synchronized void register(final boolean wantToRead, final boolean wantToWrite, P2PSocketReceiver<InetSocketAddress> receiver) {
+  @Override
+public synchronized void register(final boolean wantToRead, final boolean wantToWrite, P2PSocketReceiver<InetSocketAddress> receiver) {
     if (logger.level <= Logger.FINER) logger.log(this+".register("+(wantToRead?"r":"")+(wantToWrite?"w":"")+","+receiver+")");
     if (key == null) {
 //      if (closeEx == null) {
@@ -412,7 +418,8 @@ public class SocketManager extends SelectionKeyHandler implements P2PSocket<Inet
    * the open list.
    */
 //  Exception shutEx;
-  public void shutdownOutput() {    
+  @Override
+public void shutdownOutput() {    
 //    logger.logException(this+".shutdownOutput()", new Exception());
     boolean closeMe = false;
     synchronized(this) {
@@ -441,7 +448,8 @@ public class SocketManager extends SelectionKeyHandler implements P2PSocket<Inet
             channel.socket().shutdownOutput();
             
             tcp.wire.environment.getSelectorManager().invoke(new Runnable() {
-              public void run() {
+              @Override
+			public void run() {
                 // notify the writer/reader because an intermediate layer may have closed the socket, and they need to know
                 if (writer != null) {
 //                  try {
@@ -477,7 +485,8 @@ public class SocketManager extends SelectionKeyHandler implements P2PSocket<Inet
     }
   }
 
-  public long read(ByteBuffer dst) throws IOException {
+  @Override
+public long read(ByteBuffer dst) throws IOException {
     if (key == null || channel.socket().isInputShutdown()) return -1;
     try {
       long ret = channel.read(dst);
@@ -503,7 +512,8 @@ public class SocketManager extends SelectionKeyHandler implements P2PSocket<Inet
 //    return channel.read(dsts, offset, length);
 //  }
 
-  public long write(ByteBuffer src) throws IOException {
+  @Override
+public long write(ByteBuffer src) throws IOException {
     if (key == null || channel.socket().isOutputShutdown()) return -1;
     try {
       long ret = channel.write(src);
@@ -529,7 +539,8 @@ public class SocketManager extends SelectionKeyHandler implements P2PSocket<Inet
 //    return channel.write(srcs, offset, length);
 //  }
 
-  public boolean cancel() {
+  @Override
+public boolean cancel() {
     if (key == null) return false;
     if (delivered) throw new IllegalStateException(this+".cancel() Can't cancel, already delivered");
     close();
@@ -542,11 +553,13 @@ public class SocketManager extends SelectionKeyHandler implements P2PSocket<Inet
     close();
   }
 
-  public InetSocketAddress getIdentifier() {
+  @Override
+public InetSocketAddress getIdentifier() {
     return addr;
   }
 
-  public Map<String, Object> getOptions() {
+  @Override
+public Map<String, Object> getOptions() {
     return options;
   }
 

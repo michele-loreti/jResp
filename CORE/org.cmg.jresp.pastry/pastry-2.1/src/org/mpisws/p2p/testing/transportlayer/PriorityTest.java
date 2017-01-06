@@ -115,7 +115,8 @@ public class PriorityTest extends TLTest<InetSocketAddress> {
       // the early, low priority messages are dropped
       
       alice.sendMessage(bogus, ByteBuffer.wrap(new byte[ctr]), new MessageCallback<MultiInetSocketAddress, ByteBuffer>(){
-        public void sendFailed(MessageRequestHandle<MultiInetSocketAddress, ByteBuffer> msg, Exception reason) {
+        @Override
+		public void sendFailed(MessageRequestHandle<MultiInetSocketAddress, ByteBuffer> msg, Exception reason) {
 //          System.out.println("sendFailed");
           if (reason instanceof NodeIsFaultyException) {
           } else {
@@ -130,7 +131,8 @@ public class PriorityTest extends TLTest<InetSocketAddress> {
             }
           }
         }
-        public void ack(MessageRequestHandle<MultiInetSocketAddress, ByteBuffer> msg) {
+        @Override
+		public void ack(MessageRequestHandle<MultiInetSocketAddress, ByteBuffer> msg) {
           System.out.println("ack");
         }
       }, options);

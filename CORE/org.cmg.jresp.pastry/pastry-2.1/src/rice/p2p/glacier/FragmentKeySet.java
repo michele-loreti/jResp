@@ -35,13 +35,9 @@ advised of the possibility of such damage.
 
 *******************************************************************************/ 
 package rice.p2p.glacier;
-import java.io.Serializable;
-import java.security.*;
 import java.util.*;
 import rice.p2p.commonapi.*;
 import rice.p2p.util.*;
-
-import rice.p2p.glacier.*;
 
 /**
  * DESCRIBE THE CLASS
@@ -102,7 +98,8 @@ public class FragmentKeySet implements rice.p2p.commonapi.IdSet {
    *
    * @return the interator
    */
-  public Iterator<Id> getIterator() {
+  @Override
+public Iterator<Id> getIterator() {
     return idSet.keySet().iterator();
   }
 
@@ -145,7 +142,8 @@ public class FragmentKeySet implements rice.p2p.commonapi.IdSet {
    * @param id the id to test
    * @return true of id is a member, false otherwise
    */
-  public boolean isMemberId(rice.p2p.commonapi.Id id) {
+  @Override
+public boolean isMemberId(rice.p2p.commonapi.Id id) {
     return isMember(id);
   }
 
@@ -154,7 +152,8 @@ public class FragmentKeySet implements rice.p2p.commonapi.IdSet {
    *
    * @return DESCRIBE THE RETURN VALUE
    */
-  public int numElements() {
+  @Override
+public int numElements() {
     return idSet.size();
   }
 
@@ -229,7 +228,8 @@ public class FragmentKeySet implements rice.p2p.commonapi.IdSet {
    * @return DESCRIBE THE RETURN VALUE
    */
 
-  public String toString() {
+  @Override
+public String toString() {
     Iterator it = getIterator();
     Id key;
     String s = "[ IdSet: ";
@@ -249,7 +249,8 @@ public class FragmentKeySet implements rice.p2p.commonapi.IdSet {
    *
    * @param id the id to add
    */
-  public void addId(rice.p2p.commonapi.Id id) {
+  @Override
+public void addId(rice.p2p.commonapi.Id id) {
     addMember(id);
   }
 
@@ -258,8 +259,9 @@ public class FragmentKeySet implements rice.p2p.commonapi.IdSet {
    *
    * @param id the id to remove
    */
-  public void removeId(rice.p2p.commonapi.Id id) {
-    removeMember((FragmentKey) id);
+  @Override
+public void removeId(rice.p2p.commonapi.Id id) {
+    removeMember(id);
   }
 
   /**
@@ -268,7 +270,8 @@ public class FragmentKeySet implements rice.p2p.commonapi.IdSet {
    * @param range DESCRIBE THE PARAMETER
    * @return the subset
    */
-  public rice.p2p.commonapi.IdSet subSet(rice.p2p.commonapi.IdRange range) {
+  @Override
+public rice.p2p.commonapi.IdSet subSet(rice.p2p.commonapi.IdRange range) {
     return subSet((FragmentKeyRange) range);
   }
 
@@ -277,7 +280,8 @@ public class FragmentKeySet implements rice.p2p.commonapi.IdSet {
    *
    * @return the hash of this set
    */
-  public byte[] hash() {
+  @Override
+public byte[] hash() {
     return getHash();
   }
 
@@ -286,7 +290,8 @@ public class FragmentKeySet implements rice.p2p.commonapi.IdSet {
    *
    * @return DESCRIBE THE RETURN VALUE
    */
-  public Object clone() {
+  @Override
+public Object clone() {
     return new FragmentKeySet(this);
   }
   
@@ -295,7 +300,8 @@ public class FragmentKeySet implements rice.p2p.commonapi.IdSet {
    *
    * @return A new IdSet
    */
-  public IdSet build() {
+  @Override
+public IdSet build() {
     return new FragmentKeySet();
   }
 
@@ -303,7 +309,8 @@ public class FragmentKeySet implements rice.p2p.commonapi.IdSet {
    * return this set as an array
    * @return the array
    */
-  public rice.p2p.commonapi.Id[] asArray() {
+  @Override
+public rice.p2p.commonapi.Id[] asArray() {
     return (rice.p2p.commonapi.Id[]) idSet.keySet().toArray(new rice.p2p.commonapi.Id[0]);
   }
   

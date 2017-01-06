@@ -38,13 +38,9 @@ package rice.pastry.transport;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.mpisws.p2p.transport.multiaddress.MultiInetSocketAddress;
 import org.mpisws.p2p.transport.sourceroute.manager.simple.NextHopStrategy;
 
-import rice.pastry.NodeHandle;
 import rice.pastry.leafset.LeafSet;
 import rice.pastry.socket.SocketNodeHandle;
 
@@ -59,7 +55,8 @@ public class LeafSetNHStrategy implements NextHopStrategy<MultiInetSocketAddress
 //    this.ls = ls;
 //  }
   
-  public Collection<MultiInetSocketAddress> getNextHops(MultiInetSocketAddress destination) {
+  @Override
+public Collection<MultiInetSocketAddress> getNextHops(MultiInetSocketAddress destination) {
     if (ls == null) return null;
     
     Collection<MultiInetSocketAddress> ret = walkLeafSet(destination, 8);

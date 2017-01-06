@@ -57,7 +57,8 @@ public class JavaScribeContentDeserializer implements ScribeContentDeserializer 
     
   }
 
-  public ScribeContent deserializeScribeContent(InputBuffer buf, Endpoint endpoint, short contentType) throws IOException {    
+  @Override
+public ScribeContent deserializeScribeContent(InputBuffer buf, Endpoint endpoint, short contentType) throws IOException {    
     byte[] array = new byte[buf.readInt()];
     buf.read(array);
     

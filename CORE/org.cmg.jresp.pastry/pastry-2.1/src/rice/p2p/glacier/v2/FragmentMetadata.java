@@ -64,8 +64,9 @@ public class FragmentMetadata implements Serializable, Comparable<FragmentMetada
     return storedSince;
   }
   
-  public int compareTo(FragmentMetadata object) {
-    FragmentMetadata metadata = (FragmentMetadata) object;
+  @Override
+public int compareTo(FragmentMetadata object) {
+    FragmentMetadata metadata = object;
     
     if (metadata.currentExpirationDate > currentExpirationDate) 
       return -1;

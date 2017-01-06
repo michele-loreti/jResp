@@ -38,16 +38,8 @@ package rice.p2p.util.testing;
 
 import rice.p2p.util.*;
 import java.io.*;
-import java.math.*;
-
 import java.security.*;
-import java.security.cert.*;
-import java.security.interfaces.*;
-import java.security.spec.*;
 import java.util.*;
-import java.util.zip.*;
-import javax.crypto.*;
-import javax.crypto.spec.*;
 
 public class SecurityUtilsUnit {
 

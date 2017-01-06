@@ -39,8 +39,6 @@ package org.mpisws.p2p.transport.peerreview.audit;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.mpisws.p2p.transport.peerreview.history.logentry.HistoryEvent;
-
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
 import rice.p2p.util.MathUtils;
@@ -81,7 +79,8 @@ public class SnippetEntry {
     this(buf, decodeSeq(buf, prev.seq), hashSize);
   }
   
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     SnippetEntry that = (SnippetEntry)o;
     if (this.type != that.type) return false;
     if (this.seq != that.seq) return false;
@@ -104,7 +103,8 @@ public class SnippetEntry {
     buf.read(content);
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "SEntry type:"+type+" seq:"+seq+" "+(isHash?"hash":"not hash")+" len:"+content.length;
   }
   

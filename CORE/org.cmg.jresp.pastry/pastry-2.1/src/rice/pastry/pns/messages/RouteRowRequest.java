@@ -41,7 +41,6 @@ import java.io.IOException;
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
 import rice.pastry.NodeHandle;
-import rice.pastry.messaging.Message;
 import rice.pastry.messaging.PRawMessage;
 
 public class RouteRowRequest extends PRawMessage {
@@ -64,15 +63,18 @@ public class RouteRowRequest extends PRawMessage {
   }
 
   
-  public String toString() {
+  @Override
+public String toString() {
     return "RRReq["+index+"]";
   }
   
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)0); // version
     buf.writeShort(index);    
   }

@@ -40,13 +40,9 @@ import java.io.IOException;
 
 import org.mpisws.p2p.transport.P2PSocket;
 import org.mpisws.p2p.transport.P2PSocketReceiver;
-import org.mpisws.p2p.transport.multiaddress.MultiInetSocketAddress;
-
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
 import rice.p2p.commonapi.appsocket.AppSocketReceiver;
-import rice.pastry.NodeHandle;
-import rice.pastry.socket.TransportLayerNodeHandle;
 
 public class AppSocketReceiverWrapper<Identifier> implements
     P2PSocketReceiver<Identifier> {
@@ -61,11 +57,13 @@ public class AppSocketReceiverWrapper<Identifier> implements
     this.logger = env.getLogManager().getLogger(AppSocketReceiverWrapper.class, null);    
   }
 
-  public void receiveException(P2PSocket<Identifier> s, Exception ioe) {
+  @Override
+public void receiveException(P2PSocket<Identifier> s, Exception ioe) {
     receiver.receiveException(socket, ioe);
   }
 
-  public void receiveSelectResult(P2PSocket<Identifier> s,
+  @Override
+public void receiveSelectResult(P2PSocket<Identifier> s,
       boolean canRead, boolean canWrite) throws IOException {
 //    logger.log("rSR("+canRead+","+canWrite+")");
     receiver.receiveSelectResult(socket, canRead, canWrite);

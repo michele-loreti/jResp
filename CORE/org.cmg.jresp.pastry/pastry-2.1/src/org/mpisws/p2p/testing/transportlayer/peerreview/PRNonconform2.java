@@ -36,24 +36,11 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package org.mpisws.p2p.testing.transportlayer.peerreview;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
-import org.mpisws.p2p.testing.transportlayer.peerreview.PRRegressionTest.BogusApp;
-import org.mpisws.p2p.testing.transportlayer.peerreview.PRRegressionTest.HandleImpl;
-import org.mpisws.p2p.testing.transportlayer.peerreview.PRRegressionTest.IdImpl;
-import org.mpisws.p2p.testing.transportlayer.peerreview.PRRegressionTest.Player;
 import org.mpisws.p2p.transport.peerreview.PeerReview;
 import org.mpisws.p2p.transport.peerreview.PeerReviewImpl;
-import org.mpisws.p2p.transport.peerreview.infostore.StatusChangeListener;
-
+import org.mpisws.p2p.transport.peerreview.StatusConstants;
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
-import rice.p2p.util.MathUtils;
-import rice.selector.TimerTask;
 
 /**
  * Alice deviates from the protocol by sending a message that's different 
@@ -73,11 +60,11 @@ public class PRNonconform2 extends PRRegressionTest {
   public void finish() {
     // see if everyone found bob exposed
     try {
-      if (recordedStatus.get(bobHandle).get(aliceHandle.id) != StatusChangeListener.STATUS_EXPOSED) {
+      if (recordedStatus.get(bobHandle).get(aliceHandle.id) != StatusConstants.STATUS_EXPOSED) {
         logger.log("Bob Didn't expose Alice");
         System.exit(1);
       }
-      if (recordedStatus.get(carolHandle).get(aliceHandle.id) != StatusChangeListener.STATUS_EXPOSED) {
+      if (recordedStatus.get(carolHandle).get(aliceHandle.id) != StatusConstants.STATUS_EXPOSED) {
         logger.log("Carol Didn't expose Alice");
         System.exit(1);
       }

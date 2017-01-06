@@ -93,7 +93,8 @@ public class EvtSend<Identifier extends RawSerializable> extends HistoryEvent im
     }
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     receiverId.serialize(buf);
     buf.writeBoolean(hash != null);
     buf.write(payload.array(), payload.position(), payload.remaining());
@@ -102,7 +103,8 @@ public class EvtSend<Identifier extends RawSerializable> extends HistoryEvent im
     }
   }
   
-  public short getType() {
+  @Override
+public short getType() {
     return EVT_SEND;
   }
 }

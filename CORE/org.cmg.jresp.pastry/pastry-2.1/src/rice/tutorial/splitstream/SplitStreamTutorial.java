@@ -43,7 +43,6 @@ import java.util.*;
 import rice.environment.Environment;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.RawMessage;
-import rice.pastry.NodeHandle;
 import rice.pastry.*;
 import rice.pastry.commonapi.PastryIdFactory;
 import rice.pastry.direct.*;
@@ -134,12 +133,12 @@ public class SplitStreamTutorial {
 
     // for the first app subscribe then start the publishtask
     Iterator<MySplitStreamClient> i = apps.iterator();
-    MySplitStreamClient app = (MySplitStreamClient) i.next();
+    MySplitStreamClient app = i.next();
     app.subscribe();
     app.startPublishTask();
     // for all the rest just subscribe
     while (i.hasNext()) {
-      app = (MySplitStreamClient) i.next();
+      app = i.next();
       app.subscribe();
     }
 

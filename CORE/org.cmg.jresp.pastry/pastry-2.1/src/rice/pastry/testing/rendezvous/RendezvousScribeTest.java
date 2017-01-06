@@ -40,9 +40,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import rice.environment.Environment;
-import rice.environment.logging.Logger;
 import rice.environment.params.Parameters;
-import rice.p2p.scribe.Topic;
+import rice.p2p.commonapi.testing.CommonAPITest;
 import rice.p2p.scribe.testing.RawScribeRegrTest;
 
 /**
@@ -74,7 +73,7 @@ public class RendezvousScribeTest /*extends RawScribeRegrTest*/ {
       }
     }
     
-    Environment env = RawScribeRegrTest.parseArgs(args);
+    Environment env = CommonAPITest.parseArgs(args);
     
     Parameters p = env.getParameters();
 //    p.setInt("org.mpisws.p2p.transport_loglevel", Logger.FINE);

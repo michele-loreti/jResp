@@ -50,12 +50,14 @@ import rice.p2p.commonapi.rawserialization.OutputBuffer;
  */
 public class PortSerializer implements Serializer<InetSocketAddress>{
 
-  public InetSocketAddress deserialize(InputBuffer b, InetSocketAddress i,
+  @Override
+public InetSocketAddress deserialize(InputBuffer b, InetSocketAddress i,
       Map<String, Object> options) throws IOException {
     return new InetSocketAddress(i.getAddress(),b.readShort());
   }
 
-  public void serialize(InetSocketAddress i, OutputBuffer b) throws IOException {
+  @Override
+public void serialize(InetSocketAddress i, OutputBuffer b) throws IOException {
     b.writeShort((short)i.getPort());
   }
 

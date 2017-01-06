@@ -64,16 +64,19 @@ public class TimeoutResponseStrategy<Identifier> implements ResponseStrategy<Ide
     this.time = env.getTimeSource();
   }
   
-  public void messageReceived(Identifier i, ByteBuffer msg, Map<String,Object> options) {
+  @Override
+public void messageReceived(Identifier i, ByteBuffer msg, Map<String,Object> options) {
     lastTimeReceived.put(i, time.currentTimeMillis());
   }
 
-  public void messageSent(Identifier i, ByteBuffer msg, Map<String,Object> options) {
+  @Override
+public void messageSent(Identifier i, ByteBuffer msg, Map<String,Object> options) {
     // TODO Auto-generated method stub
 
   }
 
-  public boolean sendDirect(Identifier i, ByteBuffer msg, Map<String,Object> options) {
+  @Override
+public boolean sendDirect(Identifier i, ByteBuffer msg, Map<String,Object> options) {
     long lastTime = 0;
     if (lastTimeReceived.containsKey(i)) {
       lastTime = lastTimeReceived.get(i);

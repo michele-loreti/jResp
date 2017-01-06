@@ -58,12 +58,14 @@ public class UnifiedProcessor extends SimpleProcessor {
     this.log = log;
     bogusContinuation = new Continuation<Object, Exception>() {
     
-      public void receiveResult(Object result) {
+      @Override
+	public void receiveResult(Object result) {
         // TODO Auto-generated method stub
     
       }
     
-      public void receiveException(Exception exception) {
+      @Override
+	public void receiveException(Exception exception) {
         // TODO Auto-generated method stub
     
       }
@@ -76,7 +78,8 @@ public class UnifiedProcessor extends SimpleProcessor {
   @Override
   public Cancellable processBlockingIO(final WorkRequest workRequest) {    
     return process(new Executable<Object, Exception>() {
-      public Object execute() throws Exception {
+      @Override
+	public Object execute() throws Exception {
         workRequest.run();
         return null;
       }      

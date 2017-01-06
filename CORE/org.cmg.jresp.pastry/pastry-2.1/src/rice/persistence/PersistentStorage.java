@@ -248,11 +248,15 @@ public class PersistentStorage implements Storage {
   public void setTimer(rice.selector.Timer timer) {
     if (index) {
       timer.scheduleAtFixedRate(new rice.selector.TimerTask() {
-        public String toString() { return "persistence dirty purge enqueue"; }
-        public void run() {
+        @Override
+		public String toString() { return "persistence dirty purge enqueue"; }
+        @Override
+		public void run() {
           environment.getProcessor().processBlockingIO(new WorkRequest(new ListenerContinuation("Enqueue of writeMetadataFile", environment), environment.getSelectorManager()) {
-            public String toString() { return "persistence dirty purge"; }
-            public Object doWork() throws Exception {
+            @Override
+			public String toString() { return "persistence dirty purge"; }
+            @Override
+			public Object doWork() throws Exception {
               writeDirty();
               return Boolean.TRUE;
             }
@@ -270,12 +274,15 @@ public class PersistentStorage implements Storage {
    * @param newId The new id of the object in question.
    * @param c The command to run once the operation is complete
    */
-  public void rename(final Id oldId, final Id newId, Continuation c) {
+  @Override
+public void rename(final Id oldId, final Id newId, Continuation c) {
     printStats();
     
     environment.getProcessor().processBlockingIO(new WorkRequest(c, environment.getSelectorManager()) {
-      public String toString() { return "rename " + oldId + " " + newId; }
-      public Object doWork() throws Exception {
+      @Override
+	public String toString() { return "rename " + oldId + " " + newId; }
+      @Override
+	public Object doWork() throws Exception {
         synchronized(statLock) { numRenames++; }
         
         File f = getFile(oldId);
@@ -321,7 +328,8 @@ public class PersistentStorage implements Storage {
    * @return <code>true</code> if the action succeeds, else
    * <code>false</code>.
    */
-  public void store(final Id id, final Serializable metadata, final Serializable obj, Continuation c) {
+  @Override
+public void store(final Id id, final Serializable metadata, final Serializable obj, Continuation c) {
     if (id == null || obj == null) {
       c.receiveResult(new Boolean(false));
       return;
@@ -330,8 +338,10 @@ public class PersistentStorage implements Storage {
     printStats();
     
     environment.getProcessor().processBlockingIO(new WorkRequest(c, environment.getSelectorManager()) { 
-      public String toString() { return "store " + id; }
-      public Object doWork() throws Exception {
+      @Override
+	public String toString() { return "store " + id; }
+      @Override
+	public Object doWork() throws Exception {
         synchronized(statLock) { numWrites++; }
         
         if (logger.level <= Logger.FINER) logger.log("Storing object " + obj + " under id " + id.toStringFull() + " in root " + appDirectory);
@@ -399,12 +409,15 @@ public class PersistentStorage implements Storage {
    * @return <code>true</code> if the action succeeds, else
    * <code>false</code>.
    */
-  public void unstore(final Id id, Continuation c) {
+  @Override
+public void unstore(final Id id, Continuation c) {
     printStats();
     
     environment.getProcessor().processBlockingIO(new WorkRequest(c, environment.getSelectorManager()) { 
-      public String toString() { return "unstore " + id; }
-      public Object doWork() throws Exception {
+      @Override
+	public String toString() { return "unstore " + id; }
+      @Override
+	public Object doWork() throws Exception {
         synchronized(statLock) { numDeletes++; }
         
         /* first get the file */
@@ -439,7 +452,8 @@ public class PersistentStorage implements Storage {
    * @param id The id of the object in question.
    * @return Whether or not an object is present at id.
    */
-  public boolean exists(Id id) {
+  @Override
+public boolean exists(Id id) {
     if (index) {
       synchronized (metadata) {
         return metadata.containsKey(id);
@@ -457,7 +471,8 @@ public class PersistentStorage implements Storage {
    * @param id The id for which the metadata is needed
    * @return The metadata, or null of non exists
    */
-  public Serializable getMetadata(Id id) {
+  @Override
+public Serializable getMetadata(Id id) {
     if (index) {
       synchronized (metadata) {
         return (Serializable) metadata.get(id);
@@ -476,15 +491,18 @@ public class PersistentStorage implements Storage {
    * @param metadata The metadata to store
    * @param c The command to run once the operation is complete
    */
-  public void setMetadata(final Id id, final Serializable metadata, Continuation c) {
+  @Override
+public void setMetadata(final Id id, final Serializable metadata, Continuation c) {
     printStats();
     
     if (! exists(id)) {
       c.receiveResult(new Boolean(false));
     } else {    
       environment.getProcessor().processBlockingIO(new WorkRequest(c, environment.getSelectorManager()) { 
-        public String toString() { return "setMetadata " + id; }
-        public Object doWork() throws Exception {
+        @Override
+		public String toString() { return "setMetadata " + id; }
+        @Override
+		public Object doWork() throws Exception {
           synchronized(statLock) { numMetadataWrites++; }
           
           if (logger.level <= Logger.FINER) logger.log("COUNT: Updating metadata for " + id.toStringFull() + " in " + name);
@@ -515,15 +533,18 @@ public class PersistentStorage implements Storage {
    * @return The object, or <code>null</code> if there is no corresponding
    * object (through receiveResult on c).
    */
-  public void getObject(final Id id, Continuation c) {
+  @Override
+public void getObject(final Id id, Continuation c) {
     printStats();
     
     if (index && (! exists(id))) {
       c.receiveResult(null);
     } else {    
       environment.getProcessor().processBlockingIO(new WorkRequest(c, environment.getSelectorManager()) { 
-        public String toString() { return "getObject " + id; }
-        public Object doWork() throws Exception {
+        @Override
+		public String toString() { return "getObject " + id; }
+        @Override
+		public Object doWork() throws Exception {
           synchronized(statLock) { numReads++; }
           
           /* get the file */
@@ -568,7 +589,8 @@ public class PersistentStorage implements Storage {
    * @param range The range to query  
    * @return The idset containing the keys 
    */
-  public IdSet scan(IdRange range){
+  @Override
+public IdSet scan(IdRange range){
     if (index) {
       if (range.isEmpty())
         return factory.buildIdSet();
@@ -594,7 +616,8 @@ public class PersistentStorage implements Storage {
    *
    * @return The idset containing the keys 
    */
-  public IdSet scan() {
+  @Override
+public IdSet scan() {
     if (index) {
       synchronized (metadata){
         return factory.buildIdSet(new ImmutableSortedMap(metadata.keyMap()));
@@ -611,7 +634,8 @@ public class PersistentStorage implements Storage {
    * @param range The range to query  
    * @return The map containing the keys 
    */
-  public SortedMap scanMetadata(IdRange range) {
+  @Override
+public SortedMap scanMetadata(IdRange range) {
     if (index) {
       if (range.isEmpty()) 
         return new RedBlackMap();
@@ -632,7 +656,8 @@ public class PersistentStorage implements Storage {
    *
    * @return The treemap mapping ids to metadata 
    */
-  public SortedMap scanMetadata() {
+  @Override
+public SortedMap scanMetadata() {
     if (index) {
       return new ImmutableSortedMap(metadata.keyMap());
     } else {
@@ -647,7 +672,8 @@ public class PersistentStorage implements Storage {
    * @param value The maximal metadata value 
    * @return The submapping
    */
-  public SortedMap scanMetadataValuesHead(Object value) {
+  @Override
+public SortedMap scanMetadataValuesHead(Object value) {
     if (index) {
       return new ImmutableSortedMap(metadata.valueHeadMap(value));
     } else {
@@ -660,7 +686,8 @@ public class PersistentStorage implements Storage {
    *
    * @return The submapping
    */
-  public SortedMap scanMetadataValuesNull() {
+  @Override
+public SortedMap scanMetadataValuesNull() {
     if (index) {
       return new ImmutableSortedMap(metadata.valueNullMap());
     } else {
@@ -676,7 +703,8 @@ public class PersistentStorage implements Storage {
    * @param c The command to run once the operation is complete
    * @return The total size, in bytes, of data stored.
    */
-  public long getTotalSize(){
+  @Override
+public long getTotalSize(){
     return usedSize;
   }
   
@@ -685,7 +713,8 @@ public class PersistentStorage implements Storage {
    *
    * @return The number of ids in the catalog
    */
-  public int getSize() {
+  @Override
+public int getSize() {
     if (index) {
       return metadata.size();
     } else {
@@ -699,10 +728,13 @@ public class PersistentStorage implements Storage {
    *
    * @param c The command to run once done
    */
-  public void flush(Continuation c) {
+  @Override
+public void flush(Continuation c) {
     environment.getProcessor().processBlockingIO(new WorkRequest(c, environment.getSelectorManager()) { 
-      public String toString() { return "flush"; }
-      public Object doWork() throws Exception {
+      @Override
+	public String toString() { return "flush"; }
+      @Override
+	public Object doWork() throws Exception {
         if (logger.level <= Logger.FINER) logger.log("COUNT: Flushing all data in " + name);
 
         flushDirectory(appDirectory);
@@ -2034,7 +2066,8 @@ public class PersistentStorage implements Storage {
    * only subdirectories.
    */ 
   private class DirectoryFilter implements FilenameFilter {
-    public boolean accept(File dir, String name) {
+    @Override
+	public boolean accept(File dir, String name) {
       return isDirectory(dir, name); //(new File(dir, name)).isDirectory(); //((getPrefix(dir).length() + name.length() < factory.getIdToStringLength()) && (new File(dir, name)).isDirectory());
     }
   }
@@ -2044,7 +2077,8 @@ public class PersistentStorage implements Storage {
    * only files ( no directories )
    */
   private class FileFilter implements FilenameFilter {
-    public boolean accept(File dir, String name) {
+    @Override
+	public boolean accept(File dir, String name) {
       return isFile(dir, name); //(getPrefix(dir).length() + name.length() >= factory.getIdToStringLength());
     }
   }
@@ -2056,15 +2090,15 @@ public class PersistentStorage implements Storage {
     protected boolean[] bitMap = new boolean[256];
     
     public void put(char a) {
-      bitMap[(int) a] = true;
+      bitMap[a] = true;
     }
     
     public boolean contains(char a) {
-      return bitMap[(int) a];
+      return bitMap[a];
     }
     
     public void remove(char a) {
-      bitMap[(int) a] = false;
+      bitMap[a] = false;
     }
     
     public char[] get() {

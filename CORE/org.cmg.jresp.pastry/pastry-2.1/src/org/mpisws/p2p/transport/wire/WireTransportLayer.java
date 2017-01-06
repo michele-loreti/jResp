@@ -36,17 +36,10 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package org.mpisws.p2p.transport.wire;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
-import org.mpisws.p2p.transport.ErrorHandler;
-import org.mpisws.p2p.transport.P2PSocket;
 import org.mpisws.p2p.transport.TransportLayer;
-import org.mpisws.p2p.transport.TransportLayerCallback;
-
-import rice.Continuation;
-import rice.pastry.messaging.Message;
 
 /**
  * Sends/receives ByteBuffer from InetSocketAddress

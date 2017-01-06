@@ -167,7 +167,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
     return build(material);     
   }
   
-  public void serialize(rice.p2p.commonapi.rawserialization.OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(rice.p2p.commonapi.rawserialization.OutputBuffer buf) throws IOException {
     for (int i = 0; i < Id.length; i++) {
       buf.writeInt(Id[i]);
     }
@@ -414,7 +415,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
    * @param cw the clockwise id
    * @return true if this is between ccw (inclusive) and cw (exclusive), false otherwise
    */
-  public boolean isBetween(rice.p2p.commonapi.Id ccw, rice.p2p.commonapi.Id cw) {
+  @Override
+public boolean isBetween(rice.p2p.commonapi.Id ccw, rice.p2p.commonapi.Id cw) {
     return isBetween((Id) ccw, (Id) cw);
   }
 
@@ -511,7 +513,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
    * @param obj a Id object
    * @return true if they are equal, false otherwise.
    */
-  public boolean equals(Object obj) {
+  @Override
+public boolean equals(Object obj) {
     if ((obj == null) || (! (obj instanceof Id)))
       return false;
     
@@ -532,7 +535,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
    * @param obj the Id to compare with.
    * @return negative if this < obj, 0 if they are equal and positive if this > obj.
    */
-  public int compareTo(rice.p2p.commonapi.Id obj) {
+  @Override
+public int compareTo(rice.p2p.commonapi.Id obj) {
     Id oth = (Id) obj;
 
     for (int i = nlen - 1; i >= 0; i--) {
@@ -555,7 +559,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
    *
    * @return The byte array representation of this id
    */
-  public byte[] toByteArray() {
+  @Override
+public byte[] toByteArray() {
     return copy();
   }
 
@@ -564,7 +569,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
    *
    * @return A byte[] representing this Id
    */
-  public void toByteArray(byte[] array, int offset) {
+  @Override
+public void toByteArray(byte[] array, int offset) {
     blit(array, offset);
   }
   
@@ -573,8 +579,9 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
    *
    * @return The length of the byte[] representing this Id
    */
-  public int getByteArrayLength() {
-    return (int) IdBitLength / 8;
+  @Override
+public int getByteArrayLength() {
+    return IdBitLength / 8;
   }
   
   /**
@@ -582,7 +589,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
    *
    * @return a hash code.
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     int h = 0;
 
     /// Hash function is computed by XORing the bits of the Id.
@@ -832,7 +840,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
    *
    * @return A String representation of this Id, abbreviated
    */
-  public String toString() {
+  @Override
+public String toString() {
     StringBuffer buffer = new StringBuffer();
     buffer.append("<0x");
     
@@ -865,7 +874,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
    *
    * @return The complete representation of this Id, in hexadecimal
    */
-  public String toStringFull() {
+  @Override
+public String toStringFull() {
     StringBuffer buffer = new StringBuffer();
 
     int n = IdBitLength / 4;
@@ -883,7 +893,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
    * @param nid DESCRIBE THE PARAMETER
    * @return true if clockwise, false otherwise.
    */
-  public boolean clockwise(rice.p2p.commonapi.Id nid) {
+  @Override
+public boolean clockwise(rice.p2p.commonapi.Id nid) {
     return clockwise((Id) nid);
   }
 
@@ -893,7 +904,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
    * @param offset the distance to add
    * @return the new Id
    */
-  public rice.p2p.commonapi.Id addToId(rice.p2p.commonapi.Id.Distance offset) {
+  @Override
+public rice.p2p.commonapi.Id addToId(rice.p2p.commonapi.Id.Distance offset) {
     return add((Id.Distance) offset);
   }
 
@@ -903,7 +915,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
    * @param nid the other node id.
    * @return the distance between this and nid.
    */
-  public rice.p2p.commonapi.Id.Distance distanceFromId(rice.p2p.commonapi.Id nid) {
+  @Override
+public rice.p2p.commonapi.Id.Distance distanceFromId(rice.p2p.commonapi.Id nid) {
     return distance((Id) nid);
   }
 
@@ -913,7 +926,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
    * @param nid the other node id.
    * @return the distance between this and nid.
    */
-  public rice.p2p.commonapi.Id.Distance longDistanceFromId(rice.p2p.commonapi.Id nid) {
+  @Override
+public rice.p2p.commonapi.Id.Distance longDistanceFromId(rice.p2p.commonapi.Id nid) {
     return longDistance((Id) nid);
   }
 
@@ -1065,7 +1079,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
      * @param obj the Distance to compare with.
      * @return negative if this < obj, 0 if they are equal and positive if this > obj.
      */
-    public int compareTo(rice.p2p.commonapi.Id.Distance obj) {
+    @Override
+	public int compareTo(rice.p2p.commonapi.Id.Distance obj) {
       Distance oth = (Distance) obj;
 
       for (int i = nlen - 1; i >= 0; i--) {
@@ -1089,7 +1104,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
      * @param obj another Distance.
      * @return true if they are the same, false otherwise.
      */
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
       if (compareTo((Id.Distance)obj) == 0) {
         return true;
       } else {
@@ -1160,7 +1176,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
      *
      * @return a hash code.
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
       int h = 0;
 
       // Hash function is computed by XORing the bits of the Id.
@@ -1177,7 +1194,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
      *
      * @return The string representation of this distance
      */
-    public String toString() {
+    @Override
+	public String toString() {
       String s = "0x";
 
       String tran[] = {"0", "1", "2", "3", "4", "5", "6", "7",
@@ -1200,7 +1218,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
      * @param fill value of bit shifted in (0 if fill == 0, 1 otherwise)
      * @return this
      */
-    public rice.p2p.commonapi.Id.Distance shiftDistance(int cnt, int fill) {
+    @Override
+	public rice.p2p.commonapi.Id.Distance shiftDistance(int cnt, int fill) {
       return shift(cnt, fill);
     }
 
@@ -1227,7 +1246,8 @@ public class Id implements rice.p2p.commonapi.Id, RawSerializable {
     }
   }
 
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
   

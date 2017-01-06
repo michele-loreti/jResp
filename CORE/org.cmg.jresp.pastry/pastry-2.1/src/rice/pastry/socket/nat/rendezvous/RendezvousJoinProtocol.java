@@ -37,7 +37,6 @@ advised of the possibility of such damage.
 package rice.pastry.socket.nat.rendezvous;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.Map;
 
 import org.mpisws.p2p.transport.SocketRequestHandle;
@@ -124,14 +123,16 @@ public class RendezvousJoinProtocol extends ConsistentJoinProtocol {
     
     // open the pilot before sending the JoinRequest.
     if (logger.level <= Logger.FINE) logger.log("opening pilot to "+bootstrap);
-    pilotManager.openPilot((RendezvousSocketNodeHandle)bootstrap, 
+    pilotManager.openPilot(bootstrap, 
         new Continuation<SocketRequestHandle<RendezvousSocketNodeHandle>, Exception>(){
 
-      public void receiveException(Exception exception) {
+      @Override
+	public void receiveException(Exception exception) {
         deliverJRToMe.receiveException(exception);
       }
 
-      public void receiveResult(
+      @Override
+	public void receiveResult(
           SocketRequestHandle<RendezvousSocketNodeHandle> result) {
         RendezvousJoinRequest jr = new RendezvousJoinRequest(localHandle, thePastryNode
             .getRoutingTable().baseBitLength(), thePastryNode.getEnvironment().getTimeSource().currentTimeMillis(), bootstrap);                
@@ -165,7 +166,7 @@ public class RendezvousJoinProtocol extends ConsistentJoinProtocol {
     public Message deserialize(InputBuffer buf, short type, int priority, NodeHandle sender) throws IOException {
       switch(type) {
         case RendezvousJoinRequest.TYPE:
-          return new RendezvousJoinRequest(buf,pn, (NodeHandle)sender, pn);
+          return new RendezvousJoinRequest(buf,pn, sender, pn);
       }      
       return super.deserialize(buf, type, priority, sender);
     }

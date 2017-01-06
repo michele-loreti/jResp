@@ -37,15 +37,12 @@ advised of the possibility of such damage.
 package org.mpisws.p2p.transport.peerreview.message;
 
 import java.io.IOException;
-import java.util.Map;
-
 import org.mpisws.p2p.transport.peerreview.infostore.Evidence;
 import org.mpisws.p2p.transport.peerreview.infostore.EvidenceSerializer;
 import org.mpisws.p2p.transport.peerreview.statement.Statement;
 import org.mpisws.p2p.transport.util.Serializer;
 
 import rice.p2p.commonapi.rawserialization.InputBuffer;
-import rice.p2p.commonapi.rawserialization.OutputBuffer;
 import rice.p2p.commonapi.rawserialization.RawSerializable;
 
 /**
@@ -72,7 +69,8 @@ public class ResponseMessage<Identifier extends RawSerializable> extends Stateme
     super(buf, idSerializer, evSerializer);
   }
   
-  public short getType() {
+  @Override
+public short getType() {
     return MSG_RESPONSE;
   }
   

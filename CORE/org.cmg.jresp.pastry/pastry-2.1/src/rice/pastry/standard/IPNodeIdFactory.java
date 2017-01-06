@@ -91,7 +91,8 @@ public class IPNodeIdFactory implements NodeIdFactory {
    * @return the new nodeId
    */
 
-  public Id generateNodeId() {
+  @Override
+public Id generateNodeId() {
     byte rawIP[] = localIP.getAddress();
 
     byte rawPort[] = new byte[2];

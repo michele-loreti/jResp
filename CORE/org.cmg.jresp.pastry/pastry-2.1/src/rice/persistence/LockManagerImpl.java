@@ -57,7 +57,8 @@ public class LockManagerImpl implements LockManager {
   }
 
   
-  public void lock(Id id, Continuation c) {
+  @Override
+public void lock(Id id, Continuation c) {
     Continuation torun = null;
     if (logger.level <= Logger.FINE) logger.log("locking on id "+id+" for continuation "+c);
     synchronized (this) {
@@ -76,7 +77,8 @@ public class LockManagerImpl implements LockManager {
       torun.receiveResult(null);
   }
   
-  public void unlock(Id id) {
+  @Override
+public void unlock(Id id) {
     Continuation torun = null;
     if (logger.level <= Logger.FINE) logger.log("unlocking on id "+id);
     synchronized (this) {

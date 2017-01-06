@@ -14,7 +14,6 @@ package org.cmg.jresp.examples.bikes;
 
 import java.util.Random;
 
-import org.cmg.jresp.knowledge.Attribute;
 import org.cmg.jresp.knowledge.Template;
 import org.cmg.jresp.knowledge.Tuple;
 import org.cmg.jresp.simulation.IDelayFactory;

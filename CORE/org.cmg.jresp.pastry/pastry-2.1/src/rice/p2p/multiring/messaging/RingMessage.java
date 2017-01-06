@@ -43,7 +43,6 @@ import java.util.Hashtable;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
 import rice.p2p.multiring.*;
-import rice.p2p.scribe.*;
 import rice.p2p.scribe.rawserialization.RawScribeContent;
 import rice.p2p.util.rawserialization.JavaSerializedMessage;
 
@@ -144,11 +143,13 @@ public class RingMessage implements RawScribeContent {
     return application;
   }
 
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     id.serialize(buf);
     buf.writeUTF(application);
     buf.writeShort(message.getType());
@@ -176,7 +177,7 @@ public class RingMessage implements RawScribeContent {
     application = buf.readUTF();
 
     // this code finds the proper deserializer
-    Endpoint endpoint = (Endpoint)endpoints.get(application);
+    Endpoint endpoint = endpoints.get(application);
     if (endpoint == null) {
       throw new IOException("Couldn't find application:"+application); 
     }

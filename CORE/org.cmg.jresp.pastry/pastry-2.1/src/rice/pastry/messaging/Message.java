@@ -146,7 +146,8 @@ public abstract class Message implements Serializable, rice.p2p.commonapi.Messag
    * 
    * @return the priority of this message.
    */
-  public int getPriority() {
+  @Override
+public int getPriority() {
     return priorityLevel;
   }
 

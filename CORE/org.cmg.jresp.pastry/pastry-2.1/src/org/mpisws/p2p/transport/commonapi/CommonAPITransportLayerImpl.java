@@ -103,7 +103,8 @@ public class CommonAPITransportLayerImpl<Identifier extends NodeHandle> implemen
     if (this.optionsAdder == null) {
       this.optionsAdder = new OptionsAdder() {
       
-        public Map<String, Object> addOptions(Map<String, Object> options,
+        @Override
+		public Map<String, Object> addOptions(Map<String, Object> options,
             RawMessage m) {
           return OptionsFactory.addOption(options, MSG_STRING, m.toString(), MSG_TYPE, m.getType(), MSG_CLASS, m.getClass().getName());
         }      
@@ -139,15 +140,18 @@ public class CommonAPITransportLayerImpl<Identifier extends NodeHandle> implemen
 //    this.livenessListeners = new ArrayList<LivenessListener<TransportLayerNodeHandle<Identifier>>>();
   }
   
-  public void acceptMessages(boolean b) {
+  @Override
+public void acceptMessages(boolean b) {
     tl.acceptMessages(b);
   }
 
-  public void acceptSockets(boolean b) {
+  @Override
+public void acceptSockets(boolean b) {
     tl.acceptSockets(b);
   }
 
-  public Identifier getLocalIdentifier() {
+  @Override
+public Identifier getLocalIdentifier() {
     return tl.getLocalIdentifier();
   }
 
@@ -155,7 +159,8 @@ public class CommonAPITransportLayerImpl<Identifier extends NodeHandle> implemen
 //    livenessProvider.clearState(i.getAddress());
 //  }
 
-  public MessageRequestHandle<Identifier, RawMessage> sendMessage(
+  @Override
+public MessageRequestHandle<Identifier, RawMessage> sendMessage(
       final Identifier i,
       final RawMessage m, 
       final MessageCallback<Identifier, RawMessage> deliverAckToMe,
@@ -208,13 +213,15 @@ public class CommonAPITransportLayerImpl<Identifier extends NodeHandle> implemen
         buf, 
         new MessageCallback<Identifier, ByteBuffer>() {
     
-          public void ack(MessageRequestHandle<Identifier, ByteBuffer> msg) {
+          @Override
+		public void ack(MessageRequestHandle<Identifier, ByteBuffer> msg) {
             if (logger.level <= Logger.FINER) logger.log("sendMessage("+i+","+m+").ack()");
             if (handle.getSubCancellable() != null && msg != handle.getSubCancellable()) throw new RuntimeException("msg != cancellable.getSubCancellable() (indicates a bug in the code) msg:"+msg+" sub:"+handle.getSubCancellable());
             if (deliverAckToMe != null) deliverAckToMe.ack(handle);
           }
         
-          public void sendFailed(MessageRequestHandle<Identifier, ByteBuffer> msg, Exception ex) {            
+          @Override
+		public void sendFailed(MessageRequestHandle<Identifier, ByteBuffer> msg, Exception ex) {            
             if (ex instanceof NodeIsFaultyException) {
               ex = new NodeIsFaultyException(i, m, ex); 
             }
@@ -236,7 +243,8 @@ public class CommonAPITransportLayerImpl<Identifier extends NodeHandle> implemen
     return handle;
   }
 
-  public void messageReceived(Identifier i, ByteBuffer m, Map<String, Object> options) throws IOException {
+  @Override
+public void messageReceived(Identifier i, ByteBuffer m, Map<String, Object> options) throws IOException {
 //    if (logger.level <= Logger.FINE) logger.log("messageReceived("+i+","+m+")");
     SimpleInputBuffer buf = new SimpleInputBuffer(m.array(), m.position());
 //    long epoch = buf.readLong();
@@ -248,17 +256,20 @@ public class CommonAPITransportLayerImpl<Identifier extends NodeHandle> implemen
     callback.messageReceived(i, ret, options);
   }
 
-  public void setCallback(
+  @Override
+public void setCallback(
       TransportLayerCallback<Identifier, RawMessage> callback) {
     this.callback = callback;
   }
 
-  public void setErrorHandler(ErrorHandler<Identifier> handler) {
+  @Override
+public void setErrorHandler(ErrorHandler<Identifier> handler) {
     this.errorHandler = handler;
   }
 
   protected boolean destroyed = false;
-  public void destroy() {
+  @Override
+public void destroy() {
     destroyed = true;
     tl.destroy();
   }
@@ -315,7 +326,8 @@ public class CommonAPITransportLayerImpl<Identifier extends NodeHandle> implemen
 //    return tl.ping(i.getAddress(), options);
 //  }
 
-  public SocketRequestHandle<Identifier> openSocket(
+  @Override
+public SocketRequestHandle<Identifier> openSocket(
       final Identifier i,
       final SocketCallback<Identifier> deliverSocketToMe, 
       Map<String, Object> options) {
@@ -380,7 +392,8 @@ public class CommonAPITransportLayerImpl<Identifier extends NodeHandle> implemen
 //    return handle;
   }
 
-  public void incomingSocket(P2PSocket<Identifier> s) throws IOException {
+  @Override
+public void incomingSocket(P2PSocket<Identifier> s) throws IOException {
     if (logger.level <= Logger.FINE) logger.log("incomingSocket("+s+")");
     callback.incomingSocket(s);
 //    final SocketInputBuffer sib = new SocketInputBuffer(s,1024);

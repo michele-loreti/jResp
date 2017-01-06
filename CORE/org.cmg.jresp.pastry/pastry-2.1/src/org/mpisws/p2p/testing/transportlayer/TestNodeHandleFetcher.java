@@ -63,11 +63,13 @@ public class TestNodeHandleFetcher {
     PastryNode node2 = factory.newNode();
     node2.getNodeHandle(new InetSocketAddress(factory.getBindAddress(), bindPort), new Continuation<NodeHandle, Exception>() {
     
-      public void receiveResult(NodeHandle result) {
+      @Override
+	public void receiveResult(NodeHandle result) {
         System.out.println(result);
       }
     
-      public void receiveException(Exception exception) {
+      @Override
+	public void receiveException(Exception exception) {
         exception.printStackTrace();
       }    
     });

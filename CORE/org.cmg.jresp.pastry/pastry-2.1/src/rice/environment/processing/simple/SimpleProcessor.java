@@ -85,12 +85,14 @@ public class SimpleProcessor implements Processor {
    * @param command
    *          The command to return the result to once it's done
    */
-  public <R, E extends Exception> Cancellable process(Executable<R,E> task, Continuation<R, E> command,
+  @Override
+public <R, E extends Exception> Cancellable process(Executable<R,E> task, Continuation<R, E> command,
       SelectorManager selector, TimeSource ts, LogManager log) {
     return process(task, command, 0, selector, ts, log);
   }
 
-  public <R, E extends Exception> Cancellable process(Executable<R,E> task, Continuation<R, E> command, int priority,
+  @Override
+public <R, E extends Exception> Cancellable process(Executable<R,E> task, Continuation<R, E> command, int priority,
       SelectorManager selector, TimeSource ts, LogManager log) {
     long nextSeq;
     synchronized(SimpleProcessor.this) {
@@ -101,7 +103,8 @@ public class SimpleProcessor implements Processor {
     return ret;
   }
 
-  public Cancellable processBlockingIO(WorkRequest workRequest) {
+  @Override
+public Cancellable processBlockingIO(WorkRequest workRequest) {
     workQueue.enqueue(workRequest);
     return workRequest;
   }
@@ -110,7 +113,8 @@ public class SimpleProcessor implements Processor {
     return QUEUE;
   }
 
-  public void destroy() {
+  @Override
+public void destroy() {
     THREAD.destroy();
     QUEUE.clear();
     bioThread.destroy();
@@ -130,18 +134,21 @@ public class SimpleProcessor implements Processor {
     Processor p = env.getProcessor();
     // block the processor for 1 second while we schedule some more stuff
     p.process(new Executable() {    
-      public Object execute() {
+      @Override
+	public Object execute() {
         try { Thread.sleep(1000); } catch (InterruptedException ie) {}
         return null;
       }
     
     }, new Continuation() {
     
-      public void receiveResult(Object result) {
+      @Override
+	public void receiveResult(Object result) {
         System.out.println("Done blocking.");
       }
     
-      public void receiveException(Exception exception) {
+      @Override
+	public void receiveException(Exception exception) {
         exception.printStackTrace();
       }
     
@@ -150,17 +157,20 @@ public class SimpleProcessor implements Processor {
     for (int seq = 0; seq < 10; seq++) {
       final int mySeq = seq;
       p.process(new Executable() {    
-        public Object execute() {
+        @Override
+		public Object execute() {
           System.out.println("Executed Seq: "+mySeq);
           return null;
         }
       
       }, new Continuation() {      
-        public void receiveResult(Object result) {
+        @Override
+		public void receiveResult(Object result) {
           System.out.println("Received Seq: "+mySeq);
         }
       
-        public void receiveException(Exception exception) {
+        @Override
+		public void receiveException(Exception exception) {
           exception.printStackTrace();
         }
       

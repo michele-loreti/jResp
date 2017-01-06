@@ -84,7 +84,8 @@ public class GCIdFactory implements IdFactory {
    * @param material The material to use
    * @return The built Id.
    */
-  public Id buildId(byte[] material) {
+  @Override
+public Id buildId(byte[] material) {
     throw new UnsupportedOperationException("GCIdFactory cannot be used to build Ids!");
   }
   
@@ -94,7 +95,8 @@ public class GCIdFactory implements IdFactory {
    * @param material The material to use
    * @return The built Id.
    */
-  public Id buildId(int[] material) {
+  @Override
+public Id buildId(int[] material) {
     throw new UnsupportedOperationException("GCIdFactory cannot be used to build Ids!");
   }
   
@@ -104,7 +106,8 @@ public class GCIdFactory implements IdFactory {
    * @param string The string to use as source data
    * @return The built Id.
    */
-  public Id buildId(String string) {
+  @Override
+public Id buildId(String string) {
     throw new UnsupportedOperationException("GCIdFactory cannot be used to build Ids!");
   }
   
@@ -114,11 +117,13 @@ public class GCIdFactory implements IdFactory {
    * @param rng A random number generator
    * @return The built Id.
    */
-  public Id buildRandomId(Random rng) {
+  @Override
+public Id buildRandomId(Random rng) {
     throw new UnsupportedOperationException("GCIdFactory cannot be used to build Ids!");
   }
 
-  public Id buildRandomId(RandomSource rng) {
+  @Override
+public Id buildRandomId(RandomSource rng) {
     throw new UnsupportedOperationException("GCIdFactory cannot be used to build Ids!");
   }
 
@@ -129,7 +134,8 @@ public class GCIdFactory implements IdFactory {
    * @param string The toString() representation of an Id
    * @return The built Id.
    */
-  public Id buildIdFromToString(String string) {
+  @Override
+public Id buildIdFromToString(String string) {
     throw new UnsupportedOperationException("GCIdFactory cannot be used to build Ids!");
   }
   
@@ -142,7 +148,8 @@ public class GCIdFactory implements IdFactory {
    * @param length The length to read
    * @return The built Id.
    */
-  public Id buildIdFromToString(char[] chars, int offset, int length) {
+  @Override
+public Id buildIdFromToString(char[] chars, int offset, int length) {
     throw new UnsupportedOperationException("GCIdFactory cannot be used to build Ids!");  
   }
   
@@ -154,7 +161,8 @@ public class GCIdFactory implements IdFactory {
    * @param string The toString() representation of an Id
    * @return The built Id.
    */
-  public IdRange buildIdRangeFromPrefix(String string) {
+  @Override
+public IdRange buildIdRangeFromPrefix(String string) {
     throw new UnsupportedOperationException("GCIdFactory cannot be used to build Ids!");  
   }
   
@@ -163,7 +171,8 @@ public class GCIdFactory implements IdFactory {
    *
    * @return The correct length;
    */
-  public int getIdToStringLength() {
+  @Override
+public int getIdToStringLength() {
     throw new UnsupportedOperationException("GCIdFactory cannot be used to build Ids!");
   }
   
@@ -173,7 +182,8 @@ public class GCIdFactory implements IdFactory {
    * @param material The material to use
    * @return The built Id.Distance.
    */
-  public Id.Distance buildIdDistance(byte[] material) {
+  @Override
+public Id.Distance buildIdDistance(byte[] material) {
     throw new UnsupportedOperationException("GCIdFactory cannot be used to build IdDistances!");  }
   
   /**
@@ -183,7 +193,8 @@ public class GCIdFactory implements IdFactory {
    * @param ccw The counterclockwise Id
    * @return An IdRange with the appropriate delimiters.
    */
-  public IdRange buildIdRange(Id cw, Id ccw) {
+  @Override
+public IdRange buildIdRange(Id cw, Id ccw) {
     return new GCIdRange(factory.buildIdRange(cw, ccw));
   }
   
@@ -192,7 +203,8 @@ public class GCIdFactory implements IdFactory {
    *
    * @return an empty IdSet
    */
-  public IdSet buildIdSet() {
+  @Override
+public IdSet buildIdSet() {
     return new GCIdSet(factory);
   }
   
@@ -201,7 +213,8 @@ public class GCIdFactory implements IdFactory {
    *
    * @return an empty IdSet
    */
-  public IdSet buildIdSet(SortedMap map) {
+  @Override
+public IdSet buildIdSet(SortedMap map) {
     //return new GCIdSet(factory.buildIdSet(new GCSortedMap(map)), factory);
     throw new UnsupportedOperationException("GCIdFactory.buildIDSet()");
   }
@@ -211,7 +224,8 @@ public class GCIdFactory implements IdFactory {
    *
    * @return an empty NodeHandleSet
    */
-  public NodeHandleSet buildNodeHandleSet() {
+  @Override
+public NodeHandleSet buildNodeHandleSet() {
     throw new UnsupportedOperationException("GCIdFactory cannot be used to build NodeHandleSets!");
   }
   
@@ -223,26 +237,46 @@ public class GCIdFactory implements IdFactory {
       this.map = map;
     }
     
-    public Comparator comparator() { return null; }
-    public Object firstKey() { throw new UnsupportedOperationException("firstKey not supported!"); }
-    public SortedMap headMap(Object toKey) { throw new UnsupportedOperationException("headMap not supported!"); }
-    public Object lastKey() { throw new UnsupportedOperationException("lastKey not supported!"); }
-    public SortedMap subMap(Object fromKey, Object toKey) { throw new UnsupportedOperationException("subMap not supported!"); }
-    public SortedMap tailMap(Object fromKey) { throw new UnsupportedOperationException("tailMap not supported!");}
-    public void clear() { throw new UnsupportedOperationException("clear not supported!"); }
-    public boolean containsKey(Object key) { throw new UnsupportedOperationException("containsKey not supported!"); }
-    public boolean containsValue(Object value) { throw new UnsupportedOperationException("containsValue not supported!"); }
-    public Set entrySet() { return new GCEntrySet(map.entrySet()); }
-    public boolean equals(Object o) { throw new UnsupportedOperationException("equals not supported!"); }
-    public Object get(Object key) { throw new UnsupportedOperationException("get not supported!"); }
-    public int hashCode() { throw new UnsupportedOperationException("hashCode not supported!");  }
-    public boolean isEmpty() { throw new UnsupportedOperationException("isEmpty not supported!");  }
-    public Set keySet() { throw new UnsupportedOperationException("keyset not supported!"); }
-    public Object put(Object key, Object value) { throw new UnsupportedOperationException("put not supported!"); }
-    public void putAll(Map t) { throw new UnsupportedOperationException("putAll not supported!"); }
-    public Object remove(Object key) { throw new UnsupportedOperationException("remove not supported!"); }
-    public int size() { return map.size(); }
-    public Collection values() { throw new UnsupportedOperationException("values not supported!"); }
+    @Override
+	public Comparator comparator() { return null; }
+    @Override
+	public Object firstKey() { throw new UnsupportedOperationException("firstKey not supported!"); }
+    @Override
+	public SortedMap headMap(Object toKey) { throw new UnsupportedOperationException("headMap not supported!"); }
+    @Override
+	public Object lastKey() { throw new UnsupportedOperationException("lastKey not supported!"); }
+    @Override
+	public SortedMap subMap(Object fromKey, Object toKey) { throw new UnsupportedOperationException("subMap not supported!"); }
+    @Override
+	public SortedMap tailMap(Object fromKey) { throw new UnsupportedOperationException("tailMap not supported!");}
+    @Override
+	public void clear() { throw new UnsupportedOperationException("clear not supported!"); }
+    @Override
+	public boolean containsKey(Object key) { throw new UnsupportedOperationException("containsKey not supported!"); }
+    @Override
+	public boolean containsValue(Object value) { throw new UnsupportedOperationException("containsValue not supported!"); }
+    @Override
+	public Set entrySet() { return new GCEntrySet(map.entrySet()); }
+    @Override
+	public boolean equals(Object o) { throw new UnsupportedOperationException("equals not supported!"); }
+    @Override
+	public Object get(Object key) { throw new UnsupportedOperationException("get not supported!"); }
+    @Override
+	public int hashCode() { throw new UnsupportedOperationException("hashCode not supported!");  }
+    @Override
+	public boolean isEmpty() { throw new UnsupportedOperationException("isEmpty not supported!");  }
+    @Override
+	public Set keySet() { throw new UnsupportedOperationException("keyset not supported!"); }
+    @Override
+	public Object put(Object key, Object value) { throw new UnsupportedOperationException("put not supported!"); }
+    @Override
+	public void putAll(Map t) { throw new UnsupportedOperationException("putAll not supported!"); }
+    @Override
+	public Object remove(Object key) { throw new UnsupportedOperationException("remove not supported!"); }
+    @Override
+	public int size() { return map.size(); }
+    @Override
+	public Collection values() { throw new UnsupportedOperationException("values not supported!"); }
   }
   
   @SuppressWarnings("unchecked")
@@ -253,27 +287,45 @@ public class GCIdFactory implements IdFactory {
       this.set = set;
     }
     
-    public boolean add(Object o) { throw new UnsupportedOperationException("add not supported!"); }
-    public boolean addAll(Collection c) { throw new UnsupportedOperationException("addAll not supported!"); }
-    public void clear() { throw new UnsupportedOperationException("clear not supported!"); }
-    public boolean contains(Object o) { throw new UnsupportedOperationException("contains not supported!"); }
-    public boolean containsAll(Collection c) { throw new UnsupportedOperationException("containsAll not supported!"); }
-    public boolean equals(Object o) { throw new UnsupportedOperationException("equals not supported!"); }
-    public int hashCode() { throw new UnsupportedOperationException("hashCode not supported!"); }
-    public boolean isEmpty() { throw new UnsupportedOperationException("isEmpty not supported!"); }
-    public Iterator iterator() { return new Iterator() {
+    @Override
+	public boolean add(Object o) { throw new UnsupportedOperationException("add not supported!"); }
+    @Override
+	public boolean addAll(Collection c) { throw new UnsupportedOperationException("addAll not supported!"); }
+    @Override
+	public void clear() { throw new UnsupportedOperationException("clear not supported!"); }
+    @Override
+	public boolean contains(Object o) { throw new UnsupportedOperationException("contains not supported!"); }
+    @Override
+	public boolean containsAll(Collection c) { throw new UnsupportedOperationException("containsAll not supported!"); }
+    @Override
+	public boolean equals(Object o) { throw new UnsupportedOperationException("equals not supported!"); }
+    @Override
+	public int hashCode() { throw new UnsupportedOperationException("hashCode not supported!"); }
+    @Override
+	public boolean isEmpty() { throw new UnsupportedOperationException("isEmpty not supported!"); }
+    @Override
+	public Iterator iterator() { return new Iterator() {
       protected Iterator i = set.iterator();
-      public boolean hasNext() { return i.hasNext(); }
-      public Object next() { return new GCMapEntry((Map.Entry) i.next()); }
-      public void remove() { i.remove(); }
+      @Override
+	public boolean hasNext() { return i.hasNext(); }
+      @Override
+	public Object next() { return new GCMapEntry((Map.Entry) i.next()); }
+      @Override
+	public void remove() { i.remove(); }
     };
     }
-    public boolean remove(Object o) { throw new UnsupportedOperationException("remove not supported!"); }
-    public boolean removeAll(Collection c) { throw new UnsupportedOperationException("removeAll not supported!"); }
-    public boolean retainAll(Collection c) { throw new UnsupportedOperationException("retainAll not supported!"); }
-    public int size() { throw new UnsupportedOperationException("size not supported!"); }
-    public Object[] toArray() { throw new UnsupportedOperationException("toArray not supported!"); }
-    public Object[] toArray(Object[] a) { throw new UnsupportedOperationException("toArray not supported!"); }
+    @Override
+	public boolean remove(Object o) { throw new UnsupportedOperationException("remove not supported!"); }
+    @Override
+	public boolean removeAll(Collection c) { throw new UnsupportedOperationException("removeAll not supported!"); }
+    @Override
+	public boolean retainAll(Collection c) { throw new UnsupportedOperationException("retainAll not supported!"); }
+    @Override
+	public int size() { throw new UnsupportedOperationException("size not supported!"); }
+    @Override
+	public Object[] toArray() { throw new UnsupportedOperationException("toArray not supported!"); }
+    @Override
+	public Object[] toArray(Object[] a) { throw new UnsupportedOperationException("toArray not supported!"); }
   }
   
   @SuppressWarnings("unchecked")
@@ -284,11 +336,16 @@ public class GCIdFactory implements IdFactory {
       this.entry = entry;
     }
     
-    public boolean equals(Object o) { throw new UnsupportedOperationException("equals not supported!"); }
-    public Object getKey() { return ((GCId) entry.getKey()).getId(); }
-    public Object getValue() { return entry.getValue(); }
-    public int hashCode() { throw new UnsupportedOperationException("hashCode not supported!"); }
-    public Object setValue(Object value) { throw new UnsupportedOperationException("setValue not supported!"); }
+    @Override
+	public boolean equals(Object o) { throw new UnsupportedOperationException("equals not supported!"); }
+    @Override
+	public Object getKey() { return ((GCId) entry.getKey()).getId(); }
+    @Override
+	public Object getValue() { return entry.getValue(); }
+    @Override
+	public int hashCode() { throw new UnsupportedOperationException("hashCode not supported!"); }
+    @Override
+	public Object setValue(Object value) { throw new UnsupportedOperationException("setValue not supported!"); }
   }
 }
 

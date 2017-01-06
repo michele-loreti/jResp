@@ -37,29 +37,17 @@ advised of the possibility of such damage.
 package rice.pastry.direct;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
-import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.direct.Delivery;
 import org.mpisws.p2p.transport.direct.DirectTransportLayer;
 import org.mpisws.p2p.transport.direct.GenericNetworkSimulator;
-import org.mpisws.p2p.transport.liveness.LivenessListener;
 import org.mpisws.p2p.transport.liveness.LivenessProvider;
-import org.mpisws.p2p.transport.proximity.ProximityProvider;
-
 import rice.environment.Environment;
 import rice.environment.params.Parameters;
 import rice.environment.random.RandomSource;
 import rice.environment.random.simple.SimpleRandomSource;
 import rice.p2p.commonapi.CancellableTask;
-import rice.p2p.commonapi.rawserialization.RawMessage;
-import rice.pastry.Id;
-import rice.pastry.NodeHandle;
 import rice.pastry.PastryNode;
-import rice.pastry.ScheduledMessage;
-import rice.pastry.messaging.Message;
 
 public class NetworkSimulatorImpl<Identifier, MessageType> implements NetworkSimulator<Identifier, MessageType> {
   protected BasicNetworkSimulator<Identifier, MessageType> simulator;
@@ -92,23 +80,28 @@ public class NetworkSimulatorImpl<Identifier, MessageType> implements NetworkSim
   }
 
   // ****************** passtrhougs to simulator ***************
-  public Environment getEnvironment() {
+  @Override
+public Environment getEnvironment() {
     return simulator.getEnvironment();
   }
 
-  public void setFullSpeed() {
+  @Override
+public void setFullSpeed() {
     simulator.setFullSpeed();
   }
 
-  public void setMaxSpeed(float rate) {
+  @Override
+public void setMaxSpeed(float rate) {
     simulator.setMaxSpeed(rate);
   }
 
-  public void start() {
+  @Override
+public void start() {
     simulator.start();
   }
 
-  public void stop() {
+  @Override
+public void stop() {
     simulator.stop();
   }
   
@@ -150,7 +143,8 @@ public class NetworkSimulatorImpl<Identifier, MessageType> implements NetworkSim
    * 
    * @return the returned TestRecord
    */
-  public TestRecord getTestRecord() {
+  @Override
+public TestRecord getTestRecord() {
     return testRecord;
   }
 
@@ -159,14 +153,16 @@ public class NetworkSimulatorImpl<Identifier, MessageType> implements NetworkSim
    * 
    * @param tr input TestRecord
    */
-  public void setTestRecord(TestRecord tr) {
+  @Override
+public void setTestRecord(TestRecord tr) {
     testRecord = tr;
   }
 
   
   /************** SimulatorListeners handling *******************/
   List<GenericSimulatorListener<Identifier, MessageType>> listeners = new ArrayList<GenericSimulatorListener<Identifier, MessageType>>();  
-  public boolean addSimulatorListener(GenericSimulatorListener<Identifier, MessageType> sl) {
+  @Override
+public boolean addSimulatorListener(GenericSimulatorListener<Identifier, MessageType> sl) {
     synchronized(listeners) {
       if (listeners.contains(sl)) return false;
       listeners.add(sl);
@@ -174,13 +170,15 @@ public class NetworkSimulatorImpl<Identifier, MessageType> implements NetworkSim
     }
   }
 
-  public boolean removeSimulatorListener(GenericSimulatorListener<Identifier, MessageType> sl) {
+  @Override
+public boolean removeSimulatorListener(GenericSimulatorListener<Identifier, MessageType> sl) {
     synchronized(listeners) {
       return listeners.remove(sl);
     }
   }
 
-  public void notifySimulatorListenersSent(MessageType m, Identifier from, Identifier to, int delay) {
+  @Override
+public void notifySimulatorListenersSent(MessageType m, Identifier from, Identifier to, int delay) {
     List<GenericSimulatorListener<Identifier, MessageType>> temp;
     
     // so we aren't holding a lock while iterating/calling
@@ -193,7 +191,8 @@ public class NetworkSimulatorImpl<Identifier, MessageType> implements NetworkSim
     }
   }
 
-  public void notifySimulatorListenersReceived(MessageType m, Identifier from, Identifier to) {
+  @Override
+public void notifySimulatorListenersReceived(MessageType m, Identifier from, Identifier to) {
     List<GenericSimulatorListener<Identifier, MessageType>> temp;
     
     // so we aren't holding a lock while iterating/calling
@@ -223,57 +222,69 @@ public class NetworkSimulatorImpl<Identifier, MessageType> implements NetworkSim
 //    return new ScheduledMessage(node, msg, simulator.deliverMessageFixedRate(msg, (DirectNodeHandle)node.getLocalHandle(), from, delay, period));    
 //  }
 
-  public void destroy(DirectPastryNode dpn) {
+  @Override
+public void destroy(DirectPastryNode dpn) {
     // TODO Auto-generated method stub
     
   }
 
-  public CancellableTask enqueueDelivery(Delivery del, int delay) {
+  @Override
+public CancellableTask enqueueDelivery(Delivery del, int delay) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  public NodeRecord generateNodeRecord() {
+  @Override
+public NodeRecord generateNodeRecord() {
     return generator.generateNodeRecord();
   }
 
-  public DirectNodeHandle getClosest(DirectNodeHandle nh) {
+  @Override
+public DirectNodeHandle getClosest(DirectNodeHandle nh) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  public boolean isAlive(Identifier nh) {
+  @Override
+public boolean isAlive(Identifier nh) {
     return simulator.isAlive(nh);
   }
 
-  public float networkDelay(Identifier a, Identifier b) {
+  @Override
+public float networkDelay(Identifier a, Identifier b) {
     return simulator.networkDelay(a, b);
   }
 
-  public float proximity(Identifier a, Identifier b) {
+  @Override
+public float proximity(Identifier a, Identifier b) {
     return simulator.proximity(a, b);
   }
 
-  public void removeNode(PastryNode node) {
+  @Override
+public void removeNode(PastryNode node) {
     // TODO Auto-generated method stub
     
   }
 
-  public NodeRecord getNodeRecord(DirectNodeHandle handle) {
+  @Override
+public NodeRecord getNodeRecord(DirectNodeHandle handle) {
     return simulator.getNodeRecord(handle);
   }
 
-  public LivenessProvider<Identifier> getLivenessProvider() {
+  @Override
+public LivenessProvider<Identifier> getLivenessProvider() {
     return livenessProvider;
   }
 
-  public GenericNetworkSimulator<Identifier, MessageType> getGenericSimulator() {
+  @Override
+public GenericNetworkSimulator<Identifier, MessageType> getGenericSimulator() {
     return simulator;
   }
 
 //  public void registerNode(PastryNode dpn, NodeRecord nr) {
 //  simulator.registerIdentifier(dpn.getLocalHandle(), dpn.getTL(), nr);
-  public void registerNode(Identifier i, DirectTransportLayer<Identifier, MessageType> dtl, NodeRecord nr) {
+  @Override
+public void registerNode(Identifier i, DirectTransportLayer<Identifier, MessageType> dtl, NodeRecord nr) {
     simulator.registerIdentifier(i, dtl, nr);
   }
 }

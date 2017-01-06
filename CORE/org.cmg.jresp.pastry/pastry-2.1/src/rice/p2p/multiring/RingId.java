@@ -172,7 +172,8 @@ public class RingId implements Id {
    * @param cw the clockwise id
    * @return true if this is between ccw (inclusive) and cw (exclusive), false otherwise
    */
-  public boolean isBetween(Id ccw, Id cw) {
+  @Override
+public boolean isBetween(Id ccw, Id cw) {
     if (!(ccw instanceof RingId) || (!((RingId)ccw).getRingId().equals(ringId)) ||
         !(cw instanceof RingId) || (!((RingId)cw).getRingId().equals(ringId)))
       throw new IllegalArgumentException("Defined only for RingIds from the same ring!");
@@ -188,7 +189,8 @@ public class RingId implements Id {
    * @param nid The id to compare to
    * @return true if clockwise, false otherwise.
    */
-  public boolean clockwise(Id nid) {
+  @Override
+public boolean clockwise(Id nid) {
     if (!(nid instanceof RingId) || (!((RingId)nid).getRingId().equals(ringId)))
       throw new IllegalArgumentException("Defined only for RingIds from the same ring!");
 
@@ -201,7 +203,8 @@ public class RingId implements Id {
    * @param offset the distance to add
    * @return the new Id
    */
-  public Id addToId(Distance offset) {
+  @Override
+public Id addToId(Distance offset) {
     return build(ringId, id.addToId(offset));
   }
   
@@ -211,7 +214,8 @@ public class RingId implements Id {
    * @param nid the other node id.
    * @return the distance between this and nid.
    */
-  public Distance distanceFromId(Id nid) {
+  @Override
+public Distance distanceFromId(Id nid) {
     if (!(nid instanceof RingId) || (!((RingId)nid).getRingId().equals(ringId)))
       throw new IllegalArgumentException("Defined only for RingIds from the same ring!");
 
@@ -224,7 +228,8 @@ public class RingId implements Id {
    * @param nid the other node id.
    * @return the distance between this and nid.
    */
-  public Distance longDistanceFromId(Id nid) {
+  @Override
+public Distance longDistanceFromId(Id nid) {
     if (!(nid instanceof RingId) || (!((RingId)nid).getRingId().equals(ringId)))
       throw new IllegalArgumentException("Defined only for RingIds from the same ring!");
 
@@ -236,7 +241,8 @@ public class RingId implements Id {
    *
    * @return A byte[] representing this Id
    */
-  public byte[] toByteArray() {
+  @Override
+public byte[] toByteArray() {
     return id.toByteArray();
   }
   
@@ -245,7 +251,8 @@ public class RingId implements Id {
    *
    * @return A byte[] representing this Id
    */
-  public void toByteArray(byte[] array, int offset) {
+  @Override
+public void toByteArray(byte[] array, int offset) {
     id.toByteArray(array, offset);
   }
   
@@ -254,7 +261,8 @@ public class RingId implements Id {
    *
    * @return The length of the byte[] representing this Id
    */
-  public int getByteArrayLength() {
+  @Override
+public int getByteArrayLength() {
     return id.getByteArrayLength();
   }
   
@@ -264,7 +272,8 @@ public class RingId implements Id {
    * @param o The object to compare to
    * @return Whether or not this is object is equal
    */
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     if (! (o instanceof RingId))
       return false;
     
@@ -276,7 +285,8 @@ public class RingId implements Id {
    *
    * @return hashCode
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return (id.hashCode() * ringId.hashCode());
   }
   
@@ -285,7 +295,8 @@ public class RingId implements Id {
    *
    * @return A string with all of this Id
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "(" + ringId + ", " + id + ")";
   }
   
@@ -294,7 +305,8 @@ public class RingId implements Id {
    *
    * @return A string with all of this Id
    */
-  public String toStringFull() {
+  @Override
+public String toStringFull() {
     return "(" + ringId.toStringFull() + ", " + id.toStringFull() + ")";
   }
   
@@ -303,16 +315,19 @@ public class RingId implements Id {
    *
    * @return The comparison
    */
-  public int compareTo(Id o) {
+  @Override
+public int compareTo(Id o) {
     return id.compareTo(((RingId)o).id);
   }
 
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeShort(ringId.getType());
     ringId.serialize(buf);
     buf.writeShort(id.getType());

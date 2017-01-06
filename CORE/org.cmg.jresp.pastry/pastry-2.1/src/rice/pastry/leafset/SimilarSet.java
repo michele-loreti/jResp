@@ -218,7 +218,9 @@ public class SimilarSet extends Observable implements NodeSetEventSource, Serial
    * Generates too many objects to use this interface
    * @deprecated use addNodeSetListener
    */
-  public void addObserver(Observer o) {
+  @Deprecated
+@Override
+public void addObserver(Observer o) {
 //    if (logger.level <= Logger.WARNING) logger.log("WARNING: Observer on RoutingTable is deprecated");
     super.addObserver(o); 
   }
@@ -227,18 +229,22 @@ public class SimilarSet extends Observable implements NodeSetEventSource, Serial
    * Generates too many objects to use this interface
    * @deprecated use removeNodeSetListener
    */
-  public void deleteObserver(Observer o) {
+  @Deprecated
+@Override
+public void deleteObserver(Observer o) {
 //    if (logger.level <= Logger.WARNING) logger.log("WARNING: Observer on RoutingTable is deprecated");
     super.deleteObserver(o); 
   }
   
-  public void addNodeSetListener(NodeSetListener listener) {
+  @Override
+public void addNodeSetListener(NodeSetListener listener) {
     synchronized (listeners) {
       listeners.add(listener);
     }
   }
 
-  public void removeNodeSetListener(NodeSetListener listener) {
+  @Override
+public void removeNodeSetListener(NodeSetListener listener) {
     synchronized (listeners) {
       listeners.remove(listener);
     }
@@ -248,7 +254,7 @@ public class SimilarSet extends Observable implements NodeSetEventSource, Serial
     // pass the event to the Observers of this RoutingTable
     synchronized (listeners) {
       for (int i = 0; i < listeners.size(); i++) {
-        ((NodeSetListener)listeners.get(i)).nodeSetUpdate(this,handle,added); 
+        listeners.get(i).nodeSetUpdate(this,handle,added); 
       }
     }
     // handle deprecated interface
@@ -472,7 +478,8 @@ public class SimilarSet extends Observable implements NodeSetEventSource, Serial
         // more than 1 node, and both are live, need to sort by direction
         Collections.sort(toUse,new Comparator<NodeHandle>() {
         
-          public int compare(NodeHandle a, NodeHandle b) {
+          @Override
+		public int compare(NodeHandle a, NodeHandle b) {
             // smallest to biggest: TODO, verify this does the right thing... it's pretty minor though...
             if (clockwise) return a.getId().compareTo(b.getId());
             return b.getId().compareTo(a.getId());
@@ -713,7 +720,8 @@ public class SimilarSet extends Observable implements NodeSetEventSource, Serial
     listeners = new ArrayList<NodeSetListener>();
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return "SimilarSet{"+ln+"}";
   }
   

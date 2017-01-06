@@ -39,14 +39,10 @@ advised of the possibility of such damage.
  */
 package rice.environment.logging.simple;
 
-import java.io.PrintStream;
 import java.text.*;
 import java.util.Date;
 
-import javax.swing.text.DateFormatter;
-
 import rice.environment.logging.*;
-import rice.environment.time.TimeSource;
 
 /**
  * This logger writes its name:time:message to the printstream provided, unless the 
@@ -84,7 +80,8 @@ public class SimpleLogger extends HeirarchyLogger {
   /**
    * Prints out loggerName:currentTime:message
    */
-  public void log(String message) {
+  @Override
+public void log(String message) {
     synchronized(alm) {
       String dateString = ""+alm.getTimeSource().currentTimeMillis();
       if (alm.dateFormatter != null) {
@@ -103,7 +100,8 @@ public class SimpleLogger extends HeirarchyLogger {
   /**
    * Prints out logger:currentTime:exception.stackTrace();
    */
-  public void logException(String message, Throwable exception) {
+  @Override
+public void logException(String message, Throwable exception) {
     synchronized(alm) {
       String dateString = ""+alm.getTimeSource().currentTimeMillis();
       if (alm.dateFormatter != null) {
@@ -120,7 +118,8 @@ public class SimpleLogger extends HeirarchyLogger {
     }
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return loggerName; 
   }
 }

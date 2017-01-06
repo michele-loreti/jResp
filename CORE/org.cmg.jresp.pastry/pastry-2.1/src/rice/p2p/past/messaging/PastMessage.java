@@ -43,7 +43,6 @@ import rice.*;
 import rice.environment.Environment;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
-import rice.p2p.past.*;
 
 /**
  * @(#) PastMessage.java
@@ -99,7 +98,8 @@ public abstract class PastMessage implements RawMessage {
    *
    * @return This message's priority
    */
-  public int getPriority() {
+  @Override
+public int getPriority() {
     return MEDIUM_HIGH_PRIORITY;
   }
 
@@ -174,7 +174,8 @@ public abstract class PastMessage implements RawMessage {
     isResponse = buf.readBoolean();
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeInt(id);
 //    System.out.println("PM.serialize()" + dest);
     buf.writeShort(dest.getType());

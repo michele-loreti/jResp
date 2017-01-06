@@ -39,9 +39,6 @@ package rice.pastry.standard;
 
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
-import rice.pastry.*;
-import rice.pastry.messaging.*;
-
 import java.security.*;
 
 /**

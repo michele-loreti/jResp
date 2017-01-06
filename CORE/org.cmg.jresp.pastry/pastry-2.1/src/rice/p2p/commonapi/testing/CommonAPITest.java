@@ -37,17 +37,13 @@ advised of the possibility of such damage.
 
 package rice.p2p.commonapi.testing;
 
-import rice.*;
-
 import rice.environment.Environment;
 import rice.environment.logging.*;
-import rice.environment.logging.simple.SimpleLogManager;
 import rice.environment.params.Parameters;
 import rice.environment.params.simple.SimpleParameters;
 import rice.environment.processing.Processor;
 import rice.environment.processing.sim.SimProcessor;
 import rice.environment.random.RandomSource;
-import rice.environment.random.simple.SimpleRandomSource;
 import rice.environment.time.TimeSource;
 import rice.environment.time.simple.SimpleTimeSource;
 import rice.environment.time.simulated.DirectTimeSource;
@@ -58,8 +54,6 @@ import rice.pastry.*;
 import rice.pastry.commonapi.*;
 import rice.pastry.direct.*;
 import rice.pastry.dist.*;
-import rice.pastry.leafset.BroadcastLeafSet;
-import rice.pastry.leafset.RequestLeafSet;
 import rice.pastry.socket.SocketPastryNodeFactory;
 import rice.pastry.socket.nat.rendezvous.RendezvousSocketPastryNodeFactory;
 import rice.pastry.standard.*;

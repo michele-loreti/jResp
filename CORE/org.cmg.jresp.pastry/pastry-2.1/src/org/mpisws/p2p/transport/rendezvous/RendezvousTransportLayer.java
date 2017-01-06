@@ -40,9 +40,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Map;
 
-import rice.Continuation;
-import rice.p2p.commonapi.Cancellable;
-
 public interface RendezvousTransportLayer<HighIdentifier> {
   public static int SUCCESS = 1;
 

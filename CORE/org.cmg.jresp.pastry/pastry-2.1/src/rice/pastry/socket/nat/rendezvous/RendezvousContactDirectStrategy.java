@@ -65,7 +65,8 @@ public class RendezvousContactDirectStrategy implements ContactDirectStrategy<Re
    * If the address I should use to contact the node is the same as his internal address
    * 
    */
-  public boolean canContactDirect(RendezvousSocketNodeHandle remoteNode) {    
+  @Override
+public boolean canContactDirect(RendezvousSocketNodeHandle remoteNode) {    
     if (remoteNode.canContactDirect()) return true;
     
     MultiInetSocketAddress a = remoteNode.getAddress();

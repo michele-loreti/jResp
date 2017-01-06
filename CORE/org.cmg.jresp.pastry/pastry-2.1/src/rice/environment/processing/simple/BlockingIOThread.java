@@ -54,7 +54,8 @@ public class BlockingIOThread extends Thread {
     this.workQ = workQ;
   }
 
-  public void run() {
+  @Override
+public void run() {
     running = true;
     while (running) {
       WorkRequest wr = workQ.dequeue();
@@ -63,7 +64,8 @@ public class BlockingIOThread extends Thread {
     }
   }
 
-  @SuppressWarnings("deprecation")
+  @Override
+@SuppressWarnings("deprecation")
   public void destroy() {
     running = false;
     workQ.destroy();

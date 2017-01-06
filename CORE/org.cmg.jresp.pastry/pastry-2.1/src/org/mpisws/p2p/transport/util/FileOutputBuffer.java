@@ -41,8 +41,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
 
 public class FileOutputBuffer extends DataOutputStream implements OutputBuffer {
@@ -59,19 +57,23 @@ public class FileOutputBuffer extends DataOutputStream implements OutputBuffer {
     super(new FileOutputStream(fileName));
   }
 
-  public int bytesRemaining() {
+  @Override
+public int bytesRemaining() {
     return Integer.MAX_VALUE;
   }
 
-  public void writeByte(byte v) throws IOException {
+  @Override
+public void writeByte(byte v) throws IOException {
     this.write(v);
   }
 
-  public void writeChar(char v) throws IOException {
+  @Override
+public void writeChar(char v) throws IOException {
     writeChar((int) v);
   }
 
-  public void writeShort(short v) throws IOException {
+  @Override
+public void writeShort(short v) throws IOException {
     writeShort((int) v);
   }  
 }

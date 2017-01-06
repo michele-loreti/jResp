@@ -76,25 +76,29 @@ public class BufferReaderWriter<Identifier> {
     this.c = c;
     new BufferReader<Identifier>(sock,new Continuation<ByteBuffer, Exception>() {
     
-      public void receiveResult(ByteBuffer result) {
+      @Override
+	public void receiveResult(ByteBuffer result) {
         read = result;
         doneReading = true;
         done(null);
       }
     
-      public void receiveException(Exception exception) {
+      @Override
+	public void receiveException(Exception exception) {
         failed = true;
         done(exception);
       }    
     },readSize);
     new BufferWriter<Identifier>(writeMe,sock,new Continuation<P2PSocket<Identifier>, Exception>() {
 
-      public void receiveException(Exception exception) {
+      @Override
+	public void receiveException(Exception exception) {
         failed = true;
         done(exception);
       }
 
-      public void receiveResult(P2PSocket<Identifier> result) {
+      @Override
+	public void receiveResult(P2PSocket<Identifier> result) {
         doneWriting = true;
         done(null);        
       }    

@@ -38,10 +38,8 @@ advised of the possibility of such damage.
 package rice.pastry.dist;
 
 import rice.pastry.*;
-import rice.pastry.messaging.*;
 import rice.pastry.socket.TransportLayerNodeHandle;
 
-import java.io.*;
 import java.net.*;
 import java.util.*;
 
@@ -73,7 +71,8 @@ public abstract class DistNodeHandle<Identifier> extends TransportLayerNodeHandl
      *
      * @return the node id.
      */
-    public final Id getNodeId() {
+    @Override
+	public final Id getNodeId() {
       return nodeId;
     }
 
@@ -84,7 +83,8 @@ public abstract class DistNodeHandle<Identifier> extends TransportLayerNodeHandl
      *
      * @return A String representation of the node handle.
      */
-    public abstract String toString(); 
+    @Override
+	public abstract String toString(); 
     
     /**
      * Equivalence relation for nodehandles. They are equal if and
@@ -93,7 +93,8 @@ public abstract class DistNodeHandle<Identifier> extends TransportLayerNodeHandl
      * @param obj the other nodehandle .
      * @return true if they are equal, false otherwise.
      */
-    public abstract boolean equals(Object obj);
+    @Override
+	public abstract boolean equals(Object obj);
 
     /**
      * Hash codes for node handles. It is the hashcode of
@@ -101,7 +102,8 @@ public abstract class DistNodeHandle<Identifier> extends TransportLayerNodeHandl
      *
      * @return a hash code.
      */
-    public abstract int hashCode();
+    @Override
+	public abstract int hashCode();
 
     public abstract InetSocketAddress getInetSocketAddress();
 }

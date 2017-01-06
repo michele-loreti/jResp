@@ -62,7 +62,8 @@ public class QueueOverflowException extends IOException {
     return message;
   }  
   
-  public Throwable getCause() {
+  @Override
+public Throwable getCause() {
     return cause;
   }
 }

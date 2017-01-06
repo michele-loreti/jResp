@@ -38,16 +38,10 @@ package org.mpisws.p2p.transport.peerreview.infostore;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
 import org.mpisws.p2p.transport.peerreview.PeerReviewConstants;
 import org.mpisws.p2p.transport.peerreview.commitment.Authenticator;
-import org.mpisws.p2p.transport.peerreview.commitment.AuthenticatorSerializer;
 import org.mpisws.p2p.transport.util.FileOutputBuffer;
 
 /**
@@ -131,13 +125,15 @@ public class PeerInfoRecord<Handle, Identifier> implements PeerReviewConstants {
       this.interestedParty = interestedParty;
     }
     
-    public boolean hasResponse() {      
+    @Override
+	public boolean hasResponse() {      
       Map<Long, EvidenceRecordImpl> foo = answeredEvidence.get(originator);
       if (foo == null) return false;
       return foo.containsKey(timestamp);
     }
 
-    public void setIsProof(boolean isProof) {
+    @Override
+	public void setIsProof(boolean isProof) {
       this.isProof = isProof;
       /* This may cause the node to become SUSPECTED or EXPOSED */ 
       if (isProof && (status != STATUS_EXPOSED)) {
@@ -149,11 +145,13 @@ public class PeerInfoRecord<Handle, Identifier> implements PeerReviewConstants {
       }
     }
 
-    public void setInterestedParty(Handle interestedParty) {
+    @Override
+	public void setInterestedParty(Handle interestedParty) {
       this.interestedParty = interestedParty;
     }
     
-    public void setHasResponse() {
+    @Override
+	public void setHasResponse() {
       assert(!isProof());
       
       // pull from unanswered (if it's there)
@@ -181,19 +179,23 @@ public class PeerInfoRecord<Handle, Identifier> implements PeerReviewConstants {
       }    
     }
 
-    public boolean isProof() {
+    @Override
+	public boolean isProof() {
       return isProof;
     }
     
-    public long getTimeStamp() {
+    @Override
+	public long getTimeStamp() {
       return timestamp;
     }
     
-    public Identifier getOriginator() {
+    @Override
+	public Identifier getOriginator() {
       return originator;
     }
 
-    public Handle getInterestedParty() {
+    @Override
+	public Handle getInterestedParty() {
       return interestedParty;
     }
   }

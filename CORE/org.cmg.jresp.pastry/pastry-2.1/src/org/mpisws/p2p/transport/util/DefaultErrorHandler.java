@@ -36,8 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package org.mpisws.p2p.transport.util;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.Map;
 
 import org.mpisws.p2p.transport.ErrorHandler;
@@ -68,7 +66,8 @@ public class DefaultErrorHandler<Identifier> implements
     this.printlevel = printlevel;
   }
   
-  public void receivedUnexpectedData(Identifier id, byte[] bytes, int pos, Map<String, Object> options) {
+  @Override
+public void receivedUnexpectedData(Identifier id, byte[] bytes, int pos, Map<String, Object> options) {
     if (logger.level <= Logger.INFO) {
       // make this pretty
       String s = "";
@@ -81,7 +80,8 @@ public class DefaultErrorHandler<Identifier> implements
     }
   }
 
-  public void receivedException(Identifier i, Throwable error) {
+  @Override
+public void receivedException(Identifier i, Throwable error) {
     if (logger.level <= printlevel) {      
       logger.logException(i == null ? null : i.toString(), error);
 //      logger.logException("here I am", new Exception("ErrorHandlerCall"));

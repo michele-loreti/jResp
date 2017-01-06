@@ -70,7 +70,7 @@ public class TupleComparisonEvaluator implements ComparisonEvaluator {
 		if (o2 instanceof Template)
 			return ((Template) o2).match((Tuple) o1);
 		if (o2 instanceof Tuple)
-			return ((Tuple) o1).equals((Tuple) o2);
+			return ((Tuple) o1).equals(o2);
 		throw new UnsupportedTypeException(o2.getClass().getName(), "Pattern-Matching");
 	}
 

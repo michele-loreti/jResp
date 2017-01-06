@@ -42,9 +42,7 @@ import java.net.*;
 import java.util.*;
 
 import rice.environment.Environment;
-import rice.environment.params.simple.SimpleParameters;
 import rice.environment.random.RandomSource;
-import rice.environment.time.simulated.DirectTimeSource;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.Id;
 import rice.p2p.commonapi.NodeHandle;
@@ -417,15 +415,18 @@ public class MultiringRegrTest {
       endpoint.route(target, new MultiringTestMessage(endpoint.getId()), null);
     }
     
-    public boolean forward(RouteMessage message) {
+    @Override
+	public boolean forward(RouteMessage message) {
       return true;
     }
     
-    public void deliver(Id id, Message message) {
+    @Override
+	public void deliver(Id id, Message message) {
       System.out.println("RECEIVED MESSSAGE FROM " + ((MultiringTestMessage) message).source + " FOR TARGET " + id + " AT NODE " + endpoint.getId());
     }
     
-    public void update(NodeHandle handle, boolean joined) {
+    @Override
+	public void update(NodeHandle handle, boolean joined) {
     }
   }
   
@@ -436,7 +437,8 @@ public class MultiringRegrTest {
       this.source = source;
     }
     
-    public int getPriority() {
+    @Override
+	public int getPriority() {
       return MEDIUM_PRIORITY;
     }
   }

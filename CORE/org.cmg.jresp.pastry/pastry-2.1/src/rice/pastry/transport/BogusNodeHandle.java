@@ -45,7 +45,6 @@ import java.util.Collections;
 
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
 import rice.pastry.Id;
-import rice.pastry.NodeHandle;
 import rice.pastry.messaging.Message;
 import rice.pastry.socket.TransportLayerNodeHandle;
 

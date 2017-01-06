@@ -36,9 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package rice.p2p.util;
 
-import java.util.*;
-import java.io.*;
-
 /**
  * Implementation of a cache of strings
  */
@@ -288,7 +285,8 @@ public class StringCache {
       return value;
     }
     
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
       if (!(o instanceof Entry))
         return false;
    
@@ -298,11 +296,13 @@ public class StringCache {
       return (v1 == v2 || (v1 != null && v1.equals(v2)));
     }
     
-    public int hashCode() {
+    @Override
+	public int hashCode() {
       return 27 ^ value.hashCode();
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
       return getValue();
     }
   }

@@ -73,7 +73,8 @@ public class ProofNonconformant<Handle extends RawSerializable> implements PeerR
     this.snippet = snippet;
   }
   
-  public short getEvidenceType() {
+  @Override
+public short getEvidenceType() {
     return PROOF_NONCONFORMANT;
   }
   
@@ -83,7 +84,8 @@ public class ProofNonconformant<Handle extends RawSerializable> implements PeerR
     snippet = new LogSnippet(buf,hashSize);    
   }
    
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     to.serialize(buf);
     myHandle.serialize(buf);
     snippet.serialize(buf);    

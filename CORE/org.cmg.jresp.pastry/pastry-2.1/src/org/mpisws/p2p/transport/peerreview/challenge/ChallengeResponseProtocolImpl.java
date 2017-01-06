@@ -37,12 +37,10 @@ advised of the possibility of such damage.
 package org.mpisws.p2p.transport.peerreview.challenge;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.mpisws.p2p.transport.peerreview.PeerReviewCallback;
 import org.mpisws.p2p.transport.peerreview.PeerReviewConstants;
 import org.mpisws.p2p.transport.peerreview.PeerReviewImpl;
 import org.mpisws.p2p.transport.peerreview.audit.AuditProtocol;
@@ -59,7 +57,6 @@ import org.mpisws.p2p.transport.peerreview.identity.IdentityTransport;
 import org.mpisws.p2p.transport.peerreview.infostore.Evidence;
 import org.mpisws.p2p.transport.peerreview.infostore.EvidenceRecord;
 import org.mpisws.p2p.transport.peerreview.infostore.PeerInfoStore;
-import org.mpisws.p2p.transport.peerreview.infostore.PeerInfoStoreImpl;
 import org.mpisws.p2p.transport.peerreview.message.AccusationMessage;
 import org.mpisws.p2p.transport.peerreview.message.AckMessage;
 import org.mpisws.p2p.transport.peerreview.message.ChallengeMessage;
@@ -69,8 +66,6 @@ import org.mpisws.p2p.transport.peerreview.message.UserDataMessage;
 
 import rice.environment.logging.Logger;
 import rice.p2p.commonapi.rawserialization.RawSerializable;
-import rice.p2p.util.rawserialization.SimpleInputBuffer;
-import rice.p2p.util.rawserialization.SimpleOutputBuffer;
 import rice.p2p.util.tuples.Tuple;
 
 public class ChallengeResponseProtocolImpl<Handle extends RawSerializable, Identifier extends RawSerializable> 
@@ -127,7 +122,8 @@ public class ChallengeResponseProtocolImpl<Handle extends RawSerializable, Ident
   
   /* If a node goes back to TRUSTED, we deliver all pending messages */
 
-  public void notifyStatusChange(Identifier id, int newStatus) {
+  @Override
+public void notifyStatusChange(Identifier id, int newStatus) {
     switch (newStatus) {
     case STATUS_TRUSTED:
       LinkedList<PacketInfo<Handle, Identifier>> list = queue.remove(id);
@@ -148,7 +144,8 @@ public class ChallengeResponseProtocolImpl<Handle extends RawSerializable, Ident
   /**
    * Called when another node sends us a challenge. If the challenge is valid, we respond. 
    */
-  public void handleChallenge(Handle source, ChallengeMessage<Identifier> challenge, Map<String, Object> options) throws IOException {
+  @Override
+public void handleChallenge(Handle source, ChallengeMessage<Identifier> challenge, Map<String, Object> options) throws IOException {
     short type = challenge.getChallengeType(); 
     switch (type) {
 
@@ -481,7 +478,8 @@ public class ChallengeResponseProtocolImpl<Handle extends RawSerializable, Ident
    *  Handle an incoming RESPONSE or ACCUSATION from another node 
    * @throws IOException */
 
-  public void handleStatement(Handle source, PeerReviewMessage m, Map<String, Object> options) throws IOException {
+  @Override
+public void handleStatement(Handle source, PeerReviewMessage m, Map<String, Object> options) throws IOException {
     assert(m.getType() == MSG_ACCUSATION || m.getType() == MSG_RESPONSE);
 
 //    unsigned int pos = 1;
@@ -553,7 +551,8 @@ public class ChallengeResponseProtocolImpl<Handle extends RawSerializable, Ident
   /**
    * Looks up the first unanswered challenge to a SUSPECTED node, and sends it to that node 
    */
-  public void challengeSuspectedNode(Handle target) {    
+  @Override
+public void challengeSuspectedNode(Handle target) {    
 //    Identifier originator;
 //    long evidenceSeq;
 //    int evidenceLen;
@@ -578,7 +577,8 @@ public class ChallengeResponseProtocolImpl<Handle extends RawSerializable, Ident
     }        
   }
   
-  public void handleIncomingMessage(Handle source, UserDataMessage<Handle> message, Map<String, Object> options) throws IOException {
+  @Override
+public void handleIncomingMessage(Handle source, UserDataMessage<Handle> message, Map<String, Object> options) throws IOException {
     int status = infoStore.getStatus(peerreview.getIdentifierExtractor().extractIdentifier(source));
     switch (status) {
       case STATUS_EXPOSED:

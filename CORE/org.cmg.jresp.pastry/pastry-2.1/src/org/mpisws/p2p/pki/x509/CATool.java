@@ -46,8 +46,6 @@ import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 
-import org.bouncycastle.jce.PKCS10CertificationRequest;
-
 public interface CATool {
 
   // ctor new CATool(X509Certificate);

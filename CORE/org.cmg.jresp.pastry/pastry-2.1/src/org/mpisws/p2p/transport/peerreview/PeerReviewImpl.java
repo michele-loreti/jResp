@@ -39,12 +39,7 @@ package org.mpisws.p2p.transport.peerreview;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SignatureException;
 import java.security.cert.X509Certificate;
-import java.util.Collection;
 import java.util.Map;
 
 import org.mpisws.p2p.transport.ErrorHandler;
@@ -53,7 +48,6 @@ import org.mpisws.p2p.transport.MessageRequestHandle;
 import org.mpisws.p2p.transport.P2PSocket;
 import org.mpisws.p2p.transport.SocketCallback;
 import org.mpisws.p2p.transport.SocketRequestHandle;
-import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.TransportLayerCallback;
 import org.mpisws.p2p.transport.peerreview.audit.AuditProtocol;
 import org.mpisws.p2p.transport.peerreview.audit.AuditProtocolImpl;
@@ -74,14 +68,11 @@ import org.mpisws.p2p.transport.peerreview.evidence.EvidenceSerializerImpl;
 import org.mpisws.p2p.transport.peerreview.evidence.EvidenceTransferProtocol;
 import org.mpisws.p2p.transport.peerreview.evidence.EvidenceTransferProtocolImpl;
 import org.mpisws.p2p.transport.peerreview.evidence.ProofInconsistent;
-import org.mpisws.p2p.transport.peerreview.history.HashProvider;
 import org.mpisws.p2p.transport.peerreview.history.HashSeq;
 import org.mpisws.p2p.transport.peerreview.history.SecureHistory;
 import org.mpisws.p2p.transport.peerreview.history.SecureHistoryFactory;
 import org.mpisws.p2p.transport.peerreview.history.SecureHistoryFactoryImpl;
 import org.mpisws.p2p.transport.peerreview.identity.IdentityTransport;
-import org.mpisws.p2p.transport.peerreview.identity.IdentityTransportCallback;
-import org.mpisws.p2p.transport.peerreview.identity.UnknownCertificateException;
 import org.mpisws.p2p.transport.peerreview.infostore.Evidence;
 import org.mpisws.p2p.transport.peerreview.infostore.EvidenceSerializer;
 import org.mpisws.p2p.transport.peerreview.infostore.IdStrTranslator;
@@ -110,10 +101,8 @@ import rice.environment.Environment;
 import rice.environment.logging.Logger;
 import rice.environment.random.RandomSource;
 import rice.environment.random.simple.SimpleRandomSource;
-import rice.environment.time.simulated.DirectTimeSource;
 import rice.p2p.commonapi.Cancellable;
 import rice.p2p.commonapi.rawserialization.RawSerializable;
-import rice.p2p.util.MathUtils;
 import rice.p2p.util.rawserialization.SimpleInputBuffer;
 import rice.p2p.util.rawserialization.SimpleOutputBuffer;
 import rice.selector.TimerTask;
@@ -171,7 +160,8 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
   
   protected RandomSource random;
 
-  public RandomSource getRandomSource() {
+  @Override
+public RandomSource getRandomSource() {
     return random;
   }
   
@@ -224,7 +214,8 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
 
 
   /* Gets a fresh, unique sequence number for evidence */
-  public long getEvidenceSeq() {
+  @Override
+public long getEvidenceSeq() {
     if (nextEvidenceSeq < getTime()) {
       nextEvidenceSeq = getTime();
     }
@@ -263,7 +254,8 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
 //    history.appendEntry(type, true, entry);   
 //  }
   
-  public MessageRequestHandle<Handle, ByteBuffer> sendMessage(Handle target,
+  @Override
+public MessageRequestHandle<Handle, ByteBuffer> sendMessage(Handle target,
       ByteBuffer message,
       final MessageCallback<Handle, ByteBuffer> deliverAckToMe,
       Map<String, Object> options) {
@@ -283,12 +275,14 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
       ret.setSubCancellable(transport.sendMessage(target, msg,
           new MessageCallback<Handle, ByteBuffer>() {
 
-            public void ack(MessageRequestHandle<Handle, ByteBuffer> msg) {
+            @Override
+			public void ack(MessageRequestHandle<Handle, ByteBuffer> msg) {
               if (deliverAckToMe != null)
                 deliverAckToMe.ack(ret);
             }
 
-            public void sendFailed(
+            @Override
+			public void sendFailed(
                 MessageRequestHandle<Handle, ByteBuffer> msg, Exception reason) {
               if (deliverAckToMe != null)
                 deliverAckToMe.sendFailed(ret, reason);
@@ -310,7 +304,8 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
         deliverAckToMe, options);
   }
   
-  public void setApp(PeerReviewCallback<Handle, Identifier> callback) {
+  @Override
+public void setApp(PeerReviewCallback<Handle, Identifier> callback) {
     if (logger.level <= Logger.INFO) logger.log("setApp("+callback+")");
     this.callback = callback;
   }
@@ -318,11 +313,13 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
   /**
    * 
    */
-  public void setCallback(TransportLayerCallback<Handle, ByteBuffer> callback) {
+  @Override
+public void setCallback(TransportLayerCallback<Handle, ByteBuffer> callback) {
     setApp((PeerReviewCallback<Handle, Identifier>)callback);
   }
 
-  public void messageReceived(Handle handle, ByteBuffer message, Map<String, Object> options) throws IOException {
+  @Override
+public void messageReceived(Handle handle, ByteBuffer message, Map<String, Object> options) throws IOException {
     
     assert(initialized);
     
@@ -396,7 +393,8 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
    * new) authenticator and adds it to our local store if (a) it hasn't been
    * recorded before, and (b) its signature is valid.
    */
-  public boolean addAuthenticatorIfValid(AuthenticatorStore<Identifier> store, Identifier subject, Authenticator auth) {
+  @Override
+public boolean addAuthenticatorIfValid(AuthenticatorStore<Identifier> store, Identifier subject, Authenticator auth) {
     // see if we can exit early
         
     Authenticator existingAuth = null;
@@ -463,24 +461,29 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
     }
   }
 
-  public Cancellable requestCertificate(Handle source, Identifier certHolder, Continuation<X509Certificate, Exception> c, Map<String, Object> options) {
+  @Override
+public Cancellable requestCertificate(Handle source, Identifier certHolder, Continuation<X509Certificate, Exception> c, Map<String, Object> options) {
     return transport.requestCertificate(source, certHolder, c, options);
   }
   
-  public Cancellable requestCertificate(final Handle source, final Identifier certHolder) {
+  @Override
+public Cancellable requestCertificate(final Handle source, final Identifier certHolder) {
     return transport.requestCertificate(source, certHolder, new Continuation<X509Certificate, Exception>() {
 
-      public void receiveException(Exception exception) {
+      @Override
+	public void receiveException(Exception exception) {
         if (logger.level <= Logger.WARNING) logger.logException("error receiving cert for "+certHolder+" from "+source, exception);
       }
 
-      public void receiveResult(X509Certificate result) {
+      @Override
+	public void receiveResult(X509Certificate result) {
         notifyCertificateAvailable(certHolder);
       }        
     }, null);
   }
 
-  public void notifyCertificateAvailable(Identifier id) {
+  @Override
+public void notifyCertificateAvailable(Identifier id) {
     commitmentProtocol.notifyCertificateAvailable(id); 
     authPushProtocol.notifyCertificateAvailable(id);
     statementProtocol.notifyCertificateAvailable(id);
@@ -542,7 +545,8 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
     }
   }
   
-  public void notifyStatusChange(final Identifier id, final int newStatus) {
+  @Override
+public void notifyStatusChange(final Identifier id, final int newStatus) {
 //    char buf1[256];
     if (logger.level <= Logger.INFO) logger.log("Status change: <"+id+"> becomes "+getStatusString(newStatus));
 //    logger.logException("Status change: <"+id+"> becomes "+getStatusString(newStatus),new Exception("Stack Trace"));
@@ -551,17 +555,20 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
     
     // let pr finish first
     env.getSelectorManager().schedule(new TimerTask() {    
-      public void run() {
+      @Override
+	public void run() {
         callback.notifyStatusChange(id, newStatus);
       }
-      public String toString() {
+      @Override
+	public String toString() {
         return "NotifyStatusChangeTask: "+id+"=>"+newStatus;
       }
     }, 3);
     
   }
   
-  public void init(String dirname) throws IOException {    
+  @Override
+public void init(String dirname) throws IOException {    
     assert(callback != null);
     File dir = new File(dirname);
     if (!dir.exists()) {
@@ -625,7 +632,8 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
       public void run() {
         doMaintenance();
       }    
-      public String toString() {
+      @Override
+	public String toString() {
         return "DoMaintenanceTask";
       }
     },MAINTENANCE_INTERVAL_MILLIS, MAINTENANCE_INTERVAL_MILLIS);
@@ -635,7 +643,8 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
       public void run() {
         doAuthPush();
       }    
-      public String toString() {
+      @Override
+	public String toString() {
         return "AuthPushTask";
       }
     },DEFAULT_AUTH_PUSH_INTERVAL_MILLIS, DEFAULT_AUTH_PUSH_INTERVAL_MILLIS);
@@ -645,7 +654,8 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
       public void run() {
         doCheckpoint();
       }    
-      public String toString() {
+      @Override
+	public String toString() {
         return "CheckpointTask";
       }
     },newLogCreated ? 1 : DEFAULT_CHECKPOINT_INTERVAL_MILLIS, DEFAULT_CHECKPOINT_INTERVAL_MILLIS);
@@ -659,15 +669,18 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
     writeCheckpoint();    
   }
     
-  public PeerReviewCallback<Handle, Identifier> getApp() {
+  @Override
+public PeerReviewCallback<Handle, Identifier> getApp() {
     return callback;
   }
   
-  public SocketRequestHandle<Handle> openSocket(Handle i, SocketCallback<Handle> deliverSocketToMe, Map<String, Object> options) {
+  @Override
+public SocketRequestHandle<Handle> openSocket(Handle i, SocketCallback<Handle> deliverSocketToMe, Map<String, Object> options) {
     return transport.openSocket(i, deliverSocketToMe, options);
   }
 
-  public void incomingSocket(P2PSocket<Handle> s) throws IOException {
+  @Override
+public void incomingSocket(P2PSocket<Handle> s) throws IOException {
     callback.incomingSocket(s);
   }
 
@@ -676,61 +689,74 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
 //    env.destroy();
 //  }
   
-  public void acceptMessages(boolean b) {
+  @Override
+public void acceptMessages(boolean b) {
     transport.acceptMessages(b);
   }
 
-  public void acceptSockets(boolean b) {
+  @Override
+public void acceptSockets(boolean b) {
     transport.acceptSockets(b);
   }
 
-  public Identifier getLocalId() {
+  @Override
+public Identifier getLocalId() {
     return identifierExtractor.extractIdentifier(transport.getLocalIdentifier());
   }
   
-  public Handle getLocalHandle() {
+  @Override
+public Handle getLocalHandle() {
     return transport.getLocalIdentifier();
   }
 
-  public Handle getLocalIdentifier() {
+  @Override
+public Handle getLocalIdentifier() {
     return transport.getLocalIdentifier();
   }
 
-  public void setErrorHandler(ErrorHandler<Handle> handler) {
+  @Override
+public void setErrorHandler(ErrorHandler<Handle> handler) {
     // TODO Auto-generated method stub
     
   }
 
-  public void destroy() {
+  @Override
+public void destroy() {
     transport.destroy();
   }
 
-  public AuthenticatorSerializer getAuthenticatorSerializer() {
+  @Override
+public AuthenticatorSerializer getAuthenticatorSerializer() {
     return authenticatorSerialilzer;
   }
 
-  public Environment getEnvironment() {
+  @Override
+public Environment getEnvironment() {
     return env;
   }
 
-  public Serializer<Identifier> getIdSerializer() {
+  @Override
+public Serializer<Identifier> getIdSerializer() {
     return idSerializer;
   }
 
-  public long getTime() {
+  @Override
+public long getTime() {
     return env.getTimeSource().currentTimeMillis();
   }
   
   /** 
    * A helper function that extracts an authenticator from an incoming message and adds it to our local store. 
    */
-  public Authenticator extractAuthenticator(long seq, short entryType, byte[] entryHash, byte[] hTopMinusOne, byte[] signature) {
+  @Override
+public Authenticator extractAuthenticator(long seq, short entryType, byte[] entryHash, byte[] hTopMinusOne, byte[] signature) {
     byte[] hash = transport.hash(seq,entryType,hTopMinusOne, entryHash);
     Authenticator ret = new Authenticator(seq,hash,signature);    
     return ret;
   }
   
-  public Authenticator extractAuthenticator(Identifier id, long seq, short entryType, byte[] entryHash, byte[] hTopMinusOne, byte[] signature) {
+  @Override
+public Authenticator extractAuthenticator(Identifier id, long seq, short entryType, byte[] entryHash, byte[] hTopMinusOne, byte[] signature) {
 //    *(long long*)&authenticator[0] = seq;
     
 //    byte[] hash = transport.hash(seq,entryType,hTopMinusOne, entryHash);
@@ -741,23 +767,28 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
     return null;
   }
 
-  public Serializer<Handle> getHandleSerializer() {
+  @Override
+public Serializer<Handle> getHandleSerializer() {
     return handleSerializer;
   }
 
-  public int getHashSizeInBytes() {
+  @Override
+public int getHashSizeInBytes() {
     return transport.getHashSizeBytes();
   }
 
-  public int getSignatureSizeInBytes() {
+  @Override
+public int getSignatureSizeInBytes() {
     return transport.getSignatureSizeBytes();
   }
 
-  public IdentifierExtractor<Handle, Identifier> getIdentifierExtractor() {
+  @Override
+public IdentifierExtractor<Handle, Identifier> getIdentifierExtractor() {
     return identifierExtractor;
   }
 
-  public void challengeSuspectedNode(Handle handle) {
+  @Override
+public void challengeSuspectedNode(Handle handle) {
     challengeProtocol.challengeSuspectedNode(handle);
   }
 
@@ -765,7 +796,8 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
    * Called internally by other classes if they have found evidence against one of our peers.
    * We ask the EvidenceTransferProtocol to send it to the corresponding witness set. 
    */
-  public void sendEvidenceToWitnesses(Identifier subject, long evidenceSeq,
+  @Override
+public void sendEvidenceToWitnesses(Identifier subject, long evidenceSeq,
       Evidence evidence) {
     AccusationMessage<Identifier> accusation = new AccusationMessage<Identifier>(getLocalId(),subject,evidenceSeq,evidence);
    
@@ -782,7 +814,8 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
    * @param options
    * @return
    */
-  public void transmit(Handle dest, 
+  @Override
+public void transmit(Handle dest, 
       PeerReviewMessage message,
       MessageCallback<Handle, ByteBuffer> deliverAckToMe, 
       Map<String, Object> options) {
@@ -801,41 +834,50 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
     }
   }
 
-  public boolean hasCertificate(Identifier id) {
+  @Override
+public boolean hasCertificate(Identifier id) {
     return transport.hasCertificate(id);
   }
 
-  public byte[] sign(byte[] bytes) {
+  @Override
+public byte[] sign(byte[] bytes) {
     return transport.sign(bytes);
   }
 
-  public short getSignatureSizeBytes() {
+  @Override
+public short getSignatureSizeBytes() {
     return transport.getSignatureSizeBytes();
   }
 
-  public boolean verify(Identifier id, Authenticator auth) {
+  @Override
+public boolean verify(Identifier id, Authenticator auth) {
     byte[] signedHash = transport.hash(auth.getPartToHashThenSign());
     int result = transport.verify(id, signedHash, auth.getSignature());
     return result == SIGNATURE_OK; 
   }
   
-  public int verify(Identifier id, byte[] msg, byte[] signature) {
+  @Override
+public int verify(Identifier id, byte[] msg, byte[] signature) {
     return transport.verify(id, msg, signature);
   }
 
-  public byte[] getEmptyHash() {
+  @Override
+public byte[] getEmptyHash() {
     return transport.getEmptyHash();
   }
 
-  public short getHashSizeBytes() {
+  @Override
+public short getHashSizeBytes() {
     return transport.getHashSizeBytes();
   }
 
-  public byte[] hash(long seq, short type, byte[] nodeHash, byte[] contentHash) {
+  @Override
+public byte[] hash(long seq, short type, byte[] nodeHash, byte[] contentHash) {
     return transport.hash(seq, type, nodeHash, contentHash);
   }
 
-  public byte[] hash(ByteBuffer... hashMe) {
+  @Override
+public byte[] hash(ByteBuffer... hashMe) {
     return transport.hash(hashMe);
   }
 
@@ -843,15 +885,18 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
     return evidenceSerializer;
   }
 
-  public EvidenceTool<Handle, Identifier> getEvidenceTool() {
+  @Override
+public EvidenceTool<Handle, Identifier> getEvidenceTool() {
     return evidenceTool;
   }
 
-  public SecureHistoryFactory getHistoryFactory() {
+  @Override
+public SecureHistoryFactory getHistoryFactory() {
     return historyFactory;
   }
   
-  public VerifierFactory<Handle, Identifier> getVerifierFactory() {
+  @Override
+public VerifierFactory<Handle, Identifier> getVerifierFactory() {
     return verifierFactory;
   }
   
@@ -869,15 +914,18 @@ public class PeerReviewImpl<Handle extends RawSerializable, Identifier extends R
     authPendingStore.disableMemoryBuffer();
   }
 
-  public SecureHistory getHistory() {
+  @Override
+public SecureHistory getHistory() {
     return history;
   }
 
-  public long getTimeToleranceMillis() {
+  @Override
+public long getTimeToleranceMillis() {
     return timeToleranceMillis;
   }
 
-  public void sendEvidence(Handle dest, Identifier evidenceAgainst) {
+  @Override
+public void sendEvidence(Handle dest, Identifier evidenceAgainst) {
     evidenceTransferProtocol.sendEvidence(dest, evidenceAgainst);
   }
 }

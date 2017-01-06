@@ -119,7 +119,7 @@ public class MessageDispatch implements Destructable {
   }
 
   public PastryAppl getDestinationByAddress(int addr) {
-    PastryAppl mr = (PastryAppl) addressBook.get(Integer.valueOf(addr));    
+    PastryAppl mr = addressBook.get(Integer.valueOf(addr));    
     return mr;
   }
 
@@ -143,7 +143,7 @@ public class MessageDispatch implements Destructable {
     }
     // NOTE: There is no safety issue with calling localNode.isReady() because this is on the 
     // PastryThread, and the only way to set a node ready is also on the ready thread.
-    PastryAppl mr = (PastryAppl) addressBook.get(Integer.valueOf(msg.getDestination()));
+    PastryAppl mr = addressBook.get(Integer.valueOf(msg.getDestination()));
 
     if (mr == null) {
       if ((logger.level <= Logger.FINE) ||
@@ -179,7 +179,8 @@ public class MessageDispatch implements Destructable {
 //    }
 //  }  
   
-  public void destroy() {
+  @Override
+public void destroy() {
     Iterator<PastryAppl> i = addressBook.values().iterator();
     while(i.hasNext()) {
       PastryAppl mr = i.next();

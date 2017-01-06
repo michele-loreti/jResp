@@ -42,9 +42,6 @@ import rice.*;
 import java.io.IOException;
 import java.util.*;
 
-import org.mpisws.p2p.transport.MessageCallback;
-import org.mpisws.p2p.transport.MessageRequestHandle;
-
 import rice.environment.Environment;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.appsocket.AppSocketReceiver;
@@ -81,7 +78,8 @@ public class GCEndpoint implements Endpoint {
    *
    * @return The local node's id
    */
-  public Id getId() {
+  @Override
+public Id getId() {
     return endpoint.getId();
   }
   
@@ -97,28 +95,34 @@ public class GCEndpoint implements Endpoint {
    * @param message The message to deliver
    * @param hint The first node to send this message to, optional
    */
-  public MessageReceipt route(Id id, Message message, NodeHandle hint) {
+  @Override
+public MessageReceipt route(Id id, Message message, NodeHandle hint) {
     return endpoint.route(id, message, hint);
   }
   
-  public MessageReceipt route(Id id, RawMessage message, NodeHandle hint) {
+  @Override
+public MessageReceipt route(Id id, RawMessage message, NodeHandle hint) {
     return endpoint.route(id, message, hint);
   }
   
 
-  public MessageReceipt route(Id id, Message message, NodeHandle hint, DeliveryNotification deliverAckToMe) {
+  @Override
+public MessageReceipt route(Id id, Message message, NodeHandle hint, DeliveryNotification deliverAckToMe) {
     return endpoint.route(id, message, hint, deliverAckToMe);
   }
 
-  public MessageReceipt route(Id id, RawMessage message, NodeHandle hint, DeliveryNotification deliverAckToMe) {
+  @Override
+public MessageReceipt route(Id id, RawMessage message, NodeHandle hint, DeliveryNotification deliverAckToMe) {
     return endpoint.route(id, message, hint, deliverAckToMe);
   }
 
-  public MessageReceipt route(Id id, Message message, NodeHandle hint, DeliveryNotification deliverAckToMe, Map<String, Object> options) {
+  @Override
+public MessageReceipt route(Id id, Message message, NodeHandle hint, DeliveryNotification deliverAckToMe, Map<String, Object> options) {
     return endpoint.route(id, message, hint, deliverAckToMe, options);
   }
   
-  public MessageReceipt route(Id id, RawMessage message, NodeHandle hint, DeliveryNotification deliverAckToMe, Map<String, Object> options) {
+  @Override
+public MessageReceipt route(Id id, RawMessage message, NodeHandle hint, DeliveryNotification deliverAckToMe, Map<String, Object> options) {
     return endpoint.route(id, message, hint, deliverAckToMe, options);
   }
 
@@ -134,7 +138,8 @@ public class GCEndpoint implements Endpoint {
    * @param num The number of nodes to return.
    * @param safe Whether or not to return safe nodes.
    */
-  public NodeHandleSet localLookup(Id id, int num, boolean safe) {
+  @Override
+public NodeHandleSet localLookup(Id id, int num, boolean safe) {
     return endpoint.localLookup(id, num, safe);
   }
   
@@ -144,7 +149,8 @@ public class GCEndpoint implements Endpoint {
    *
    * @param num The number of desired handle to return.
    */
-  public NodeHandleSet neighborSet(int num) {
+  @Override
+public NodeHandleSet neighborSet(int num) {
     return endpoint.neighborSet(num);
   }
   
@@ -155,7 +161,8 @@ public class GCEndpoint implements Endpoint {
    * @param id The object's id.
    * @param maxRank The number of desired replicas.
    */
-  public NodeHandleSet replicaSet(Id id, int maxRank) {
+  @Override
+public NodeHandleSet replicaSet(Id id, int maxRank) {
     return endpoint.replicaSet(id, maxRank);
   }
   
@@ -170,7 +177,8 @@ public class GCEndpoint implements Endpoint {
    * @param handle The root handle of the remove set
    * @param set The set of other nodes around the root handle
    */
-  public NodeHandleSet replicaSet(Id id, int maxRank, NodeHandle root, NodeHandleSet set) {
+  @Override
+public NodeHandleSet replicaSet(Id id, int maxRank, NodeHandle root, NodeHandleSet set) {
     return endpoint.replicaSet(id, maxRank, root, set);
   }
   
@@ -189,7 +197,8 @@ public class GCEndpoint implements Endpoint {
    * @param rank The root rank.
    * @param lkey An "index" in case of multiple ranges.
    */
-  public IdRange range(NodeHandle handle, int rank, Id lkey) {
+  @Override
+public IdRange range(NodeHandle handle, int rank, Id lkey) {
     IdRange range = endpoint.range(handle, rank, lkey);
     return (range == null ? null : new GCIdRange(range));
   }
@@ -210,7 +219,8 @@ public class GCEndpoint implements Endpoint {
    * @param lkey An "index" in case of multiple ranges.
    * @param cumulative Whether to return the cumulative or single range
    */
-  public IdRange range(NodeHandle handle, int rank, Id lkey, boolean cumulative) {
+  @Override
+public IdRange range(NodeHandle handle, int rank, Id lkey, boolean cumulative) {
     IdRange range = endpoint.range(handle, rank, lkey, cumulative);
     return (range == null ? null : new GCIdRange(range));
   }
@@ -221,11 +231,13 @@ public class GCEndpoint implements Endpoint {
    *
    * @return A NodeHandle referring to the local node.
    */
-  public NodeHandle getLocalNodeHandle() {
+  @Override
+public NodeHandle getLocalNodeHandle() {
     return endpoint.getLocalNodeHandle();
   }
   
-  public List<NodeHandle> networkNeighbors(int num) {
+  @Override
+public List<NodeHandle> networkNeighbors(int num) {
     return endpoint.networkNeighbors(num);
   }
   
@@ -236,7 +248,8 @@ public class GCEndpoint implements Endpoint {
    * @param message The message to be delivered
    * @param delay The number of milliseconds to wait before delivering the message
    */
-  public CancellableTask scheduleMessage(Message message, long delay) {
+  @Override
+public CancellableTask scheduleMessage(Message message, long delay) {
     return endpoint.scheduleMessage(message, delay);
   }
   
@@ -248,11 +261,13 @@ public class GCEndpoint implements Endpoint {
    * @param delay The number of milliseconds to wait before delivering the fist message
    * @param delay The number of milliseconds to wait before delivering subsequent messages
    */
-  public CancellableTask scheduleMessage(Message message, long delay, long period) {
+  @Override
+public CancellableTask scheduleMessage(Message message, long delay, long period) {
     return endpoint.scheduleMessage(message, delay, period);
   }
   
-  public CancellableTask scheduleMessageAtFixedRate(Message message, long delay, long period) {
+  @Override
+public CancellableTask scheduleMessageAtFixedRate(Message message, long delay, long period) {
     return endpoint.scheduleMessageAtFixedRate(message, delay, period);
   }
   
@@ -264,7 +279,8 @@ public class GCEndpoint implements Endpoint {
    * @param task The task to run on the processing thread
    * @param command The command to return the result to once it's done
    */
-  @SuppressWarnings("unchecked")
+  @Override
+@SuppressWarnings("unchecked")
   public void process(Executable task, Continuation command) {
     endpoint.process(task, command);
   }
@@ -275,83 +291,101 @@ public class GCEndpoint implements Endpoint {
    * 
    * @return The unique instance name of this application
    */
-  public String getInstance() {
+  @Override
+public String getInstance() {
     return "GC" + endpoint.getInstance();
   }
 
   /* (non-Javadoc)
    * @see rice.p2p.commonapi.Endpoint#getEnvironment()
    */
-  public Environment getEnvironment() {
+  @Override
+public Environment getEnvironment() {
     return endpoint.getEnvironment();
   }
 
   /**
    * Passthrough to the sub endpoint.
    */
-  public void connect(NodeHandle handle, AppSocketReceiver receiver, int timeout) {
+  @Override
+public void connect(NodeHandle handle, AppSocketReceiver receiver, int timeout) {
     endpoint.connect(handle, receiver, timeout);
   }
 
-  public void accept(AppSocketReceiver receiver) {
+  @Override
+public void accept(AppSocketReceiver receiver) {
     endpoint.accept(receiver);
   }
 
-  public void setDeserializer(MessageDeserializer md) {
+  @Override
+public void setDeserializer(MessageDeserializer md) {
     endpoint.setDeserializer(md);    
   }
 
-  public MessageDeserializer getDeserializer() {
+  @Override
+public MessageDeserializer getDeserializer() {
     return endpoint.getDeserializer();    
   }
 
-  public Id readId(InputBuffer buf, short type) throws IOException {    
+  @Override
+public Id readId(InputBuffer buf, short type) throws IOException {    
     if (type == GCId.TYPE)
       return new GCId(buf, endpoint);
 
     return endpoint.readId(buf, type);
   }
 
-  public NodeHandle readNodeHandle(InputBuffer buf) throws IOException {
+  @Override
+public NodeHandle readNodeHandle(InputBuffer buf) throws IOException {
     return endpoint.readNodeHandle(buf);
   }
 
-  public IdRange readIdRange(InputBuffer buf) throws IOException {
+  @Override
+public IdRange readIdRange(InputBuffer buf) throws IOException {
     return new GCIdRange(buf, endpoint); //.readIdRange(buf);
   }
 
-  public NodeHandle coalesce(NodeHandle handle) {
+  @Override
+public NodeHandle coalesce(NodeHandle handle) {
     return endpoint.coalesce(handle);
   }
 
-  public NodeHandleSet readNodeHandleSet(InputBuffer buf, short type) throws IOException {
+  @Override
+public NodeHandleSet readNodeHandleSet(InputBuffer buf, short type) throws IOException {
     return endpoint.readNodeHandleSet(buf, type);
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "GCE["+endpoint+"]";
   }
   
-  public void register() {
+  @Override
+public void register() {
     endpoint.register(); 
   }
 
-  public int proximity(NodeHandle nh) {
+  @Override
+public int proximity(NodeHandle nh) {
     return endpoint.proximity(nh);
   }
 
-  public boolean isAlive(NodeHandle nh) {
+  @Override
+public boolean isAlive(NodeHandle nh) {
     return endpoint.isAlive(nh);
   }
 
-  public void setConsistentRouting(boolean val) {
+  @Override
+public void setConsistentRouting(boolean val) {
     endpoint.setConsistentRouting(val);
   }
 
-  public boolean routingConsistentFor(Id id) {
+  @Override
+public boolean routingConsistentFor(Id id) {
     return endpoint.routingConsistentFor(id);
   }
-  public void setSendOptions(Map<String, Object> options) {
+  @Override
+public void setSendOptions(Map<String, Object> options) {
     endpoint.setSendOptions(options);    
   }
 }

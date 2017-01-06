@@ -42,11 +42,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import rice.*;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
 import rice.p2p.scribe.*;
-import rice.p2p.scribe.rawserialization.ScribeContentDeserializer;
 
 /**
  * @(#) SubscribeAckMessage.java
@@ -106,17 +104,20 @@ public class SubscribeAckMessage extends AbstractSubscribeMessage {
    *
    * @return A String
    */
-  public String toString() {
+  @Override
+public String toString() {
     if (topics.size() == 1) return "SubscribeAckMessage{"+topics.get(0)+" ID:"+id+"}";
     return "SubscribeAckMessage{"+topics.size()+" ID:"+id+"}"; 
   }
 
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE; 
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)1); // version
     super.serialize(buf);
 

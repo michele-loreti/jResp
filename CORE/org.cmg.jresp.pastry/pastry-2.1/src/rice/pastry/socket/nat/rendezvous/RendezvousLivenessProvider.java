@@ -36,9 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package rice.pastry.socket.nat.rendezvous;
 
-import java.util.Map;
-
-import org.mpisws.p2p.transport.liveness.LivenessListener;
 import org.mpisws.p2p.transport.liveness.LivenessProvider;
 
 /**

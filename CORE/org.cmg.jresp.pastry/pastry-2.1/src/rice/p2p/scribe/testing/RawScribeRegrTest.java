@@ -36,20 +36,11 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 
 package rice.p2p.scribe.testing;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.util.*;
-
 import rice.environment.Environment;
-import rice.environment.logging.Logger;
-import rice.environment.params.simple.SimpleParameters;
-import rice.environment.time.simulated.DirectTimeSource;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
-import rice.p2p.commonapi.testing.CommonAPITest;
 import rice.p2p.scribe.*;
-import rice.p2p.scribe.messaging.SubscribeMessage;
 import rice.p2p.scribe.rawserialization.*;
 
 /**
@@ -66,15 +57,18 @@ public class RawScribeRegrTest extends ScribeRegrTest {
     super(env);
   }
   
-  public TestScribeContent buildTestScribeContent(Topic topic, int num) {
+  @Override
+public TestScribeContent buildTestScribeContent(Topic topic, int num) {
     return new RawTestScribeContent(topic, num);
   }
 
-  protected void processNode(int num, Node node) {
+  @Override
+protected void processNode(int num, Node node) {
     super.processNode(num, node);    
     scribes[num].setContentDeserializer(new ScribeContentDeserializer() {
       
-      public ScribeContent deserializeScribeContent(InputBuffer buf, Endpoint endpoint,
+      @Override
+	public ScribeContent deserializeScribeContent(InputBuffer buf, Endpoint endpoint,
           short contentType) throws IOException {
         switch(contentType) {
           case RawTestScribeContent.TYPE:
@@ -121,7 +115,8 @@ public class RawScribeRegrTest extends ScribeRegrTest {
       super(topic, num);
     }
     
-    public short getType() {
+    @Override
+	public short getType() {
       return TYPE;
     }
     
@@ -129,7 +124,8 @@ public class RawScribeRegrTest extends ScribeRegrTest {
       super(new Topic(buf, endpoint), buf.readInt()); 
     }
 
-    public void serialize(OutputBuffer buf) throws IOException {
+    @Override
+	public void serialize(OutputBuffer buf) throws IOException {
       topic.serialize(buf);
       buf.writeInt(num);
     }

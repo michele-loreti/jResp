@@ -41,7 +41,6 @@ import java.util.Arrays;
 
 import rice.environment.logging.Logger;
 import rice.environment.random.RandomSource;
-import rice.environment.random.simple.SimpleRandomSource;
 import rice.p2p.commonapi.rawserialization.*;
 
 public class BloomFilter implements Serializable {
@@ -73,9 +72,9 @@ public class BloomFilter implements Serializable {
     
     for (int i=2; i<=maxFactor; i++) {
       if (isPrimeL[i]) {
-        for (int j=0; j<=(int)(maxFactor/i); j++)
+        for (int j=0; j<=maxFactor/i; j++)
           isPrimeL[j*i] = false;
-        for (int j=(int)((offset+i-1)/i); j<=(int)(length/i); j++)
+        for (int j=(offset+i-1)/i; j<=length/i; j++)
           isPrimeH[j*i - offset] = false;
       }
     }
@@ -158,7 +157,8 @@ System.outt.println(); */
     return true;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     String result = "[BV "+(bitfield.length*8)+"bit = { ";
     for (int i=0; i<hashParams.length; i++)
       result = result + ((i==0) ? "" : ", ") + hashParams[i];

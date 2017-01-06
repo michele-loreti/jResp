@@ -51,11 +51,13 @@ public class ConnectorExceptionDelivery<Identifier> implements Delivery {
     this.connectorReceiver = connectorReceiver;
     this.connectorHandle = connectorHandle;
   }
-  public void deliver() {
+  @Override
+public void deliver() {
     connectorReceiver.receiveException(connectorHandle, e);      
   }
   // out of band, needs to get in front of any other message
-  public int getSeq() {
+  @Override
+public int getSeq() {
     return -1; 
   }
 }

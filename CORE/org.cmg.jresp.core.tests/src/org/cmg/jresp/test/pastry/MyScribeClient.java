@@ -131,6 +131,7 @@ public class MyScribeClient implements ScribeClient, Application {
 	 * Part of the Application interface. Will receive PublishContent every so
 	 * often.
 	 */
+	@Override
 	public void deliver(Id id, Message message) {
 		if (message instanceof PublishContent) {
 			sendMulticast();
@@ -151,6 +152,7 @@ public class MyScribeClient implements ScribeClient, Application {
 	/**
 	 * Called whenever we receive a published message.
 	 */
+	@Override
 	public void deliver(Topic topic, ScribeContent content) {
 		System.out.println("MyScribeClient.deliver(" + topic + "," + content + ")");
 		if (((MyScribeContent) content).from == null) {
@@ -172,33 +174,40 @@ public class MyScribeClient implements ScribeClient, Application {
 	 * Called when we receive an anycast. If we return false, it will be
 	 * delivered elsewhere. Returning true stops the message here.
 	 */
+	@Override
 	public boolean anycast(Topic topic, ScribeContent content) {
 		boolean returnValue = myScribe.getEnvironment().getRandomSource().nextInt(3) == 0;
 		System.out.println("MyScribeClient.anycast(" + topic + "," + content + "):" + returnValue);
 		return returnValue;
 	}
 
+	@Override
 	public void childAdded(Topic topic, NodeHandle child) {
 		// System.out.println("MyScribeClient.childAdded("+topic+","+child+")");
 	}
 
+	@Override
 	public void childRemoved(Topic topic, NodeHandle child) {
 		// System.out.println("MyScribeClient.childRemoved("+topic+","+child+")");
 	}
 
+	@Override
 	public void subscribeFailed(Topic topic) {
 		// System.out.println("MyScribeClient.childFailed("+topic+")");
 	}
 
+	@Override
 	public boolean forward(RouteMessage message) {
 		return true;
 	}
 
+	@Override
 	public void update(NodeHandle handle, boolean joined) {
 
 	}
 
 	class PublishContent implements Message {
+		@Override
 		public int getPriority() {
 			return MAX_PRIORITY;
 		}

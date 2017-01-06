@@ -41,23 +41,14 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.util.Iterator;
 import java.util.Vector;
 
 import rice.Continuation;
 import rice.environment.Environment;
-import rice.environment.params.simple.SimpleParameters;
 import rice.p2p.commonapi.*;
-import rice.p2p.commonapi.appsocket.AppSocket;
-import rice.p2p.commonapi.appsocket.AppSocketReceiver;
-import rice.pastry.NodeHandle;
 import rice.pastry.NodeIdFactory;
 import rice.pastry.PastryNode;
-import rice.pastry.PastryNodeFactory;
 import rice.pastry.commonapi.PastryIdFactory;
-import rice.pastry.direct.*;
-import rice.pastry.leafset.LeafSet;
-import rice.pastry.socket.SocketPastryNodeFactory;
 import rice.pastry.socket.appsocket.AppSocketPastryNodeFactory;
 import rice.pastry.socket.appsocket.SocketFactory;
 import rice.pastry.standard.RandomNodeIdFactory;
@@ -135,12 +126,14 @@ public class Tutorial2 {
        * Receive the new SocketChannel.
        * @param result
        */
-      public void receiveResult(final SocketChannel socket) {
+      @Override
+	public void receiveResult(final SocketChannel socket) {
         System.out.println("Opened SocketChannel "+socket);
         // we're going to write in a blocking mode, so make sure to do this on another thread
         new Thread(new Runnable() {
         
-          public void run() {
+          @Override
+		public void run() {
             // create the message
             final ByteBuffer out = ByteBuffer.wrap(rice.pastry.Id.build().toByteArray());
             
@@ -165,7 +158,8 @@ public class Tutorial2 {
        * Handle a problem connecting.
        * @param exception
        */
-      public void receiveException(Exception exception) {
+      @Override
+	public void receiveException(Exception exception) {
         exception.printStackTrace();
         throw new RuntimeException("Not implemented. ");        
       }      

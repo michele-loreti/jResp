@@ -146,7 +146,8 @@ public class Manifest implements Serializable {
     return result;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return "[Manifest obj=["+dump(objectHash, false)+"] expires="+expirationDate+"]";
   }
   

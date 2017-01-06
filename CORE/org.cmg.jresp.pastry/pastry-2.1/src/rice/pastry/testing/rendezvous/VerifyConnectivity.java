@@ -79,12 +79,14 @@ public class VerifyConnectivity {
     final ConnectivityVerifier verifier = new ConnectivityVerifierImpl(factory);
     verifier.findExternalAddress(factory.getNextInetSocketAddress(), Collections.singleton(bootaddress), new Continuation<InetAddress, IOException>() {
       
-      public void receiveResult(final InetAddress result) {
+      @Override
+	public void receiveResult(final InetAddress result) {
         System.out.println("My external address is "+result);
 
         // for some reason, can't do this immeadiately... don't know why yet
         Runnable r = new Runnable() {        
-          public void run() {        
+          @Override
+		public void run() {        
             InetSocketAddress[] addrs = new InetSocketAddress[2];
             addrs[0] = new InetSocketAddress(result, externalPort);
             addrs[1] = factory.getNextInetSocketAddress();
@@ -93,15 +95,18 @@ public class VerifyConnectivity {
             
             verifier.verifyConnectivity(local, Collections.singleton(bootaddress), new ConnectivityResult() {
             
-              public void udpSuccess(InetSocketAddress from, Map<String, Object> options) {
+              @Override
+			public void udpSuccess(InetSocketAddress from, Map<String, Object> options) {
                 System.out.println("UDP works. "+from);
               }
             
-              public void tcpSuccess(InetSocketAddress from, Map<String, Object> options) {
+              @Override
+			public void tcpSuccess(InetSocketAddress from, Map<String, Object> options) {
                 System.out.println("TCP works. "+from);
               }
             
-              public void receiveException(Exception exception) {
+              @Override
+			public void receiveException(Exception exception) {
                 exception.printStackTrace();
               }    
             });        
@@ -111,7 +116,8 @@ public class VerifyConnectivity {
         env.getSelectorManager().invoke(r);        
       }
     
-      public void receiveException(IOException exception) {
+      @Override
+	public void receiveException(IOException exception) {
         exception.printStackTrace();
       }    
     });

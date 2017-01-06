@@ -37,19 +37,15 @@ advised of the possibility of such damage.
 package rice.p2p.scribe.testing;
 
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.*;
 
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
-import rice.environment.params.simple.SimpleParameters;
-import rice.environment.time.simulated.DirectTimeSource;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
 import rice.p2p.commonapi.testing.CommonAPITest;
 import rice.p2p.scribe.*;
 import rice.p2p.scribe.messaging.SubscribeMessage;
-import rice.p2p.util.tuples.Tuple;
 import rice.pastry.PastryNode;
 
 /**
@@ -92,7 +88,8 @@ public class ScribeRegrTest extends CommonAPITest {
     return new TestScribeContent(topic, numMessages);
   }
 
-  public void setupParams(Environment env) {
+  @Override
+public void setupParams(Environment env) {
     super.setupParams(env);
     // we want to see if messages are dropped because not ready
 //    if (!env.getParameters().contains("rice.p2p.scribe.ScribeImpl@ScribeRegrTest_loglevel"))
@@ -127,7 +124,8 @@ public class ScribeRegrTest extends CommonAPITest {
    * @param node The newly created node
    * @param num The number of this node
    */
-  protected void processNode(int num, Node node) {
+  @Override
+protected void processNode(int num, Node node) {
     scribes[num] = new ScribeImpl(node, INSTANCE);
     policies[num] = new TestScribePolicy(scribes[num]);
     scribes[num].setPolicy(policies[num]);
@@ -137,7 +135,8 @@ public class ScribeRegrTest extends CommonAPITest {
    * Method which should run the test - this is called once all of the nodes have been created and
    * are ready.
    */
-  protected void runTest() {
+  @Override
+protected void runTest() {
     if (NUM_NODES < 2) {
       System.out.println("The DistScribeRegrTest must be run with at least 2 nodes for proper testing.  Use the '-nodes n' to specify the number of nodes.");
       return;
@@ -877,7 +876,8 @@ public class ScribeRegrTest extends CommonAPITest {
      * @param o DESCRIBE THE PARAMETER
      * @return DESCRIBE THE RETURN VALUE
      */
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
       if (!(o instanceof TestScribeContent)) {
         return false;
       }
@@ -891,7 +891,8 @@ public class ScribeRegrTest extends CommonAPITest {
      *
      * @return DESCRIBE THE RETURN VALUE
      */
-    public String toString() {
+    @Override
+	public String toString() {
       return "TestScribeContent(" + topic + ", " + num + ")";
     }
   }
@@ -928,7 +929,8 @@ public class ScribeRegrTest extends CommonAPITest {
      *
      * @return The DestinationId value
      */
-    public Id getDestinationId() {
+    @Override
+	public Id getDestinationId() {
       return id;
     }
 
@@ -937,7 +939,8 @@ public class ScribeRegrTest extends CommonAPITest {
      *
      * @return The NextHopHandle value
      */
-    public NodeHandle getNextHopHandle() {
+    @Override
+	public NodeHandle getNextHopHandle() {
       return nextHop;
     }
 
@@ -947,11 +950,14 @@ public class ScribeRegrTest extends CommonAPITest {
      * @deprecated
      * @return The Message value
      */
-    public Message getMessage() {
+    @Deprecated
+	@Override
+	public Message getMessage() {
       return message;
     }
 
-    public Message getMessage(MessageDeserializer md) {
+    @Override
+	public Message getMessage(MessageDeserializer md) {
       return message;
     }
 
@@ -960,7 +966,8 @@ public class ScribeRegrTest extends CommonAPITest {
      *
      * @param id The new DestinationId value
      */
-    public void setDestinationId(Id id) {
+    @Override
+	public void setDestinationId(Id id) {
       this.id = id;
     }
 
@@ -969,7 +976,8 @@ public class ScribeRegrTest extends CommonAPITest {
      *
      * @param nextHop The new NextHopHandle value
      */
-    public void setNextHopHandle(NodeHandle nextHop) {
+    @Override
+	public void setNextHopHandle(NodeHandle nextHop) {
       this.nextHop = nextHop;
     }
 
@@ -978,11 +986,13 @@ public class ScribeRegrTest extends CommonAPITest {
      *
      * @param message The new Message value
      */
-    public void setMessage(Message message) {
+    @Override
+	public void setMessage(Message message) {
       this.message = message;
     }
     
-    public void setMessage(RawMessage message) {
+    @Override
+	public void setMessage(RawMessage message) {
       this.message = message;
     }
     
@@ -1070,7 +1080,8 @@ public class ScribeRegrTest extends CommonAPITest {
      * @param content DESCRIBE THE PARAMETER
      * @return DESCRIBE THE RETURN VALUE
      */
-    public boolean anycast(Topic topic, ScribeContent content) {
+    @Override
+	public boolean anycast(Topic topic, ScribeContent content) {
 //      System.out.println(scribe+" "+this+".anycast():"+acceptAnycast);
       if (acceptAnycast)
         anycastMessages.add(content);
@@ -1084,7 +1095,8 @@ public class ScribeRegrTest extends CommonAPITest {
      * @param topic DESCRIBE THE PARAMETER
      * @param content DESCRIBE THE PARAMETER
      */
-    public void deliver(Topic topic, ScribeContent content) {
+    @Override
+	public void deliver(Topic topic, ScribeContent content) {
 //      scribe.getEnvironment().getLogManager().getLogger(TestScribeClient.class,null).log(this+"deliver("+topic+","+content+")");
       publishMessages.add(content);
     }
@@ -1095,7 +1107,8 @@ public class ScribeRegrTest extends CommonAPITest {
      * @param topic DESCRIBE THE PARAMETER
      * @param child DESCRIBE THE PARAMETER
      */
-    public void childAdded(Topic topic, NodeHandle child) {
+    @Override
+	public void childAdded(Topic topic, NodeHandle child) {
      // System.out.println("CHILD ADDED AT " + scribe.getId());
     }
 
@@ -1105,11 +1118,13 @@ public class ScribeRegrTest extends CommonAPITest {
      * @param topic DESCRIBE THE PARAMETER
      * @param child DESCRIBE THE PARAMETER
      */
-    public void childRemoved(Topic topic, NodeHandle child) {
+    @Override
+	public void childRemoved(Topic topic, NodeHandle child) {
      // System.out.println("CHILD REMOVED AT " + scribe.getId());
     }
 
-    public void subscribeFailed(Topic topic) {
+    @Override
+	public void subscribeFailed(Topic topic) {
       subscribeFailed = true;
       scribe.subscribe(topic, this);
     }
@@ -1118,7 +1133,8 @@ public class ScribeRegrTest extends CommonAPITest {
       return subscribeFailed;
     }
     
-    public String toString() {      
+    @Override
+	public String toString() {      
       if (topics.size() == 1) {
         return topics.get(0).toString(); 
       }
@@ -1153,7 +1169,8 @@ public class ScribeRegrTest extends CommonAPITest {
       this.neverAllowSubscribe = neverAllowSubscribe;
     }
 
-    public boolean allowSubscribe(SubscribeMessage message, ScribeClient[] clients, NodeHandle[] children) {
+    @Override
+	public boolean allowSubscribe(SubscribeMessage message, ScribeClient[] clients, NodeHandle[] children) {
   //System.out.println("Allow subscribe , client.size "+clients.length+", children "+children.length+" for subscriber "+message.getSubscriber());
       return (! neverAllowSubscribe) && (allowSubscribe || (clients.length > 0) || this.scribe.isRoot(message.getTopic()));
     }

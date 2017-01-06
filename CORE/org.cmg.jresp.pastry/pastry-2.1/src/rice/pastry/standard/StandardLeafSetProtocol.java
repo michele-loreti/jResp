@@ -71,7 +71,7 @@ public class StandardLeafSetProtocol extends PastryAppl implements LeafSetProtoc
     leafSet = ls;
     Iterator<NodeHandle> i = leafSet.asList().iterator();
     while(i.hasNext()) {
-      NodeHandle nh = (NodeHandle)i.next(); 
+      NodeHandle nh = i.next(); 
       nh.addObserver(this);
     }    
     cachedSet = new HashSet<NodeHandle>(leafSet.maxSize() * 2);  
@@ -84,7 +84,8 @@ public class StandardLeafSetProtocol extends PastryAppl implements LeafSetProtoc
    * 
    * @param msg the message.
    */
-  public void messageForAppl(Message msg) {
+  @Override
+public void messageForAppl(Message msg) {
     if (msg instanceof BroadcastLeafSet) {
       // receive a leafset from another node
       BroadcastLeafSet bls = (BroadcastLeafSet) msg;
@@ -202,7 +203,7 @@ public class StandardLeafSetProtocol extends PastryAppl implements LeafSetProtoc
         Iterator<NodeHandle> it = new ArrayList<NodeHandle>(insertedHandles).iterator();
         while (it.hasNext()) {
           // send leafset to missing node
-          NodeHandle nh = (NodeHandle) it.next();
+          NodeHandle nh = it.next();
           thePastryNode.send(nh,bl,null, options);
         }
       }
@@ -378,7 +379,8 @@ public class StandardLeafSetProtocol extends PastryAppl implements LeafSetProtoc
 
   }
 
-  public boolean deliverWhenNotReady() {
+  @Override
+public boolean deliverWhenNotReady() {
     return true;
   }
 
@@ -400,9 +402,10 @@ public class StandardLeafSetProtocol extends PastryAppl implements LeafSetProtoc
   /**
    * If nodehandle is dead, remove it from the leafset.
    */
-  public void update(Observable o, Object arg) {
+  @Override
+public void update(Observable o, Object arg) {
 //    if (o instanceof NodeHandle) {      
-      if (arg == NodeHandle.DECLARED_DEAD) {
+      if (arg == rice.p2p.commonapi.NodeHandle.DECLARED_DEAD) {
         leafSet.remove((NodeHandle)o);
       }
 //    }    

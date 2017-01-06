@@ -93,7 +93,8 @@ public class NodeSet implements NodeSetI, Serializable {
    * @return false if handle was already a member, true otherwise
    */
 
-  public boolean put(NodeHandle handle) {
+  @Override
+public boolean put(NodeHandle handle) {
     if (set.contains(handle))
       return false;
 
@@ -122,9 +123,10 @@ public class NodeSet implements NodeSetI, Serializable {
    *         found.
    */
 
-  public NodeHandle get(Id nid) {
+  @Override
+public NodeHandle get(Id nid) {
     try {
-      return (NodeHandle) set.elementAt(getIndex(nid));
+      return set.elementAt(getIndex(nid));
     } catch (Exception e) {
       return null;
     }
@@ -138,11 +140,12 @@ public class NodeSet implements NodeSetI, Serializable {
    * @return the handle, or null if the position is out of bounds
    */
 
-  public NodeHandle get(int i) {
+  @Override
+public NodeHandle get(int i) {
     NodeHandle h;
 
     try {
-      h = (NodeHandle) set.elementAt(i);
+      h = set.elementAt(i);
     } catch (Exception e) {
       return null;
     }
@@ -174,7 +177,7 @@ public class NodeSet implements NodeSetI, Serializable {
 
   public NodeHandle remove(Id nid) {
     try {
-      return (NodeHandle) set.remove(getIndex(nid));
+      return set.remove(getIndex(nid));
     } catch (Exception e) {
       return null;
     }
@@ -186,7 +189,8 @@ public class NodeSet implements NodeSetI, Serializable {
    * @return the size.
    */
 
-  public int size() {
+  @Override
+public int size() {
     return set.size();
   }
 
@@ -197,16 +201,18 @@ public class NodeSet implements NodeSetI, Serializable {
    * @return the index or -1 if no such element
    */
 
-  public int getIndex(Id nid) {
+  @Override
+public int getIndex(Id nid) {
     return getIndexId(nid);
   }
 
-  public int getIndex(NodeHandle nh) {
+  @Override
+public int getIndex(NodeHandle nh) {
     NodeHandle h;
 
     for (int i = 0; i < set.size(); i++) {
       try {
-        h = (NodeHandle) set.elementAt(i);
+        h = set.elementAt(i);
         if (h.equals(nh))
           return i;
       } catch (Exception e) {
@@ -221,7 +227,7 @@ public class NodeSet implements NodeSetI, Serializable {
 
     for (int i = 0; i < set.size(); i++) {
       try {
-        h = (NodeHandle) set.elementAt(i);
+        h = set.elementAt(i);
         if (h.getNodeId().equals(nid))
           return i;
       } catch (Exception e) {
@@ -256,7 +262,8 @@ public class NodeSet implements NodeSetI, Serializable {
    * 
    * @param handle the handle to remove
    */
-  public NodeHandle remove(NodeHandle handle) {
+  @Override
+public NodeHandle remove(NodeHandle handle) {
     if (set.remove(handle)) {
       return handle;
     }
@@ -288,7 +295,8 @@ public class NodeSet implements NodeSetI, Serializable {
    * @param handle the handle to test
    * @return true of handle is a member, false otherwise
    */
-  public boolean member(NodeHandle handle) {
+  @Override
+public boolean member(NodeHandle handle) {
     return set.contains(handle);
   }
 
@@ -325,7 +333,8 @@ public class NodeSet implements NodeSetI, Serializable {
    * Returns a string representation of the NodeSet
    */
 
-  public String toString() {
+  @Override
+public String toString() {
     String s = "NodeSet: ";
     for (int i = 0; i < size(); i++)
       s = s + get(i).getNodeId();
@@ -342,7 +351,8 @@ public class NodeSet implements NodeSetI, Serializable {
    * 
    * @return true if the put succeeded, false otherwise.
    */
-  public boolean putHandle(rice.p2p.commonapi.NodeHandle handle) {
+  @Override
+public boolean putHandle(rice.p2p.commonapi.NodeHandle handle) {
     return put((NodeHandle) handle);
   }
 
@@ -353,7 +363,8 @@ public class NodeSet implements NodeSetI, Serializable {
    * @return the handle associated with that id or null if no such handle is
    *         found.
    */
-  public rice.p2p.commonapi.NodeHandle getHandle(rice.p2p.commonapi.Id id) {
+  @Override
+public rice.p2p.commonapi.NodeHandle getHandle(rice.p2p.commonapi.Id id) {
     synchronized(set) {
       for (NodeHandle nh : set) {
         if (nh.getId().equals(id)) return nh; 
@@ -369,7 +380,8 @@ public class NodeSet implements NodeSetI, Serializable {
    * @return the handle associated with that id or null if no such handle is
    *         found.
    */
-  public rice.p2p.commonapi.NodeHandle getHandle(int i) {
+  @Override
+public rice.p2p.commonapi.NodeHandle getHandle(int i) {
     return get(i);
   }
 
@@ -379,7 +391,8 @@ public class NodeSet implements NodeSetI, Serializable {
    * @param id a node id.
    * @return true if that node id is in the set, false otherwise.
    */
-  public boolean memberHandle(rice.p2p.commonapi.Id id) {
+  @Override
+public boolean memberHandle(rice.p2p.commonapi.Id id) {
     return memberId(id);
   }
 
@@ -390,7 +403,8 @@ public class NodeSet implements NodeSetI, Serializable {
    * 
    * @return the node handle removed or null if nothing.
    */
-  public rice.p2p.commonapi.NodeHandle removeHandle(rice.p2p.commonapi.Id id) {
+  @Override
+public rice.p2p.commonapi.NodeHandle removeHandle(rice.p2p.commonapi.Id id) {
     return remove((rice.pastry.Id) id);
   }
 
@@ -401,7 +415,8 @@ public class NodeSet implements NodeSetI, Serializable {
    * 
    * @return the index or throws a NoSuchElementException.
    */
-  public int getIndexHandle(rice.p2p.commonapi.Id id)
+  @Override
+public int getIndexHandle(rice.p2p.commonapi.Id id)
       throws NoSuchElementException {
     return getIndex((Id)id);
   }
@@ -418,16 +433,18 @@ public class NodeSet implements NodeSetI, Serializable {
     }
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeShort((short)set.size());
     Iterator<NodeHandle> i = set.iterator();
     while(i.hasNext()) {
-      NodeHandle nh = (NodeHandle)i.next();
+      NodeHandle nh = i.next();
       nh.serialize(buf);
     }
   }  
   
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE; 
   }
   

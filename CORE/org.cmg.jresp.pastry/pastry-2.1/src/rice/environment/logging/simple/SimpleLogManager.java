@@ -40,11 +40,8 @@ advised of the possibility of such damage.
 package rice.environment.logging.simple;
 
 import java.io.PrintStream;
-import java.util.Hashtable;
-
 import rice.environment.logging.*;
 import rice.environment.logging.LogManager;
-import rice.environment.params.ParameterChangeListener;
 import rice.environment.params.Parameters;
 import rice.environment.time.TimeSource;
 import rice.environment.time.simple.SimpleTimeSource;
@@ -71,7 +68,8 @@ public class SimpleLogManager extends AbstractLogManager implements CloneableLog
     super(stream, timeSource, params, prefix, dateFormat);
   }
   
-  public PrintStream getPrintStream() {
+  @Override
+public PrintStream getPrintStream() {
     return ps;
   }
   
@@ -79,7 +77,8 @@ public class SimpleLogManager extends AbstractLogManager implements CloneableLog
     return params;
   }
   
-  public TimeSource getTimeSource() {
+  @Override
+public TimeSource getTimeSource() {
     return time;
   }
   
@@ -119,17 +118,20 @@ public class SimpleLogManager extends AbstractLogManager implements CloneableLog
     this(null, timeSource, params);
   }
   
-  protected Logger constructLogger(String clazz, int level, boolean useDefault) {
+  @Override
+protected Logger constructLogger(String clazz, int level, boolean useDefault) {
     return new SimpleLogger(clazz,this,level, useDefault);
   }
 
   /* (non-Javadoc)
    * @see rice.environment.logging.CloneableLogManager#clone(java.lang.String)
    */
-  public LogManager clone(String detail) {
+  @Override
+public LogManager clone(String detail) {
     return clone(detail,time);
   }
-  public LogManager clone(String detail, TimeSource ts) {
+  @Override
+public LogManager clone(String detail, TimeSource ts) {
     return new SimpleLogManager(ps, ts, params, detail, dateFormat);
   }
   

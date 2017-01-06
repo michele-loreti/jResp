@@ -72,39 +72,48 @@ public class SortedLinkedList<E extends Comparable<E>> extends LinkedList<E> {
     
     return new ListIterator<E>(){
 
-      public void add(E o) {
+      @Override
+	public void add(E o) {
         throw new UnsupportedOperationException("Does not guarantee sortedness.");
       }
 
-      public boolean hasNext() {
+      @Override
+	public boolean hasNext() {
         return it.hasNext();
       }
 
-      public boolean hasPrevious() {
+      @Override
+	public boolean hasPrevious() {
         return it.hasPrevious();
       }
 
-      public E next() {
+      @Override
+	public E next() {
         return it.next();
       }
 
-      public int nextIndex() {
+      @Override
+	public int nextIndex() {
         return it.nextIndex();
       }
 
-      public E previous() {
+      @Override
+	public E previous() {
         return it.previous();
       }
 
-      public int previousIndex() {
+      @Override
+	public int previousIndex() {
         return it.previousIndex();
       }
 
-      public void remove() {
+      @Override
+	public void remove() {
         it.remove();
       }
 
-      public void set(E o) {
+      @Override
+	public void set(E o) {
         throw new UnsupportedOperationException("Does not guarantee sortedness.");
       }    
     };

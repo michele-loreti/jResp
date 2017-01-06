@@ -51,7 +51,6 @@ import org.mpisws.p2p.filetransfer.SimpleFileTransferListener;
 import org.mpisws.p2p.transport.P2PSocket;
 import org.mpisws.p2p.transport.SocketCallback;
 import org.mpisws.p2p.transport.SocketRequestHandle;
-import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.TransportLayerCallback;
 import org.mpisws.p2p.transport.liveness.LivenessListener;
 import org.mpisws.p2p.transport.liveness.LivenessTransportLayer;
@@ -62,8 +61,6 @@ import org.mpisws.p2p.transport.simpleidentity.SimpleIdentityTransportLayer;
 import org.mpisws.p2p.transport.util.DefaultErrorHandler;
 import org.mpisws.p2p.transport.wire.WireTransportLayer;
 import org.mpisws.p2p.transport.wire.WireTransportLayerImpl;
-import org.mpisws.p2p.transport.wire.magicnumber.MagicNumberTransportLayer;
-
 import rice.Continuation;
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
@@ -92,7 +89,8 @@ public class EncryptedFileTest {
     SimpleIdentityTransportLayer<InetSocketAddress, ByteBuffer> idtl1 = new SimpleIdentityTransportLayer<InetSocketAddress, ByteBuffer>(wtl1,new InetSocketAddressSerializer(), null ,env,errorHandler);
     LivenessTransportLayer<InetSocketAddress, ByteBuffer> ltl1 = new LivenessTransportLayerImpl<InetSocketAddress>(idtl1,env,errorHandler,300000);
     ltl1.addLivenessListener(new LivenessListener<InetSocketAddress>() {    
-      public void livenessChanged(InetSocketAddress i, int val,
+      @Override
+	public void livenessChanged(InetSocketAddress i, int val,
           Map<String, Object> options) {
         logger.log("Node1: livenessChanged("+i+","+val+","+options+")");
       }    
@@ -103,24 +101,28 @@ public class EncryptedFileTest {
 
     etl1.setCallback(new TransportLayerCallback<InetSocketAddress, ByteBuffer>() {
     
-      public void messageReceived(InetSocketAddress i, ByteBuffer m,
+      @Override
+	public void messageReceived(InetSocketAddress i, ByteBuffer m,
           Map<String, Object> options) throws IOException {
         // TODO Auto-generated method stub
     
       }
     
-      public void incomingSocket(P2PSocket<InetSocketAddress> s) throws IOException {
+      @Override
+	public void incomingSocket(P2PSocket<InetSocketAddress> s) throws IOException {
         // we got a socket, convert it to an AppSocket, then a FileTransfer
         logger.log("incomingSocket("+s+")");    
         final AppSocket sock = new SocketAdapter<InetSocketAddress>(s, env);
         FileTransfer ft = new FileTransferImpl(sock,new FileTransferCallback() {
         
-          public void messageReceived(ByteBuffer bb) {
+          @Override
+		public void messageReceived(ByteBuffer bb) {
             // TODO Auto-generated method stub
         
           }
         
-          public void fileReceived(File f, ByteBuffer metadata) {
+          @Override
+		public void fileReceived(File f, ByteBuffer metadata) {
             try {
               String name = new SimpleInputBuffer(metadata).readUTF();            
               logger.log("file received "+f+" named:"+name+" size:"+f.length());
@@ -129,7 +131,8 @@ public class EncryptedFileTest {
             }
           }
 
-          public void receiveException(Exception ioe) {
+          @Override
+		public void receiveException(Exception ioe) {
             logger.logException("Receiver FTC.receiveException()", ioe);
           }
         
@@ -162,7 +165,8 @@ public class EncryptedFileTest {
 
     // check liveness on addr1
     ltl2.addLivenessListener(new LivenessListener<InetSocketAddress>() {    
-      public void livenessChanged(InetSocketAddress i, int val,
+      @Override
+	public void livenessChanged(InetSocketAddress i, int val,
           Map<String, Object> options) {
         logger.log("Node2: livenessChanged("+i+","+val+","+options+")");
       }    
@@ -174,7 +178,8 @@ public class EncryptedFileTest {
 
     etl2.openSocket(addr1, new SocketCallback<InetSocketAddress>() {
     
-      public void receiveResult(SocketRequestHandle<InetSocketAddress> cancellable,
+      @Override
+	public void receiveResult(SocketRequestHandle<InetSocketAddress> cancellable,
           P2PSocket<InetSocketAddress> s) {
         logger.log("opened Socket "+s);
         
@@ -182,17 +187,20 @@ public class EncryptedFileTest {
         final AppSocket sock = new SocketAdapter<InetSocketAddress>(s, env);
         FileTransfer ft = new FileTransferImpl(sock, new FileTransferCallback() {
         
-          public void messageReceived(ByteBuffer bb) {
+          @Override
+		public void messageReceived(ByteBuffer bb) {
             // TODO Auto-generated method stub
         
           }
         
-          public void fileReceived(File f, ByteBuffer metadata) {
+          @Override
+		public void fileReceived(File f, ByteBuffer metadata) {
             // TODO Auto-generated method stub
         
           }
         
-          public void receiveException(Exception ioe) {
+          @Override
+		public void receiveException(Exception ioe) {
             logger.logException("Sender FTC.receiveException()", ioe);
           }
         }, env);       
@@ -217,11 +225,13 @@ public class EncryptedFileTest {
           sob.writeUTF("foo");
           ft.sendFile(new File("delme.txt"), sob.getByteBuffer(), (byte)0, new Continuation<FileReceipt, Exception>() {
           
-            public void receiveResult(FileReceipt result) {
+            @Override
+			public void receiveResult(FileReceipt result) {
               System.out.println("Send success "+result);
             }
           
-            public void receiveException(Exception exception) {
+            @Override
+			public void receiveException(Exception exception) {
               System.out.println("Send Failed");
             }
           
@@ -232,7 +242,8 @@ public class EncryptedFileTest {
         
       }
     
-      public void receiveException(SocketRequestHandle<InetSocketAddress> s,
+      @Override
+	public void receiveException(SocketRequestHandle<InetSocketAddress> s,
           Exception ex) {
         logger.logException("receiveException("+s+")", ex);
       }    

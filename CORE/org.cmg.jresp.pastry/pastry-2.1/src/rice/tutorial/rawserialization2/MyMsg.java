@@ -70,18 +70,21 @@ public class MyMsg extends LookupMessage {
     this.to = to;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "MyMsg from "+from+" to "+to;
   }
 
   /**
    * Use low priority to prevent interference with overlay maintenance traffic.
    */
-  public int getPriority() {
+  @Override
+public int getPriority() {
     return Message.LOW_PRIORITY;
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     JavaSerializer.serialize(this, buf);
   }
 }

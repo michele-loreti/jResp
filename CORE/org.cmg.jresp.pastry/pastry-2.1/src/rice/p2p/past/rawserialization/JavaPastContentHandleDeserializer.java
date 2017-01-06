@@ -49,7 +49,8 @@ import rice.p2p.util.rawserialization.JavaDeserializer;
 public class JavaPastContentHandleDeserializer implements
     PastContentHandleDeserializer {
 
-  public PastContentHandle deserializePastContentHandle(InputBuffer buf, Endpoint endpoint, short contentType) throws IOException {   
+  @Override
+public PastContentHandle deserializePastContentHandle(InputBuffer buf, Endpoint endpoint, short contentType) throws IOException {   
     switch(contentType) {
       case 0:
         byte[] array = new byte[buf.readInt()];

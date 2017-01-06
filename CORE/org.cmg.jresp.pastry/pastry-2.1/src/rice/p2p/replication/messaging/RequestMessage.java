@@ -41,7 +41,6 @@ import java.io.IOException;
 
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
-import rice.p2p.replication.*;
 import rice.p2p.util.*;
 
 /**
@@ -94,16 +93,19 @@ public class RequestMessage extends ReplicationMessage {
     return filters;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return "RequestMessage("+getSource()+"):"+(ranges == null?null:ranges.length); 
   }
 
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE; 
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)0); // version
     super.serialize(buf);
 

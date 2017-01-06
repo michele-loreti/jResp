@@ -89,7 +89,8 @@ public class MultiringRouteMessage implements RouteMessage {
    *
    * @return The destination Id
    */
-  public Id getDestinationId() {
+  @Override
+public Id getDestinationId() {
     return RingId.build(ringId, message.getDestinationId());
   }
   
@@ -98,7 +99,8 @@ public class MultiringRouteMessage implements RouteMessage {
    *
    * @return The next hop
    */
-  public NodeHandle getNextHopHandle() {
+  @Override
+public NodeHandle getNextHopHandle() {
     return new MultiringNodeHandle(ringId, message.getNextHopHandle()); 
   }
   
@@ -108,11 +110,14 @@ public class MultiringRouteMessage implements RouteMessage {
    * @return The enclosed message
    * @deprecated Use getMessages(MessageDeserializer)
    */
-  public Message getMessage() {
+  @Deprecated
+@Override
+public Message getMessage() {
     return message.getMessage();
   }
   
-  public Message getMessage(MessageDeserializer md) throws IOException {
+  @Override
+public Message getMessage(MessageDeserializer md) throws IOException {
     return message.getMessage(md);
   }
   
@@ -121,7 +126,8 @@ public class MultiringRouteMessage implements RouteMessage {
    *
    * @param id The destination Id
    */
-  public void setDestinationId(Id id) {
+  @Override
+public void setDestinationId(Id id) {
     message.setDestinationId(((RingId) id).getId()); 
   }
   
@@ -130,7 +136,8 @@ public class MultiringRouteMessage implements RouteMessage {
    *
    * @param nextHop The next hop for this handle
    */
-  public void setNextHopHandle(NodeHandle nextHop) {
+  @Override
+public void setNextHopHandle(NodeHandle nextHop) {
     message.setNextHopHandle(((MultiringNodeHandle) nextHop).getHandle());
   }
   
@@ -139,7 +146,8 @@ public class MultiringRouteMessage implements RouteMessage {
    *
    * @param message The internal message
    */
-  public void setMessage(Message message) {
+  @Override
+public void setMessage(Message message) {
     if (message instanceof RawMessage) {
       setMessage((RawMessage)message); 
     } else {
@@ -150,7 +158,8 @@ public class MultiringRouteMessage implements RouteMessage {
   /**
    * Better performance.
    */
-  public void setMessage(RawMessage message) {
+  @Override
+public void setMessage(RawMessage message) {
     this.message.setMessage(message); 
   }
   

@@ -12,6 +12,7 @@
  */
 package org.cmg.jresp.knowledge.ts;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.cmg.jresp.knowledge.KnowledgeManager;

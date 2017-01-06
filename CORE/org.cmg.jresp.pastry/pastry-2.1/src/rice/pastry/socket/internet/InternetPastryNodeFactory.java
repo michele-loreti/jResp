@@ -357,11 +357,13 @@ public class InternetPastryNodeFactory extends
 
     connectivityVerifier.findExternalNodes(bindAddress, nonInternetRoutable, new Continuation<Collection<InetSocketAddress>, IOException>() {
       
-      public void receiveResult(Collection<InetSocketAddress> result) {
+      @Override
+	public void receiveResult(Collection<InetSocketAddress> result) {
         findExternalAddressHelper(nodeId, bindAddress, deliverResultToMe, result);
       }
     
-      public void receiveException(IOException exception) {
+      @Override
+	public void receiveException(IOException exception) {
         if (nonInternetRoutable == null || nonInternetRoutable.isEmpty()) findExternalAddressHelper(nodeId, bindAddress, deliverResultToMe, null);
       }          
     });                              
@@ -375,7 +377,8 @@ public class InternetPastryNodeFactory extends
     if (myProbeAddresses != null && !myProbeAddresses.isEmpty()) {
       connectivityVerifier.findExternalAddress(bindAddress, myProbeAddresses, new Continuation<InetAddress, IOException>() {
         
-        public void receiveResult(InetAddress result) {
+        @Override
+		public void receiveResult(InetAddress result) {
           if (externalAddresses != null) {
             if (!externalAddresses[0].equals(result)) {
               deliverResultToMe.receiveException(new IOException("Probe address ("+result+") does not match specified externalAddress ("+externalAddresses[0]+")."));
@@ -385,7 +388,8 @@ public class InternetPastryNodeFactory extends
           openFirewallPort(nodeId, bindAddress, deliverResultToMe, result, -1);
         }
       
-        public void receiveException(IOException exception) {
+        @Override
+		public void receiveException(IOException exception) {
           deliverResultToMe.receiveException(exception);
         }          
       });                              
@@ -512,7 +516,8 @@ public class InternetPastryNodeFactory extends
         
         // invoke to let the cancel succeed, seems to need to take a second sometimes
         environment.getSelectorManager().schedule(new TimerTask() {        
-          public void run() {
+          @Override
+		public void run() {
             newNodeSelector(nodeId, proxyAddress, deliverResultToMe, null, true);        
           }        
         }, 1000);
@@ -524,12 +529,14 @@ public class InternetPastryNodeFactory extends
       boolean udpSuccess = false;
       boolean tcpSuccess = false;
       
-      public void udpSuccess(InetSocketAddress from, Map<String, Object> options) {
+      @Override
+	public void udpSuccess(InetSocketAddress from, Map<String, Object> options) {
         udpSuccess = true;
         complete();
       }
     
-      public void tcpSuccess(InetSocketAddress from, Map<String, Object> options) {
+      @Override
+	public void tcpSuccess(InetSocketAddress from, Map<String, Object> options) {
         tcpSuccess = true;
         complete();
       }
@@ -541,7 +548,8 @@ public class InternetPastryNodeFactory extends
         }
       }
       
-      public void receiveException(Exception e) {
+      @Override
+	public void receiveException(Exception e) {
         timer.cancel();
         if (e instanceof CantVerifyConnectivityException) {
           // mark node firewalled if internal address matches the prefix, otherwise not firewalled

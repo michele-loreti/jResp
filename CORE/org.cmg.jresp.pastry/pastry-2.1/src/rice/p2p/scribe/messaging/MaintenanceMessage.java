@@ -59,11 +59,13 @@ public class MaintenanceMessage implements Message {
   public MaintenanceMessage() {
   }
     
-  public int getPriority() {
+  @Override
+public int getPriority() {
     return DEFAULT_PRIORITY;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "MaintenanceMessage";
   }  
 }

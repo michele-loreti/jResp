@@ -45,7 +45,6 @@ import java.util.zip.*;
 
 import rice.environment.Environment;
 import rice.p2p.commonapi.*;
-import rice.p2p.multiring.*;
 import rice.p2p.util.*;
 import rice.pastry.commonapi.*;
 import rice.pastry.dist.*;
@@ -118,7 +117,7 @@ public class RingCertificate implements Serializable {
    * @return All certificate
    */
   public static RingCertificate getCertificate(Id ringId) {
-    return (RingCertificate) CERTIFICATES.get(ringId);
+    return CERTIFICATES.get(ringId);
   }
   
   /**
@@ -300,7 +299,8 @@ public class RingCertificate implements Serializable {
    *
    * @return a string
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "[Ring Certificate for ring '" + name + "' (" + id + ")]";
   }
   

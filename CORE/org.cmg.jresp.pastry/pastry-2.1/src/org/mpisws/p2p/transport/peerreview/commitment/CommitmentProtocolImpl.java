@@ -39,7 +39,6 @@ package org.mpisws.p2p.transport.peerreview.commitment;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.SignatureException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -142,7 +141,8 @@ public class CommitmentProtocolImpl<Handle extends RawSerializable, Identifier e
    */
   protected void initReceiveCache() throws IOException {
     receiveCache = new LinkedHashMap<Tuple<Identifier, Long>, ReceiveInfo<Identifier>>(RECEIVE_CACHE_SIZE, 0.75f, true) {
-      protected boolean removeEldestEntry(Map.Entry eldest) {
+      @Override
+	protected boolean removeEldestEntry(Map.Entry eldest) {
         return size() > RECEIVE_CACHE_SIZE;
       }
     };
@@ -173,7 +173,8 @@ public class CommitmentProtocolImpl<Handle extends RawSerializable, Identifier e
     return ret;
   }
   
-  public void notifyCertificateAvailable(Identifier id) {
+  @Override
+public void notifyCertificateAvailable(Identifier id) {
     makeProgress(id);
   }
   
@@ -184,7 +185,8 @@ public class CommitmentProtocolImpl<Handle extends RawSerializable, Identifier e
    * @return The ack message and whether it was already logged.
    * @throws SignatureException 
    */
-  public Tuple<AckMessage<Identifier>,Boolean> logMessageIfNew(UserDataMessage<Handle> udm) {
+  @Override
+public Tuple<AckMessage<Identifier>,Boolean> logMessageIfNew(UserDataMessage<Handle> udm) {
     try {
       boolean loggedPreviously; // part of the return statement
       long seqOfRecvEntry;
@@ -255,7 +257,8 @@ public class CommitmentProtocolImpl<Handle extends RawSerializable, Identifier e
     }
   }
   
-  public void notifyStatusChange(Identifier id, int newStatus) {
+  @Override
+public void notifyStatusChange(Identifier id, int newStatus) {
     makeProgressAllPeers();
   }
 
@@ -451,7 +454,8 @@ public class CommitmentProtocolImpl<Handle extends RawSerializable, Identifier e
   /**
    * Handle an incoming USERDATA message 
    */
-  public void handleIncomingMessage(Handle source, UserDataMessage<Handle> msg, Map<String, Object> options) throws IOException {
+  @Override
+public void handleIncomingMessage(Handle source, UserDataMessage<Handle> msg, Map<String, Object> options) throws IOException {
 //    char buf1[256];    
 
     /* Check whether the timestamp (in the sequence number) is close enough to our local time.
@@ -473,7 +477,8 @@ public class CommitmentProtocolImpl<Handle extends RawSerializable, Identifier e
     makeProgress(peerreview.getIdentifierExtractor().extractIdentifier(source));
   }
 
-  public MessageRequestHandle<Handle, ByteBuffer> handleOutgoingMessage(
+  @Override
+public MessageRequestHandle<Handle, ByteBuffer> handleOutgoingMessage(
       final Handle target, final ByteBuffer message, 
       MessageCallback<Handle, ByteBuffer> deliverAckToMe,
       final Map<String, Object> options) {
@@ -548,7 +553,8 @@ public class CommitmentProtocolImpl<Handle extends RawSerializable, Identifier e
   }
   /* This is called if we receive an acknowledgment from another node */
 
-  public void handleIncomingAck(Handle source, AckMessage<Identifier> ackMessage, Map<String, Object> options) throws IOException {
+  @Override
+public void handleIncomingAck(Handle source, AckMessage<Identifier> ackMessage, Map<String, Object> options) throws IOException {
 //  AckMessage<Identifier> ackMessage = AckMessage.build(sib, peerreview.getIdSerializer(), hasher.getHashSizeBytes(), transport.signatureSizeInBytes());
 
     /* Acknowledgment: Log it (if we don't have it already) and send the next message, if any */
@@ -616,7 +622,8 @@ public class CommitmentProtocolImpl<Handle extends RawSerializable, Identifier e
     }
   }
 
-  public void setTimeToleranceMillis(long timeToleranceMillis) {
+  @Override
+public void setTimeToleranceMillis(long timeToleranceMillis) {
     this.timeToleranceMillis = timeToleranceMillis;
   }
 }

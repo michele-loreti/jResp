@@ -41,11 +41,9 @@ import java.net.*;
 import java.util.*;
 
 import rice.environment.Environment;
-import rice.environment.logging.Logger;
 import rice.pastry.*;
 import rice.pastry.routing.*;
 import rice.pastry.leafset.*;
-import rice.pastry.dist.*;
 import rice.pastry.socket.*;
 
 /** 
@@ -102,7 +100,8 @@ public class PastryNetworkTest {
           System.out.println("Fetching leafset of " + handle + " (thread " + numThreads + " of "+MAX_THREADS+")");
           
           Thread t = new Thread() {
-            public void run() {  
+            @Override
+			public void run() {  
               boolean gotResponse = false;
               try {
                 LeafSet ls = null; // TODO: fix this, old code: factory.getLeafSet(handle);
@@ -225,7 +224,7 @@ public class PastryNetworkTest {
       while (j.hasNext())
         rt.put((NodeHandle) j.next());
 
-      RouteSet[] ideal = (RouteSet[]) rt.getRow(row);
+      RouteSet[] ideal = rt.getRow(row);
       RouteSet[] actual = (RouteSet[]) routerows.get(node);
       
       for (int k=0; k<ideal.length; k++) {

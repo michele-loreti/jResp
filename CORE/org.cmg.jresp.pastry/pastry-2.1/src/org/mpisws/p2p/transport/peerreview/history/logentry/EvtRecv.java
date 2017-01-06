@@ -39,7 +39,6 @@ package org.mpisws.p2p.transport.peerreview.history.logentry;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import org.mpisws.p2p.transport.peerreview.PeerReviewConstants;
 import org.mpisws.p2p.transport.peerreview.history.HashProvider;
 import org.mpisws.p2p.transport.util.Serializer;
 
@@ -82,7 +81,8 @@ public class EvtRecv<Handle extends RawSerializable> extends HistoryEvent {
     hash = hasher.hash(ByteBuffer.wrap(this.payload));
   }
 
-  public short getType() {
+  @Override
+public short getType() {
     return EVT_RECV;
   }
 
@@ -100,7 +100,8 @@ public class EvtRecv<Handle extends RawSerializable> extends HistoryEvent {
     }
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     senderHandle.serialize(buf);
     buf.writeLong(senderSeq);
     buf.writeBoolean(hash != null);  

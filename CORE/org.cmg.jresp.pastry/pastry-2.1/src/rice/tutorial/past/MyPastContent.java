@@ -71,7 +71,8 @@ public class MyPastContent extends ContentHashPastContent {
   /**
    * A descriptive toString()
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "MyPastContent ["+content+"]";
   }
 }

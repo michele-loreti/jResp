@@ -40,7 +40,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
-import org.mpisws.p2p.transport.simpleidentity.InetSocketAddressSerializer;
 import org.mpisws.p2p.transport.util.Serializer;
 
 import rice.p2p.commonapi.rawserialization.InputBuffer;
@@ -54,7 +53,8 @@ public class MyInetSocketAddress extends InetSocketAddress implements RawSeriali
     public static final int IPV4_BYTES = 4;
     public static final int IPV6_BYTES = 16;
 
-    public MyInetSocketAddress deserialize(InputBuffer b) throws IOException {
+    @Override
+	public MyInetSocketAddress deserialize(InputBuffer b) throws IOException {
       byte version = b.readByte();
       byte[] addr;
       
@@ -73,7 +73,8 @@ public class MyInetSocketAddress extends InetSocketAddress implements RawSeriali
       return new MyInetSocketAddress(InetAddress.getByAddress(addr),0xFFFF & port);
     }
 
-    public void serialize(MyInetSocketAddress i, OutputBuffer b)
+    @Override
+	public void serialize(MyInetSocketAddress i, OutputBuffer b)
         throws IOException {
       byte[] addr = i.getAddress().getAddress();
       // write version
@@ -97,7 +98,8 @@ public class MyInetSocketAddress extends InetSocketAddress implements RawSeriali
   }
 
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     serializer.serialize(this, buf);    
   }
 

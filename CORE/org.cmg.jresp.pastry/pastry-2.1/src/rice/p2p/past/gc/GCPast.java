@@ -87,7 +87,8 @@ public interface GCPast extends Past {
    * @param obj the object to be inserted
    * @param command Command to be performed when the result is received
    */
-  public void insert(PastContent obj, Continuation command);
+  @Override
+public void insert(PastContent obj, Continuation command);
   
   /**
    * Inserts an object with the given ID into this instance of Past.

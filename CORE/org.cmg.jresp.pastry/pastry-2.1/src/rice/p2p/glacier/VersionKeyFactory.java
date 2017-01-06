@@ -42,7 +42,6 @@ import rice.environment.random.RandomSource;
 import rice.p2p.commonapi.*;
 import rice.p2p.multiring.MultiringIdFactory;
 import rice.p2p.multiring.RingId;
-import rice.pastry.Id;
 import java.util.SortedMap;
 
 
@@ -71,7 +70,8 @@ public class VersionKeyFactory implements IdFactory {
    * @param material DESCRIBE THE PARAMETER
    * @return DESCRIBE THE RETURN VALUE
    */
-  public rice.p2p.commonapi.Id buildId(byte[] material) {
+  @Override
+public rice.p2p.commonapi.Id buildId(byte[] material) {
     throw new RuntimeException("VersionKeyFactory.buildId(byte[]) is not supported!");
   }
 
@@ -81,7 +81,8 @@ public class VersionKeyFactory implements IdFactory {
    * @param material The material to use
    * @return The built Id.
    */
-  public rice.p2p.commonapi.Id buildId(int[] material) {
+  @Override
+public rice.p2p.commonapi.Id buildId(int[] material) {
     throw new RuntimeException("VersionKeyFactory.buildId(int[]) is not supported!");
   }
 
@@ -92,7 +93,8 @@ public class VersionKeyFactory implements IdFactory {
    * @param string The string to use as source data
    * @return The built Id.
    */
-  public rice.p2p.commonapi.Id buildId(String string) {
+  @Override
+public rice.p2p.commonapi.Id buildId(String string) {
     throw new RuntimeException("VersionKeyFactory.buildId(String) is not supported!");
   }
 
@@ -102,11 +104,13 @@ public class VersionKeyFactory implements IdFactory {
    * @param rng A random number generator
    * @return The built Id.
    */
-  public rice.p2p.commonapi.Id buildRandomId(Random rng) {
+  @Override
+public rice.p2p.commonapi.Id buildRandomId(Random rng) {
     return new VersionKey(FACTORY.buildRandomId(rng), rng.nextLong());
   }
   
-  public rice.p2p.commonapi.Id buildRandomId(RandomSource rng) {
+  @Override
+public rice.p2p.commonapi.Id buildRandomId(RandomSource rng) {
     return new VersionKey(FACTORY.buildRandomId(rng), rng.nextLong());
   }
 
@@ -116,7 +120,8 @@ public class VersionKeyFactory implements IdFactory {
    * @param string DESCRIBE THE PARAMETER
    * @return DESCRIBE THE RETURN VALUE
    */
-  public rice.p2p.commonapi.Id buildIdFromToString(String string) {
+  @Override
+public rice.p2p.commonapi.Id buildIdFromToString(String string) {
     StringTokenizer stok = new StringTokenizer(string, "(,)- :v#");
     if (stok.countTokens() < 3) {
       return null;
@@ -130,7 +135,8 @@ public class VersionKeyFactory implements IdFactory {
     return new VersionKey(key, Long.valueOf(versionS).longValue());
   }
 
-  public rice.p2p.commonapi.Id buildIdFromToString(char[] chars, int offset, int length) {
+  @Override
+public rice.p2p.commonapi.Id buildIdFromToString(char[] chars, int offset, int length) {
     return buildIdFromToString(new String(chars, offset, length));
   }
 
@@ -140,7 +146,8 @@ public class VersionKeyFactory implements IdFactory {
    * @param material The material to use
    * @return The built Id.Distance.
    */
-  public rice.p2p.commonapi.Id.Distance buildIdDistance(byte[] material) {
+  @Override
+public rice.p2p.commonapi.Id.Distance buildIdDistance(byte[] material) {
     throw new RuntimeException("VersionKeyFactory.buildIdDistance() is not supported!");
   }
 
@@ -151,7 +158,8 @@ public class VersionKeyFactory implements IdFactory {
    * @param ccw The counterclockwise Id
    * @return An IdRange with the appropriate delimiters.
    */
-  public IdRange buildIdRange(rice.p2p.commonapi.Id cw, rice.p2p.commonapi.Id ccw) {
+  @Override
+public IdRange buildIdRange(rice.p2p.commonapi.Id cw, rice.p2p.commonapi.Id ccw) {
     throw new RuntimeException("VersionKeyFactory.buildIdRange() is not supported!");
   }
   
@@ -163,7 +171,8 @@ public class VersionKeyFactory implements IdFactory {
    * @param string The toString() representation of an Id
    * @return The built Id.
    */
-  public IdRange buildIdRangeFromPrefix(String string) {
+  @Override
+public IdRange buildIdRangeFromPrefix(String string) {
     return new VersionKeyRange(FACTORY.buildIdRangeFromPrefix(string));
   }
 
@@ -172,7 +181,8 @@ public class VersionKeyFactory implements IdFactory {
    *
    * @return an empty IdSet
    */
-  public IdSet buildIdSet() {
+  @Override
+public IdSet buildIdSet() {
     return new VersionKeySet();
   }
   
@@ -182,7 +192,8 @@ public class VersionKeyFactory implements IdFactory {
    * @Param map The map which to take the keys from to create the IdSet's elements
    * @return an empty IdSet
    */
-  public IdSet buildIdSet(SortedMap map) {
+  @Override
+public IdSet buildIdSet(SortedMap map) {
     return new VersionKeySet(map);
   }
 
@@ -191,11 +202,13 @@ public class VersionKeyFactory implements IdFactory {
    *
    * @return an empty NodeHandleSet
    */
-  public NodeHandleSet buildNodeHandleSet() {
+  @Override
+public NodeHandleSet buildNodeHandleSet() {
     throw new RuntimeException("VersionKeyFactory.buildNodeHandleSet() is not supported!");
   }
   
-  public int getIdToStringLength() {
+  @Override
+public int getIdToStringLength() {
     return FACTORY.getIdToStringLength() + 13;
   }
 }

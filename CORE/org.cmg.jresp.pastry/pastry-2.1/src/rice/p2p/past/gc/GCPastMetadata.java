@@ -39,8 +39,6 @@ package rice.p2p.past.gc;
 
 import java.io.*;
 
-import rice.p2p.past.*;
-
 /**
  * @(#) GCPastMetadata.java
  * 
@@ -85,11 +83,13 @@ public class GCPastMetadata implements Serializable, Comparable<GCPastMetadata> 
     return new GCPastMetadata(expiration);
   }
   
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     return ((GCPastMetadata) o).expiration == expiration;
   }
   
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return (int) expiration;
   }
   
@@ -99,8 +99,9 @@ public class GCPastMetadata implements Serializable, Comparable<GCPastMetadata> 
    * @param other The object ot compare to
    * @return the comparison
    */
-  public int compareTo(GCPastMetadata other) {
-    GCPastMetadata metadata = (GCPastMetadata) other;
+  @Override
+public int compareTo(GCPastMetadata other) {
+    GCPastMetadata metadata = other;
     
     if (metadata.expiration > expiration) 
       return -1;
@@ -110,7 +111,8 @@ public class GCPastMetadata implements Serializable, Comparable<GCPastMetadata> 
       return 0;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "GCPMetadata " + expiration;
   }
   

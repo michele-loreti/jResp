@@ -40,9 +40,6 @@ advised of the possibility of such damage.
 package org.mpisws.p2p.transport.sourceroute.manager;
 
 import java.util.Collection;
-import java.util.List;
-
-import org.mpisws.p2p.transport.multiaddress.MultiInetSocketAddress;
 import org.mpisws.p2p.transport.sourceroute.SourceRoute;
 
 /**

@@ -269,7 +269,8 @@ public abstract class CommonAPIAppl extends PastryAppl {
    * send and receive messages
    */
 
-  public void notifyReady() {
+  @Override
+public void notifyReady() {
   }
 
   /*
@@ -277,7 +278,8 @@ public abstract class CommonAPIAppl extends PastryAppl {
    */
 
   // hide defunct methods from PastryAppl
-  public final void messageForAppl(Message msg) {
+  @Override
+public final void messageForAppl(Message msg) {
   }
 
   /**
@@ -287,7 +289,8 @@ public abstract class CommonAPIAppl extends PastryAppl {
    * @param wasAdded true if the node was added, false if the node was removed.
    */
 
-  public final void leafSetChange(NodeHandle nh, boolean wasAdded) {
+  @Override
+public final void leafSetChange(NodeHandle nh, boolean wasAdded) {
     update(nh, wasAdded);
   }
 
@@ -297,7 +300,8 @@ public abstract class CommonAPIAppl extends PastryAppl {
    * @param msg the message that is arriving.
    */
 
-  public void receiveMessage(Message msg) {
+  @Override
+public void receiveMessage(Message msg) {
     if (logger.level <= Logger.FINER) logger.log(
         "[" + thePastryNode + "] recv " + msg);
 

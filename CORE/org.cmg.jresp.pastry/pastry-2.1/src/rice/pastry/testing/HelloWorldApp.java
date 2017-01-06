@@ -43,9 +43,6 @@ import rice.pastry.client.*;
 import rice.pastry.messaging.*;
 import rice.pastry.routing.*;
 
-import java.util.*;
-import java.io.*;
-
 /**
  * A hello world example for pastry. This is the per-node app object.
  * 
@@ -95,7 +92,8 @@ public class HelloWorldApp extends PastryAppl {
    * 
    * @return the address of this application.
    */
-  public int getAddress() {
+  @Override
+public int getAddress() {
     return addr;
   }
 
@@ -104,7 +102,8 @@ public class HelloWorldApp extends PastryAppl {
    * 
    * @param msg Message being routed around
    */
-  public void messageForAppl(Message msg) {
+  @Override
+public void messageForAppl(Message msg) {
     if (logger.level <= Logger.FINE) {
       System.out.println("Received " + msg + " at " + getNodeId());
     }
@@ -119,7 +118,8 @@ public class HelloWorldApp extends PastryAppl {
    * @param opt send options
    * @return true if message needs to be forwarded according to plan.
    */
-  public boolean enrouteMessage(Message msg, Id key, NodeHandle nextHop,
+  @Override
+public boolean enrouteMessage(Message msg, Id key, NodeHandle nextHop,
       SendOptions opt) {
     if (logger.level <= Logger.FINER) {
       System.out.println("Enroute " + msg + " at " + getNodeId());
@@ -133,7 +133,8 @@ public class HelloWorldApp extends PastryAppl {
    * @param nh node handle that got added/removed
    * @param wasAdded added (true) or removed (false)
    */
-  public void leafSetChange(NodeHandle nh, boolean wasAdded) {
+  @Override
+public void leafSetChange(NodeHandle nh, boolean wasAdded) {
     if (logger.level <= Logger.FINEST) {
       String s = "In " + getNodeId() + "'s leaf set, " + "node " + nh.getNodeId()
           + " was ";
@@ -152,7 +153,8 @@ public class HelloWorldApp extends PastryAppl {
    * @param nh node handle that got added/removed
    * @param wasAdded added (true) or removed (false)
    */
-  public void routeSetChange(NodeHandle nh, boolean wasAdded) {
+  @Override
+public void routeSetChange(NodeHandle nh, boolean wasAdded) {
     if (logger.level <= Logger.FINEST) {
       String s = "In " + getNodeId() + "'s route set, " + "node "
           + nh.getNodeId() + " was ";
@@ -169,7 +171,8 @@ public class HelloWorldApp extends PastryAppl {
    * Invoked by {RMI,Direct}PastryNode when the node has something in its leaf
    * set, and has become ready to receive application messages.
    */
-  public void notifyReady() {
+  @Override
+public void notifyReady() {
     if (logger.level <= Logger.INFO)
       System.out.println("Node " + getNodeId()
           + " ready, waking up any clients");

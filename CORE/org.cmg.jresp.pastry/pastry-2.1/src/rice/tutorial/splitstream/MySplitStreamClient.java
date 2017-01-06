@@ -41,11 +41,6 @@ package rice.tutorial.splitstream;
 
 import rice.environment.random.RandomSource;
 import rice.p2p.commonapi.*;
-import rice.p2p.scribe.Scribe;
-import rice.p2p.scribe.ScribeClient;
-import rice.p2p.scribe.ScribeContent;
-import rice.p2p.scribe.ScribeImpl;
-import rice.p2p.scribe.Topic;
 import rice.p2p.splitstream.*;
 import rice.pastry.commonapi.PastryIdFactory;
 
@@ -161,7 +156,8 @@ public class MySplitStreamClient implements SplitStreamClient, Application {
   /**
    * Part of the Application interface.  Will receive PublishContent every so often.
    */
-  public void deliver(Id id, Message message) {
+  @Override
+public void deliver(Id id, Message message) {
     if (message instanceof PublishContent) {
       publish();
     }
@@ -207,37 +203,42 @@ public class MySplitStreamClient implements SplitStreamClient, Application {
   private String printData(byte[] data) {
     StringBuffer sb = new StringBuffer();
     for (int i = 0; i < data.length-1; i++) {
-      sb.append((int)data[i]);
+      sb.append(data[i]);
       sb.append(',');
     }
-    sb.append((int)data[data.length-1]);
+    sb.append(data[data.length-1]);
     return sb.toString();
   }
   
   /**
    * Called whenever we receive a published message.
    */
-  public void deliver(Stripe s, byte[] data) {
+  @Override
+public void deliver(Stripe s, byte[] data) {
     System.out.println(endpoint.getId()+" deliver("+s+"):seq:"+data[0]+" stripe:"+data[1]+" "+printData(data)+")");
   }
 
   class PublishContent implements Message {
-    public int getPriority() {
+    @Override
+	public int getPriority() {
       return Message.MEDIUM_PRIORITY;
     }
   }
   
   // error handling
-  public void joinFailed(Stripe s) {
+  @Override
+public void joinFailed(Stripe s) {
     System.out.println("joinFailed("+s+")");    
   }
 
   // rest of the Application Interface
-  public boolean forward(RouteMessage message) {
+  @Override
+public boolean forward(RouteMessage message) {
     throw new RuntimeException("Cant happen.");
   }
 
-  public void update(NodeHandle handle, boolean joined) {
+  @Override
+public void update(NodeHandle handle, boolean joined) {
   }
 
 }

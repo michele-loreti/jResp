@@ -40,16 +40,9 @@ package rice.pastry.standard;
 import java.io.*;
 import java.net.InetAddress;
 import java.security.*;
-import java.security.cert.*;
-import java.security.spec.*;
-import java.util.*;
 import java.util.zip.*;
-import javax.crypto.*;
-import javax.crypto.spec.*;
-
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
-import rice.environment.random.simple.SimpleRandomSource;
 import rice.pastry.*;
 import rice.p2p.util.*;
 
@@ -88,7 +81,8 @@ public class CertifiedNodeIdFactory implements NodeIdFactory {
    *
    * @return the new nodeId
    */
-  public Id generateNodeId() {
+  @Override
+public Id generateNodeId() {
     XMLObjectInputStream xois = null;
     try {
       File f = new File(NODE_ID_FILENAME);

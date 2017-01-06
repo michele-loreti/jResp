@@ -37,7 +37,6 @@ advised of the possibility of such damage.
 package rice.p2p.glacier;
 
 import java.io.IOException;
-import java.util.*;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
 
@@ -69,7 +68,8 @@ public class VersionKeyRange implements IdRange {
    *
    * @return the id at the counterclockwise edge of the range (inclusive)
    */
-  public Id getCCWId() {
+  @Override
+public Id getCCWId() {
     return new VersionKey(range.getCCWId(), 0L);
   }
 
@@ -78,7 +78,8 @@ public class VersionKeyRange implements IdRange {
    *
    * @return the id at the clockwise edge of the range (exclusive)
    */
-  public Id getCWId() {
+  @Override
+public Id getCWId() {
     return new VersionKey(range.getCWId(), 0L);
   }
 
@@ -87,7 +88,8 @@ public class VersionKeyRange implements IdRange {
    *
    * @return This range's complement
    */
-  public IdRange getComplementRange() {
+  @Override
+public IdRange getComplementRange() {
     throw new RuntimeException("VersionKeyRange.getComplementRange() is not supported!");
   }
 
@@ -96,7 +98,8 @@ public class VersionKeyRange implements IdRange {
    *
    * @return Whether or not this range is empty
    */
-  public boolean isEmpty() {
+  @Override
+public boolean isEmpty() {
     return range.isEmpty();
   }
 
@@ -106,7 +109,8 @@ public class VersionKeyRange implements IdRange {
    * @param key the key
    * @return true if the key lies within this range, false otherwise
    */
-  public boolean containsId(Id key) {
+  @Override
+public boolean containsId(Id key) {
     return range.containsId(((VersionKey)key).id);
   }
 
@@ -116,7 +120,8 @@ public class VersionKeyRange implements IdRange {
    * @param merge DESCRIBE THE PARAMETER
    * @return The merge
    */
-  public IdRange mergeRange(IdRange merge) {
+  @Override
+public IdRange mergeRange(IdRange merge) {
     throw new RuntimeException("VersionKeyRange.mergeRange() is not supported!");
   }
 
@@ -126,7 +131,8 @@ public class VersionKeyRange implements IdRange {
    * @param diff DESCRIBE THE PARAMETER
    * @return The merge
    */
-  public IdRange diffRange(IdRange diff) {
+  @Override
+public IdRange diffRange(IdRange diff) {
     throw new RuntimeException("VersionKeyRange.diffRange() is not supported!");
   }
 
@@ -136,7 +142,8 @@ public class VersionKeyRange implements IdRange {
    * @param intersect DESCRIBE THE PARAMETER
    * @return The merge
    */
-  public IdRange intersectRange(IdRange intersect) {
+  @Override
+public IdRange intersectRange(IdRange intersect) {
     throw new RuntimeException("VersionKeyRange.intersectRange() is not supported!");
   }
 
@@ -146,7 +153,8 @@ public class VersionKeyRange implements IdRange {
    * @param o DESCRIBE THE PARAMETER
    * @return Equals
    */
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     return ((VersionKeyRange)o).range.equals(range);
   }
 
@@ -155,7 +163,8 @@ public class VersionKeyRange implements IdRange {
    *
    * @return hashCode
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return range.hashCode();
   }
 
@@ -164,7 +173,8 @@ public class VersionKeyRange implements IdRange {
    *
    * @return A string
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "[VKRange " + range + "]";
   }
   
@@ -172,7 +182,8 @@ public class VersionKeyRange implements IdRange {
     range = endpoint.readIdRange(buf); 
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     range.serialize(buf);
   }
 }

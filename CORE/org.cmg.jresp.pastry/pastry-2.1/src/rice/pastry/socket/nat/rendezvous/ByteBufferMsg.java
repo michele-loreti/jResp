@@ -63,15 +63,18 @@ public class ByteBufferMsg extends PRawMessage {
     originalSender = sender;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "BBM["+buffer+"] from "+originalSender;
   }
   
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)0); // version
     originalSender.serialize(buf);
     buf.writeInt(buffer.remaining());

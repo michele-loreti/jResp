@@ -39,7 +39,6 @@ package rice.p2p.past.messaging;
 
 import java.io.IOException;
 
-import rice.*;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
 import rice.p2p.past.*;
@@ -101,7 +100,8 @@ public class InsertMessage extends ContinuationMessage {
    *
    * @param o The object argument
    */
-  public void receiveResult(Object o) {
+  @Override
+public void receiveResult(Object o) {
     super.receiveResult(o);
     content = null;
   }
@@ -112,7 +112,8 @@ public class InsertMessage extends ContinuationMessage {
    *
    * @param e The exception argument
    */
-  public void receiveException(Exception e) {
+  @Override
+public void receiveException(Exception e) {
     super.receiveException(e);
     content = null;
   }
@@ -122,16 +123,19 @@ public class InsertMessage extends ContinuationMessage {
    *
    * @return A string representing this message
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "[InsertMessage for " + content + "]";
   }
   
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE; 
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)0); // version        
     serializeHelper(buf);
   }

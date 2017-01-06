@@ -36,10 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package rice.p2p.util;
 
-import java.io.*;
-import java.math.*;
-import java.util.*;
-
 import rice.environment.random.RandomSource;
 
 /**
@@ -316,7 +312,7 @@ public class MathUtils {
     result |= ((long)(input[offset+4] & 0xFF)) << 24;
     result |= ((long)(input[offset+5] & 0xFF)) << 16;
     result |= ((long)(input[offset+6] & 0xFF)) << 8;
-    result |= ((long)(input[offset+7] & 0xFF));
+    result |= (input[offset+7] & 0xFF);
 
     return result;
   }
@@ -347,11 +343,11 @@ public class MathUtils {
   }
   
   public static int uByteToInt(byte b) {
-    return (int) b & 0xFF;
+    return b & 0xFF;
   }
   
   public static int uShortToInt(short b) {
-    return (int) b & 0xFFFF;
+    return b & 0xFFFF;
   }
   
   public static byte intToUByte(int i) {

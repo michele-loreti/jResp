@@ -89,7 +89,8 @@ public class BufferWriter<Identifier> implements P2PSocketReceiver<Identifier> {
     this(writeMe, socket, continuation, true);
   }
 
-  public void receiveException(P2PSocket<Identifier> socket, Exception ioe) {
+  @Override
+public void receiveException(P2PSocket<Identifier> socket, Exception ioe) {
     if (continuation == null) {
       socket.close();
     } else {
@@ -97,7 +98,8 @@ public class BufferWriter<Identifier> implements P2PSocketReceiver<Identifier> {
     }
   }
 
-  public void receiveSelectResult(P2PSocket<Identifier> socket,
+  @Override
+public void receiveSelectResult(P2PSocket<Identifier> socket,
       boolean canRead, boolean canWrite) throws IOException {
 //    System.out.println("BufferWriter.rsr()");
     if (sizeBuf != null && sizeBuf.hasRemaining()) {

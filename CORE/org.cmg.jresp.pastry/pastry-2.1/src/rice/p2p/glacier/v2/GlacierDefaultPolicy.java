@@ -62,7 +62,8 @@ public class GlacierDefaultPolicy implements GlacierPolicy {
     logger = environment.getLogManager().getLogger(GlacierDefaultPolicy.class, instance);
   }
 
-  public boolean checkSignature(Manifest manifest, VersionKey key) {
+  @Override
+public boolean checkSignature(Manifest manifest, VersionKey key) {
     if (manifest.getSignature() == null)
       return false;
       
@@ -73,12 +74,14 @@ public class GlacierDefaultPolicy implements GlacierPolicy {
     manifest.setSignature(key.toByteArray());
   }
 
-  @SuppressWarnings("unchecked")
+  @Override
+@SuppressWarnings("unchecked")
   public void prefetchLocalObject(VersionKey key, Continuation command) {
     command.receiveResult(null);
   }
 
-  public PastContent decodeObject(Fragment[] fragments, Endpoint endpoint, PastContentDeserializer pcd) {
+  @Override
+public PastContent decodeObject(Fragment[] fragments, Endpoint endpoint, PastContentDeserializer pcd) {
     return codec.decode(fragments, endpoint, pcd);
   }
   
@@ -95,7 +98,8 @@ public class GlacierDefaultPolicy implements GlacierPolicy {
     }
   }
   
-  public Manifest[] createManifests(VersionKey key, PastContent obj, Fragment[] fragments, long expiration) {
+  @Override
+public Manifest[] createManifests(VersionKey key, PastContent obj, Fragment[] fragments, long expiration) {
     return createManifests(key, obj instanceof RawPastContent ? (RawPastContent)obj : new JavaSerializedPastContent(obj), fragments, expiration);
   }
   
@@ -153,7 +157,8 @@ public class GlacierDefaultPolicy implements GlacierPolicy {
     }
   }
   
-  public Fragment[] encodeObject(PastContent obj, boolean[] generateFragment) {
+  @Override
+public Fragment[] encodeObject(PastContent obj, boolean[] generateFragment) {
     return encodeObject(obj instanceof RawPastContent ? (RawPastContent)obj : new JavaSerializedPastContent(obj), generateFragment);
   }
 
@@ -168,7 +173,8 @@ public class GlacierDefaultPolicy implements GlacierPolicy {
     return fragments;
   }
 
-  public Manifest updateManifest(VersionKey key, Manifest manifest, long newExpiration) {
+  @Override
+public Manifest updateManifest(VersionKey key, Manifest manifest, long newExpiration) {
     if (!checkSignature(manifest, key))
       return null;
 

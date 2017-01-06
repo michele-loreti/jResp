@@ -39,6 +39,7 @@ package rice.pastry.socket;
 import java.util.Map;
 
 import org.mpisws.p2p.transport.liveness.LivenessProvider;
+import org.mpisws.p2p.transport.liveness.LivenessTypes;
 import org.mpisws.p2p.transport.sourceroute.SourceRoute;
 import org.mpisws.p2p.transport.sourceroute.SourceRouteFactory;
 import org.mpisws.p2p.transport.sourceroute.SourceRouteForwardStrategy;
@@ -65,12 +66,13 @@ public class LivenesSourceRouteForwardStrategy<Identifier> implements
     this.liveness = liveness;
   }
 
-  public boolean forward(Identifier nextHop, SourceRoute<Identifier> sr,
+  @Override
+public boolean forward(Identifier nextHop, SourceRoute<Identifier> sr,
       boolean socket, Map<String, Object> options) {
     if (!socket)
       return true;
     SourceRoute<Identifier> i = factory.getSourceRoute(nextHop);
-    boolean ret = (liveness.getLiveness(i, options) < LivenessProvider.LIVENESS_DEAD);
+    boolean ret = (liveness.getLiveness(i, options) < LivenessTypes.LIVENESS_DEAD);
     if (!ret)
       if (logger.level <= Logger.WARNING)
         logger.log("Not forwarding socket to " + nextHop + " sr:" + sr

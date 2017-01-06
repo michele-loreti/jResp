@@ -175,11 +175,13 @@ public class EventSimulator {
   public void start() {
     // this makes things single threaded
     manager.invoke(new Runnable() {      
-      public void run() {
+      @Override
+	public void run() {
         if (running) return;
         running = true;
         manager.invoke(new Runnable() {    
-          public void run() {
+          @Override
+		public void run() {
 //            logger.log("EventSimulator.run()");
             if (!running) return;            
             try {
@@ -206,7 +208,8 @@ public class EventSimulator {
     
   public void stop() {
     manager.invoke(new Runnable() {      
-      public void run() {
+      @Override
+	public void run() {
         running = false;
       }
     });

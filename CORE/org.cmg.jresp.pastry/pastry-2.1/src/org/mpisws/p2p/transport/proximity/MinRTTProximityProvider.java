@@ -36,8 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package org.mpisws.p2p.transport.proximity;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -81,7 +79,8 @@ public class MinRTTProximityProvider<Identifier> implements ProximityProvider<Id
     this.managers = new HashMap<Identifier, EntityManager>();
   }
   
-  public int proximity(Identifier i, Map<String, Object> options) {
+  @Override
+public int proximity(Identifier i, Map<String, Object> options) {
     EntityManager manager = getManager(i);
     int ret = manager.proximity;
     if (ret == DEFAULT_PROXIMITY) {
@@ -90,15 +89,18 @@ public class MinRTTProximityProvider<Identifier> implements ProximityProvider<Id
     return ret;
   }
   
-  public void pingResponse(Identifier i, int rtt, Map<String, Object> options) {
+  @Override
+public void pingResponse(Identifier i, int rtt, Map<String, Object> options) {
     getManager(i).markProximity(rtt, options);
   }
 
-  public void pingReceived(Identifier i, Map<String, Object> options) {
+  @Override
+public void pingReceived(Identifier i, Map<String, Object> options) {
 
   }
   
-  public void clearState(Identifier i) {
+  @Override
+public void clearState(Identifier i) {
     synchronized(managers) {
       managers.remove(i);
     }    
@@ -177,19 +179,22 @@ public class MinRTTProximityProvider<Identifier> implements ProximityProvider<Id
       }
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
       return identifier.toString();
     }
   }
 
   Collection<ProximityListener<Identifier>> listeners = new ArrayList<ProximityListener<Identifier>>();
-  public void addProximityListener(ProximityListener<Identifier> listener) {
+  @Override
+public void addProximityListener(ProximityListener<Identifier> listener) {
     synchronized(listeners) {
       listeners.add(listener);
     }
   }
 
-  public boolean removeProximityListener(ProximityListener<Identifier> listener) {
+  @Override
+public boolean removeProximityListener(ProximityListener<Identifier> listener) {
     synchronized(listeners) {
       return listeners.remove(listener);
     }

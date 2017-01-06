@@ -65,8 +65,6 @@ import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.security.spec.RSAKeyGenParameterSpec;
 import java.util.Date;
-import java.util.Random;
-
 import javax.security.auth.x500.X500Principal;
 
 import org.bouncycastle.asn1.x509.X509Extensions;
@@ -101,7 +99,8 @@ public class CAToolImpl implements CATool {
     this.keyPair = caPair;
   }
   
-  public X509Certificate getCertificate() {
+  @Override
+public X509Certificate getCertificate() {
     return cert;
   }
   
@@ -211,7 +210,8 @@ public class CAToolImpl implements CATool {
     return cert;
   }  
   
-  public X509Certificate sign(String CN, PublicKey key) throws CertificateParsingException, CertificateEncodingException, InvalidKeyException, IllegalStateException, NoSuchProviderException, NoSuchAlgorithmException, SignatureException {
+  @Override
+public X509Certificate sign(String CN, PublicKey key) throws CertificateParsingException, CertificateEncodingException, InvalidKeyException, IllegalStateException, NoSuchProviderException, NoSuchAlgorithmException, SignatureException {
     Date exp = new Date();
     exp.setYear(exp.getYear()+1);
     return sign(CN,key,exp,System.currentTimeMillis());
@@ -244,7 +244,8 @@ public class CAToolImpl implements CATool {
     return cert;        
   }
   
-  public X509Certificate sign(String CN, PublicKey publicKey, Date expiryDate, long serialNumber) throws CertificateParsingException, CertificateEncodingException, InvalidKeyException, IllegalStateException, NoSuchProviderException, NoSuchAlgorithmException, SignatureException {
+  @Override
+public X509Certificate sign(String CN, PublicKey publicKey, Date expiryDate, long serialNumber) throws CertificateParsingException, CertificateEncodingException, InvalidKeyException, IllegalStateException, NoSuchProviderException, NoSuchAlgorithmException, SignatureException {
     return sign(CN,publicKey,expiryDate,serialNumber,cert,keyPair.getPrivate());
   }
   

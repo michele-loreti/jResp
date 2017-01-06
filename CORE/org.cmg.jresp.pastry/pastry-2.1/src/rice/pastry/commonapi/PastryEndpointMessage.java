@@ -128,17 +128,20 @@ public class PastryEndpointMessage extends PRawMessage {
    *
    * @return The string
    */
-  public String toString() {
+  @Override
+public String toString() {
 //    return "[PEM " + getMessage() + "]";
     return getMessage().toString();
   }
   
   /***************** Raw Serialization ***************************************/  
-  public short getType() {
+  @Override
+public short getType() {
     return message.getType();
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
 //    buf.writeBoolean(isRaw); 
     
 //    buf.writeByte((byte)0); // version

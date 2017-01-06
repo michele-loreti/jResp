@@ -58,7 +58,8 @@ public class WireSourceRoute extends SourceRoute<InetSocketAddress> {
     super(address);
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte) path.size());
     for (InetSocketAddress i : path) {
       buf.write(i.getAddress().getAddress(),0,4);
@@ -66,7 +67,8 @@ public class WireSourceRoute extends SourceRoute<InetSocketAddress> {
     }
   }
 
-  public int getSerializedLength() {
+  @Override
+public int getSerializedLength() {
     int ret = 5; // version+numhops
 
     // IPV4+port

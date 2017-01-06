@@ -37,9 +37,6 @@ advised of the possibility of such damage.
 
 package rice.p2p.scribe;
 
-import java.util.Collection;
-
-import rice.*;
 import rice.p2p.commonapi.*;
 
 /**
@@ -51,6 +48,7 @@ import rice.p2p.commonapi.*;
  * @version $Id: ScribeClient.java 3673 2007-04-12 10:46:28Z jeffh $
  * @author Alan Mislove
  */
+@Deprecated
 public interface ScribeClient {
 
   /**

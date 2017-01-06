@@ -119,7 +119,8 @@ public class SplitStreamDistTest {
         
     if (IM_ALIVE_PERIOD > 0) {
       new Thread(new Runnable() {
-        public void run() {
+        @Override
+		public void run() {
           while(true) {
             System.out.println("ImALIVE:"+env.getTimeSource().currentTimeMillis());
             try {
@@ -194,7 +195,8 @@ public class SplitStreamDistTest {
     System.out.println("Node "+node+" created.");
     
     Runtime.getRuntime().addShutdownHook(new Thread() {
-      public void run() { System.out.println("SHUTDOWN "+env.getTimeSource().currentTimeMillis()+" "+node); }
+      @Override
+	public void run() { System.out.println("SHUTDOWN "+env.getTimeSource().currentTimeMillis()+" "+node); }
     });
     
     synchronized(node) {

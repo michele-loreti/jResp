@@ -37,8 +37,6 @@ advised of the possibility of such damage.
 package org.mpisws.p2p.transport.peerreview.message;
 
 import java.io.IOException;
-import java.util.Map;
-
 import org.mpisws.p2p.transport.peerreview.infostore.Evidence;
 import org.mpisws.p2p.transport.peerreview.infostore.EvidenceSerializer;
 import org.mpisws.p2p.transport.util.Serializer;
@@ -71,7 +69,8 @@ public class ChallengeMessage<Identifier extends RawSerializable> implements Pee
     this.challenge = challenge;
   }
 
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
   
@@ -86,7 +85,8 @@ public class ChallengeMessage<Identifier extends RawSerializable> implements Pee
     challenge = evidenceSerializer.deserialize(buf,chalType,false);
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     originator.serialize(buf);
     buf.writeLong(evidenceSeq);
     buf.writeByte((byte)challenge.getEvidenceType());

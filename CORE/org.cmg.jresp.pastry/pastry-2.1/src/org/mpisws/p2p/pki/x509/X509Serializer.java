@@ -36,16 +36,9 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package org.mpisws.p2p.pki.x509;
 
-import java.io.IOException;
-import java.security.NoSuchProviderException;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 import org.mpisws.p2p.transport.util.Serializer;
-
-import rice.p2p.commonapi.rawserialization.InputBuffer;
-import rice.p2p.commonapi.rawserialization.OutputBuffer;
 
 public interface X509Serializer extends Serializer<X509Certificate> {
 //  X509Certificate deserialize(InputBuffer buf) throws IOException, CertificateException, NoSuchProviderException;

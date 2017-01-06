@@ -37,9 +37,6 @@ advised of the possibility of such damage.
 package org.mpisws.p2p.transport.peerreview.replay;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-
 import org.mpisws.p2p.transport.peerreview.PeerReviewConstants;
 import org.mpisws.p2p.transport.peerreview.history.HashProvider;
 import org.mpisws.p2p.transport.peerreview.history.IndexEntry;
@@ -54,7 +51,8 @@ import rice.p2p.util.rawserialization.SimpleInputBuffer;
 
 public class BasicEntryDeserializer implements PeerReviewConstants, EntryDeserializer {
 
-  public String entryId(short id) {
+  @Override
+public String entryId(short id) {
     switch (id) {
     case EVT_SEND: return "Send";
     case EVT_RECV: return "Receive";
@@ -81,7 +79,8 @@ public class BasicEntryDeserializer implements PeerReviewConstants, EntryDeseria
     }
   }
 
-  public String read(IndexEntry ie, SecureHistory history) throws IOException {
+  @Override
+public String read(IndexEntry ie, SecureHistory history) throws IOException {
     if (ie.getType() >= EVT_MIN_SOCKET_EVT && ie.getType() <= EVT_MAX_SOCKET_EVT) {
       return entryId(ie.getType())+" n:"+ie.getSeq()+" i:"+ie.getFileIndex()+" sock:"+new SimpleInputBuffer(history.getEntry(ie, 4)).readInt();
     }

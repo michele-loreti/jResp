@@ -37,8 +37,6 @@ advised of the possibility of such damage.
 package org.mpisws.p2p.transport.util;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.util.Map;
 
 import org.mpisws.p2p.transport.P2PSocket;
@@ -59,7 +57,8 @@ public class DefaultCallback<Identifier, MessageType> implements
     this.logger = logger;
   }
 
-  public void incomingSocket(P2PSocket s)
+  @Override
+public void incomingSocket(P2PSocket s)
       throws IOException {
     logger.log("incomingSocket("+s+")");
   }
@@ -68,7 +67,8 @@ public class DefaultCallback<Identifier, MessageType> implements
     logger.log("livenessChanged("+i+","+state+")");
   }
 
-  public void messageReceived(Identifier i, MessageType m, Map<String, Object> options)
+  @Override
+public void messageReceived(Identifier i, MessageType m, Map<String, Object> options)
       throws IOException {
     logger.log("messageReceived("+i+","+m+")");
   }

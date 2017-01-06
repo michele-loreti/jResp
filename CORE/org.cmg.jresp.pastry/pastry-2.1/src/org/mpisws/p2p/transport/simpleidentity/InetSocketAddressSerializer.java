@@ -60,12 +60,14 @@ public class InetSocketAddressSerializer implements Serializer<InetSocketAddress
   public static final int IPV4_BYTES = 4;
   public static final int IPV6_BYTES = 16;
 
-  public InetSocketAddress deserialize(InputBuffer b, InetSocketAddress i,
+  @Override
+public InetSocketAddress deserialize(InputBuffer b, InetSocketAddress i,
       Map<String, Object> options) throws IOException {
     return deserializeAddress(b);
   }
 
-  public void serialize(InetSocketAddress i, OutputBuffer b) throws IOException {
+  @Override
+public void serialize(InetSocketAddress i, OutputBuffer b) throws IOException {
     serializeAddress(i,b);
   }
 
@@ -110,7 +112,8 @@ public class InetSocketAddressSerializer implements Serializer<InetSocketAddress
     return i.getAddress().getAddress().length+2+1;  // address+port+header
   }
 
-  public InetSocketAddress deserialize(InputBuffer buf) throws IOException {
+  @Override
+public InetSocketAddress deserialize(InputBuffer buf) throws IOException {
     return deserializeAddress(buf);
   }
 

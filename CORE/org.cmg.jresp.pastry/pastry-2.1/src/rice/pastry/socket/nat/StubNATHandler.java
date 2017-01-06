@@ -53,19 +53,23 @@ public class StubNATHandler implements NATHandler {
     // TODO Auto-generated constructor stub
   }
 
-  public InetAddress getFireWallExternalAddress() {
+  @Override
+public InetAddress getFireWallExternalAddress() {
     return null;
   }
 
-  public InetAddress findFireWall(InetAddress bindAddress) throws IOException {
+  @Override
+public InetAddress findFireWall(InetAddress bindAddress) throws IOException {
     throw new IOException(errorString);
   }
 
-  public int findAvailableFireWallPort(int internal, int external, int tries, String appName) throws IOException {
+  @Override
+public int findAvailableFireWallPort(int internal, int external, int tries, String appName) throws IOException {
     throw new IOException(errorString);
   }
 
-  public void openFireWallPort(int local, int external, String appName) throws IOException {
+  @Override
+public void openFireWallPort(int local, int external, String appName) throws IOException {
     throw new IOException(errorString);
   }
 }

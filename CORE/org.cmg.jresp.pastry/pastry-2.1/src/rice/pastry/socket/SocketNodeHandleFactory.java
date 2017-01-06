@@ -41,8 +41,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
 import org.mpisws.p2p.transport.multiaddress.MultiInetSocketAddress;
 import org.mpisws.p2p.transport.util.Serializer;
 
@@ -50,7 +48,6 @@ import rice.environment.logging.Logger;
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
 import rice.pastry.Id;
-import rice.pastry.NodeHandle;
 import rice.pastry.NodeHandleFactory;
 import rice.pastry.NodeHandleFactoryListener;
 import rice.pastry.PastryNode;
@@ -80,15 +77,17 @@ public class SocketNodeHandleFactory implements NodeHandleFactory<SocketNodeHand
   public SocketNodeHandle getNodeHandle(MultiInetSocketAddress i, long epoch, Id id) {
     SocketNodeHandle handle = new SocketNodeHandle(i, epoch, id, pn);
     
-    return (SocketNodeHandle)coalesce(handle);
+    return coalesce(handle);
   }
 
-  public SocketNodeHandle readNodeHandle(InputBuffer buf) throws IOException {
+  @Override
+public SocketNodeHandle readNodeHandle(InputBuffer buf) throws IOException {
     return coalesce(SocketNodeHandle.build(buf, pn));
   }
   
-  public SocketNodeHandle coalesce(SocketNodeHandle h) {
-    SocketNodeHandle handle = (SocketNodeHandle)h;
+  @Override
+public SocketNodeHandle coalesce(SocketNodeHandle h) {
+    SocketNodeHandle handle = h;
     if (handleSet.containsKey(handle)) {
       return handleSet.get(handle);
     }
@@ -114,7 +113,8 @@ public class SocketNodeHandleFactory implements NodeHandleFactory<SocketNodeHand
   }
 
 
-  public void addNodeHandleFactoryListener(
+  @Override
+public void addNodeHandleFactoryListener(
       NodeHandleFactoryListener<SocketNodeHandle> listener) {
     synchronized(listeners) {
       listeners.add(listener);
@@ -122,7 +122,8 @@ public class SocketNodeHandleFactory implements NodeHandleFactory<SocketNodeHand
   }
 
 
-  public void removeNodeHandleFactoryListener(
+  @Override
+public void removeNodeHandleFactoryListener(
       NodeHandleFactoryListener<SocketNodeHandle> listener) {
     synchronized(listeners) {
       listeners.remove(listener);
@@ -130,12 +131,14 @@ public class SocketNodeHandleFactory implements NodeHandleFactory<SocketNodeHand
   }
 
 
-  public SocketNodeHandle deserialize(InputBuffer buf) throws IOException {
+  @Override
+public SocketNodeHandle deserialize(InputBuffer buf) throws IOException {
     return readNodeHandle(buf);
   }
 
 
-  public void serialize(SocketNodeHandle i, OutputBuffer buf)
+  @Override
+public void serialize(SocketNodeHandle i, OutputBuffer buf)
       throws IOException {
     i.serialize(buf);
   }

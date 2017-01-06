@@ -35,16 +35,8 @@ advised of the possibility of such damage.
 
 *******************************************************************************/ 
 package rice.pastry.direct;
-import java.lang.*;
-
-import java.util.*;
-
 import rice.environment.Environment;
-import rice.environment.logging.Logger;
-import rice.environment.random.RandomSource;
-import rice.pastry.*;
 import rice.pastry.direct.proximitygenerators.EuclideanProximityGenerator;
-import rice.pastry.messaging.*;
 
 /**
  * Euclidean network topology and idealized node life. Emulates a network of nodes that are randomly

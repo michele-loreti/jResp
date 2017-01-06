@@ -40,9 +40,6 @@ package rice.p2p.multiring;
 import java.io.IOException;
 import java.util.*;
 
-import org.mpisws.p2p.transport.MessageCallback;
-import org.mpisws.p2p.transport.MessageRequestHandle;
-
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
 import rice.p2p.commonapi.*;
@@ -122,7 +119,8 @@ public class MultiringNode implements Node, ScribeClient {
     this.scribe = new ScribeImpl(this, "Multiring");
     scribe.setContentDeserializer(new ScribeContentDeserializer() {
       
-      public ScribeContent deserializeScribeContent(InputBuffer buf, Endpoint endpoint, short type) throws IOException {
+      @Override
+	public ScribeContent deserializeScribeContent(InputBuffer buf, Endpoint endpoint, short type) throws IOException {
         switch (type) {
           case RingMessage.TYPE:
             return new RingMessage(buf, endpoint, endpoints);
@@ -150,7 +148,8 @@ public class MultiringNode implements Node, ScribeClient {
     this.collection.addNode(this);
   }
   
-  public NodeHandle getLocalNodeHandle() {
+  @Override
+public NodeHandle getLocalNodeHandle() {
     return new MultiringNodeHandle(getRingId(), node.getLocalNodeHandle());
   }
   
@@ -165,14 +164,17 @@ public class MultiringNode implements Node, ScribeClient {
    * @return The endpoint specific to this applicationk, which can be used
    * for message sending/receiving.
    */
-  public Endpoint registerApplication(Application application, String instance) {
+  @Deprecated
+@Override
+public Endpoint registerApplication(Application application, String instance) {
     Endpoint endpoint = new MultiringEndpoint(this, node.buildEndpoint(new MultiringApplication(getRingId(), application), application.getClass() + "-" + instance), application);
     endpoints.put(endpoint.getInstance(), endpoint);
     endpoint.register();
     return endpoint;
   }
   
-  public Endpoint buildEndpoint(Application application, String instance) {
+  @Override
+public Endpoint buildEndpoint(Application application, String instance) {
     Endpoint endpoint = new MultiringEndpoint(this, node.buildEndpoint(new MultiringApplication(getRingId(), application), application.getClass() + "-" + instance), application);
     endpoints.put(endpoint.getInstance(), endpoint);
     
@@ -209,7 +211,8 @@ public class MultiringNode implements Node, ScribeClient {
    *
    * @return This node's Id
    */
-  public Id getId() {
+  @Override
+public Id getId() {
     return RingId.build(ringId, node.getId());
   }
   
@@ -254,7 +257,8 @@ public class MultiringNode implements Node, ScribeClient {
    *
    * @return A factory for creating Ids.
    */
-  public IdFactory getIdFactory() {
+  @Override
+public IdFactory getIdFactory() {
     return new MultiringIdFactory(ringId, node.getIdFactory());
   }
   
@@ -291,19 +295,23 @@ public class MultiringNode implements Node, ScribeClient {
       scribe.anycast(new Topic(RingId.build(ringId, getTarget(id))), new RingMessage(id, message, application));
       MessageReceipt ret = new MessageReceipt(){
       
-        public boolean cancel() {
+        @Override
+		public boolean cancel() {
           return false;
         }
       
-        public Message getMessage() {
+        @Override
+		public Message getMessage() {
           return message;
         }
       
-        public Id getId() {
+        @Override
+		public Id getId() {
           return id;
         }
         
-        public NodeHandle getHint() {
+        @Override
+		public NodeHandle getHint() {
           return null;
         }      
       };
@@ -360,7 +368,8 @@ public class MultiringNode implements Node, ScribeClient {
    * @param content The content which was anycasted
    * @return Whether or not the anycast should continue
    */
-  public boolean anycast(Topic topic, ScribeContent content) {
+  @Override
+public boolean anycast(Topic topic, ScribeContent content) {
     if (content instanceof RingMessage) {
       RingMessage rm = (RingMessage) content;
       //System.outt.println("RECEIVED ANYCAST TO " + rm.getId() + " AT NODE " + getId());
@@ -379,7 +388,8 @@ public class MultiringNode implements Node, ScribeClient {
    * @param topic The topic the message was published to
    * @param content The content which was published
    */
-  public void deliver(Topic topic, ScribeContent content) {
+  @Override
+public void deliver(Topic topic, ScribeContent content) {
     if (logger.level <= Logger.FINER) logger.log(
         "Received unexpected delivery on topic " + topic + " of " + content);
   }
@@ -391,7 +401,8 @@ public class MultiringNode implements Node, ScribeClient {
    * @param topic The topic to unsubscribe from
    * @param child The child that was added
    */
-  public void childAdded(Topic topic, NodeHandle child) {
+  @Override
+public void childAdded(Topic topic, NodeHandle child) {
   }
   
   /**
@@ -401,7 +412,8 @@ public class MultiringNode implements Node, ScribeClient {
    * @param topic The topic to unsubscribe from
    * @param child The child that was removed
    */
-  public void childRemoved(Topic topic, NodeHandle child) {
+  @Override
+public void childRemoved(Topic topic, NodeHandle child) {
   }
   
   /**
@@ -411,7 +423,8 @@ public class MultiringNode implements Node, ScribeClient {
    *
    * @param topic The topic which the subscribe failed on
    */
-  public void subscribeFailed(Topic topic) {
+  @Override
+public void subscribeFailed(Topic topic) {
     if (logger.level <= Logger.WARNING) logger.log(
         getId() + ": Received error joining ringId topic " + topic + " - trying again.");
     nodeAdded(((RingId) topic.getId()).getId());
@@ -422,7 +435,8 @@ public class MultiringNode implements Node, ScribeClient {
    *
    * @return A string
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "{MultiringNode " + getId() + "}";
   }
 
@@ -431,11 +445,13 @@ public class MultiringNode implements Node, ScribeClient {
    * 
    * @return the environment
    */
-  public Environment getEnvironment() {
+  @Override
+public Environment getEnvironment() {
     return environment;
   }
   
-  public String printRouteState() {
+  @Override
+public String printRouteState() {
     return node.printRouteState();
   }
 }

@@ -39,7 +39,6 @@ package rice.p2p.scribe;
 
 import java.io.*;
 
-import rice.*;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
 
@@ -103,7 +102,8 @@ public class Topic implements Serializable, Comparable<Topic> {
    * @param o The object to compare to
    * @return Whether or not they are equal
    */
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     if (o instanceof Topic) {
       return ((Topic) o).id.equals(id);
     }
@@ -116,7 +116,8 @@ public class Topic implements Serializable, Comparable<Topic> {
    *
    * @return The hashcode for this topic
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return id.hashCode();
   }
 
@@ -125,7 +126,8 @@ public class Topic implements Serializable, Comparable<Topic> {
    *
    * @return A String representation of this topic
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "[TOPIC " + id + "]";
   }  
 
@@ -138,7 +140,8 @@ public class Topic implements Serializable, Comparable<Topic> {
     id.serialize(buf); 
   }
 
-  public int compareTo(Topic that) {
+  @Override
+public int compareTo(Topic that) {
     return this.id.compareTo(that.id);
   }
 }

@@ -134,7 +134,7 @@ public class ClosestRegrTest {
     double sum = 0;
     Iterator<PastryNode> i = nds.iterator(); 
     while(i.hasNext()) {
-      PastryNode pn = (PastryNode)i.next(); 
+      PastryNode pn = i.next(); 
       sum+=pn.getRoutingTable().numUniqueEntries();
     }
     return sum/nds.size();

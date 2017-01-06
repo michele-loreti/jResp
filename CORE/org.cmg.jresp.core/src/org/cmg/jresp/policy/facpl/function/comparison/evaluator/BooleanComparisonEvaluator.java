@@ -103,7 +103,7 @@ public class BooleanComparisonEvaluator implements ComparisonEvaluator {
 	@Override
 	public boolean isSubsetOf(Object o1, Object o2) throws Throwable {
 		if (o2 instanceof Bag) {
-			return ((Bag) o2).contains((Boolean) o1);
+			return ((Bag) o2).contains(o1);
 		} else {
 			throw new UnsupportedTypeException("Boolean", "Subset");
 		}
@@ -112,7 +112,7 @@ public class BooleanComparisonEvaluator implements ComparisonEvaluator {
 	@Override
 	public boolean isAtLestOneMemberOf(Object o1, Object o2) throws Throwable {
 		if (o2 instanceof Bag) {
-			return ((Bag) o2).contains((Boolean) o1);
+			return ((Bag) o2).contains(o1);
 		} else {
 			throw new UnsupportedTypeException("Boolean", "AtLeastOneMemberOf");
 		}

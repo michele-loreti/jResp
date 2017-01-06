@@ -31,6 +31,7 @@ public class ScribePortAddress extends Address {
 		return id;
 	}
 
+	@Override
 	public String toString() {
 		return id.toStringFull();
 	}

@@ -50,11 +50,11 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mpisws.p2p.transport.ErrorHandler;
-import org.mpisws.p2p.transport.MessageCallback;
 import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.liveness.LivenessListener;
 import org.mpisws.p2p.transport.liveness.LivenessProvider;
 import org.mpisws.p2p.transport.liveness.LivenessTransportLayerImpl;
+import org.mpisws.p2p.transport.liveness.LivenessTypes;
 import org.mpisws.p2p.transport.liveness.PingListener;
 import org.mpisws.p2p.transport.liveness.Pinger;
 import org.mpisws.p2p.transport.multiaddress.MultiInetAddressTransportLayerImpl;
@@ -179,7 +179,7 @@ public class LivenessTest extends SRTest {
   
   public static int getDelay(SourceRoute a, SourceRoute b) {
 //    System.out.println("getDelay("+a+","+b+")");
-    TransportLayer<SourceRoute, ByteBuffer> bob = LivenessTest.bob;
+    TransportLayer<SourceRoute, ByteBuffer> bob = TLTest.bob;
     if (b.getLastHop().equals(bob.getLocalIdentifier().getLastHop()) &&
         a.equals(alice.getLocalIdentifier())) {
 //       System.out.println("here");
@@ -199,7 +199,8 @@ public class LivenessTest extends SRTest {
     final Object lock = new Object();
     
     PingListener<SourceRoute<MultiInetSocketAddress>> pl = new PingListener<SourceRoute<MultiInetSocketAddress>>() {    
-      public void pingResponse(SourceRoute<MultiInetSocketAddress> i, int rtt, Map<String, Object> options) {
+      @Override
+	public void pingResponse(SourceRoute<MultiInetSocketAddress> i, int rtt, Map<String, Object> options) {
         synchronized(lock) {
 //          System.out.println("i"+i.getLastHop());
           pingResponse.put(i.getLastHop(), new Tupel(i, rtt));
@@ -207,12 +208,13 @@ public class LivenessTest extends SRTest {
         }
       }   
       
-      public void pingReceived(SourceRoute<MultiInetSocketAddress> i, Map<String, Object> options) {
+      @Override
+	public void pingReceived(SourceRoute<MultiInetSocketAddress> i, Map<String, Object> options) {
 
       }
     };
     
-    ((Pinger<SourceRoute<MultiInetSocketAddress>>)LivenessTest.bob).addPingListener(pl);
+    ((Pinger<SourceRoute<MultiInetSocketAddress>>)TLTest.bob).addPingListener(pl);
 
     bob_prox.proximity(getIdentifier(bob, alice), options); // initial check, causes ping if no data
     bob_prox.proximity(getIdentifier(bob, carol), options); // initial check, causes ping if no data
@@ -246,14 +248,15 @@ public class LivenessTest extends SRTest {
   
   @Test
   public void testLiveness() throws Exception {    
-    LivenessProvider<SourceRoute<MultiInetSocketAddress>> alice = (LivenessProvider<SourceRoute<MultiInetSocketAddress>>)LivenessTest.alice;
+    LivenessProvider<SourceRoute<MultiInetSocketAddress>> alice = (LivenessProvider<SourceRoute<MultiInetSocketAddress>>)TLTest.alice;
     SourceRoute<MultiInetSocketAddress> aliceToDave = getIdentifier(
-        (TransportLayer<SourceRoute<MultiInetSocketAddress>, ByteBuffer>)LivenessTest.alice, dave);
+        TLTest.alice, dave);
     final List<Tupel> tupels = new ArrayList<Tupel>(3);
     final Object lock = new Object();
     
     alice.addLivenessListener(new LivenessListener<SourceRoute<MultiInetSocketAddress>>() {    
-      public void livenessChanged(SourceRoute<MultiInetSocketAddress> i, int val, Map<String, Object> options) {
+      @Override
+	public void livenessChanged(SourceRoute<MultiInetSocketAddress> i, int val, Map<String, Object> options) {
         synchronized(lock) {
           tupels.add(new Tupel(i,val));        
           lock.notify();
@@ -264,7 +267,7 @@ public class LivenessTest extends SRTest {
     // starts out suspected
     assertTrue(
         alice.getLiveness(aliceToDave, null) == 
-          LivenessListener.LIVENESS_SUSPECTED);
+          LivenessTypes.LIVENESS_SUSPECTED);
     
     // becomes alive
     assertTrue(alice.checkLiveness(aliceToDave, null));
@@ -278,7 +281,7 @@ public class LivenessTest extends SRTest {
 
     assertTrue(
         alice.getLiveness(aliceToDave, null) == 
-        LivenessListener.LIVENESS_ALIVE);
+        LivenessTypes.LIVENESS_ALIVE);
     assertTrue(tupels.size() == 1);
 
     
@@ -298,7 +301,7 @@ public class LivenessTest extends SRTest {
     
     assertTrue(
         alice.getLiveness(aliceToDave, null) == 
-        LivenessListener.LIVENESS_DEAD);
+        LivenessTypes.LIVENESS_DEAD);
     // suspected/dead
     assertTrue(tupels.size() == 3);
   }

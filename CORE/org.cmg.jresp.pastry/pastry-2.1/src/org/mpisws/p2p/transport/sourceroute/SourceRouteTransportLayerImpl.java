@@ -43,8 +43,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.mpisws.p2p.transport.MessageRequestHandle;
@@ -56,16 +54,13 @@ import org.mpisws.p2p.transport.SocketCallback;
 import org.mpisws.p2p.transport.SocketRequestHandle;
 import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.TransportLayerCallback;
-import org.mpisws.p2p.transport.multiaddress.MultiInetAddressTransportLayer;
 import org.mpisws.p2p.transport.util.MessageRequestHandleImpl;
-import org.mpisws.p2p.transport.util.DefaultCallback;
 import org.mpisws.p2p.transport.util.DefaultErrorHandler;
 import org.mpisws.p2p.transport.util.InsufficientBytesException;
 import org.mpisws.p2p.transport.util.SocketInputBuffer;
 import org.mpisws.p2p.transport.util.SocketRequestHandleImpl;
 import org.mpisws.p2p.transport.util.SocketWrapperSocket;
 
-import rice.Continuation;
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
 import rice.p2p.commonapi.Cancellable;
@@ -126,7 +121,8 @@ public class SourceRouteTransportLayerImpl<Identifier> implements
     etl.setCallback(this);
   }
   
-  public SocketRequestHandle<SourceRoute<Identifier>> openSocket(
+  @Override
+public SocketRequestHandle<SourceRoute<Identifier>> openSocket(
       final SourceRoute<Identifier> i,
       final SocketCallback<SourceRoute<Identifier>> deliverSocketToMe,
       Map<String, Object> options) {
@@ -157,13 +153,15 @@ public class SourceRouteTransportLayerImpl<Identifier> implements
     final ByteBuffer b = ByteBuffer.wrap(sob.getBytes());
     
     handle.setSubCancellable(etl.openSocket(i.getHop(1), new SocketCallback<Identifier>(){    
-      public void receiveResult(
+      @Override
+	public void receiveResult(
           SocketRequestHandle<Identifier> c, 
           final P2PSocket<Identifier> result) {
         if (handle.getSubCancellable() != null && c != handle.getSubCancellable()) throw new RuntimeException("c != handle.getSubCancellable() (indicates a bug in the code) c:"+c+" sub:"+handle.getSubCancellable());
         
         handle.setSubCancellable(new Cancellable() {        
-          public boolean cancel() {
+          @Override
+		public boolean cancel() {
             result.close();
             return true;
           }        
@@ -171,7 +169,8 @@ public class SourceRouteTransportLayerImpl<Identifier> implements
 
         if (logger.level <= Logger.FINER) logger.log("openSocket("+i+"):receiveResult("+result+")");
         result.register(false, true, new P2PSocketReceiver<Identifier>() {        
-          public void receiveSelectResult(P2PSocket<Identifier> socket,
+          @Override
+		public void receiveSelectResult(P2PSocket<Identifier> socket,
               boolean canRead, boolean canWrite) throws IOException {
             if (canRead || !canWrite) throw new IOException("Expected to write! "+canRead+","+canWrite);
             
@@ -186,13 +185,15 @@ public class SourceRouteTransportLayerImpl<Identifier> implements
             }
           }
         
-          public void receiveException(P2PSocket<Identifier> socket,
+          @Override
+		public void receiveException(P2PSocket<Identifier> socket,
               Exception e) {
             deliverSocketToMe.receiveException(handle, e);
           }        
         }); 
       }    
-      public void receiveException(SocketRequestHandle<Identifier> c, Exception exception) {
+      @Override
+	public void receiveException(SocketRequestHandle<Identifier> c, Exception exception) {
         deliverSocketToMe.receiveException(handle, exception);
       }    
     }, options));      
@@ -220,14 +221,16 @@ public class SourceRouteTransportLayerImpl<Identifier> implements
     callback.incomingSocket(new SocketWrapperSocket<SourceRoute<Identifier>, Identifier>(sr, socket, logger, errorHandler, socket.getOptions())); 
   }
 
-  public void incomingSocket(final P2PSocket<Identifier> socka) throws IOException {
+  @Override
+public void incomingSocket(final P2PSocket<Identifier> socka) throws IOException {
     // read the header
     if (logger.level <= Logger.FINE) logger.log("incomingSocket("+socka+")");
 
     final SocketInputBuffer sib = new SocketInputBuffer(socka,1024);
     socka.register(true, false, new P2PSocketReceiver<Identifier>() {
     
-      public void receiveSelectResult(P2PSocket<Identifier> socket,
+      @Override
+	public void receiveSelectResult(P2PSocket<Identifier> socket,
           boolean canRead, boolean canWrite) throws IOException {
         if (logger.level <= Logger.FINER) logger.log("incomingSocket("+socket+"):receiveSelectResult()");
         if (canWrite || !canRead) throw new IOException("Expected to read! "+canRead+","+canWrite);
@@ -265,10 +268,12 @@ public class SourceRouteTransportLayerImpl<Identifier> implements
               
               etl.openSocket(nextHop, new SocketCallback<Identifier>() {
               
-                public void receiveResult(SocketRequestHandle<Identifier> cancellable, final P2PSocket<Identifier> sockb) {
+                @Override
+				public void receiveResult(SocketRequestHandle<Identifier> cancellable, final P2PSocket<Identifier> sockb) {
                   sockb.register(false, true, new P2PSocketReceiver<Identifier>() {
                   
-                    public void receiveSelectResult(P2PSocket<Identifier> socket,
+                    @Override
+					public void receiveSelectResult(P2PSocket<Identifier> socket,
                         boolean canRead, boolean canWrite) throws IOException {
                       if (canRead || !canWrite) throw new IOException("Expected to write! "+canRead+","+canWrite);
                       
@@ -286,7 +291,8 @@ public class SourceRouteTransportLayerImpl<Identifier> implements
                       }
                     }
                   
-                    public void receiveException(P2PSocket<Identifier> socket,
+                    @Override
+					public void receiveException(P2PSocket<Identifier> socket,
                         Exception e) {
                       errorHandler.receivedException(sr, e);
                       socka.close();
@@ -299,7 +305,8 @@ public class SourceRouteTransportLayerImpl<Identifier> implements
                 /**
                  * Couldn't open the socket, the next hop was dead.
                  */
-                public void receiveException(SocketRequestHandle<Identifier> s, Exception ex) {
+                @Override
+				public void receiveException(SocketRequestHandle<Identifier> s, Exception ex) {
                   // may be nice to send some kind of error message to the opener
   //                errorHandler.receivedException(sr, ex);
                   socka.close();
@@ -322,7 +329,8 @@ public class SourceRouteTransportLayerImpl<Identifier> implements
         }
       }
     
-      public void receiveException(P2PSocket<Identifier> socket,Exception e) {
+      @Override
+	public void receiveException(P2PSocket<Identifier> socket,Exception e) {
         errorHandler.receivedException(srFactory.getSourceRoute(etl.getLocalIdentifier(), socket.getIdentifier()), e);
       }          
     });
@@ -330,7 +338,8 @@ public class SourceRouteTransportLayerImpl<Identifier> implements
   }
   
 
-  public MessageRequestHandle<SourceRoute<Identifier>, ByteBuffer> sendMessage(final SourceRoute<Identifier> i, final ByteBuffer m,
+  @Override
+public MessageRequestHandle<SourceRoute<Identifier>, ByteBuffer> sendMessage(final SourceRoute<Identifier> i, final ByteBuffer m,
       final MessageCallback<SourceRoute<Identifier>, ByteBuffer> deliverAckToMe,
       Map<String, Object> options) {
     if (logger.level <= Logger.FINE) logger.log("sendMessage("+i+","+m+")");    
@@ -368,11 +377,13 @@ public class SourceRouteTransportLayerImpl<Identifier> implements
         i.getHop(1), 
         buf, 
         new MessageCallback<Identifier, ByteBuffer>() {
-          public void ack(MessageRequestHandle<Identifier, ByteBuffer> msg) {
+          @Override
+		public void ack(MessageRequestHandle<Identifier, ByteBuffer> msg) {
             if (handle.getSubCancellable() != null && msg != handle.getSubCancellable()) throw new RuntimeException("msg != handle.getSubCancellable() (indicates a bug in the code) msg:"+msg+" sub:"+handle.getSubCancellable());
             if (deliverAckToMe != null) deliverAckToMe.ack(handle);
           }
-          public void sendFailed(MessageRequestHandle<Identifier, ByteBuffer> msg, Exception ex) {
+          @Override
+		public void sendFailed(MessageRequestHandle<Identifier, ByteBuffer> msg, Exception ex) {
             if (handle.getSubCancellable() != null && msg != handle.getSubCancellable()) throw new RuntimeException("msg != handle.getSubCancellable() (indicates a bug in the code) msg:"+msg+" sub:"+handle.getSubCancellable());
             if (deliverAckToMe == null) {
               errorHandler.receivedException(i, ex);
@@ -385,7 +396,8 @@ public class SourceRouteTransportLayerImpl<Identifier> implements
     return handle;
   }
 
-  public void messageReceived(Identifier i, ByteBuffer m, Map<String, Object> options) throws IOException {
+  @Override
+public void messageReceived(Identifier i, ByteBuffer m, Map<String, Object> options) throws IOException {
     if (!m.hasRemaining()) {
       errorHandler.receivedUnexpectedData(srFactory.getSourceRoute(etl.getLocalIdentifier(), i), m.array(), m.position(), null);
     }
@@ -438,36 +450,44 @@ public class SourceRouteTransportLayerImpl<Identifier> implements
   }
 
   // ************************** Getters/Setters *****************
-  public void setCallback(
+  @Override
+public void setCallback(
       TransportLayerCallback<SourceRoute<Identifier>, ByteBuffer> callback) {
     this.callback = callback;
   }
 
-  public void setErrorHandler(ErrorHandler<SourceRoute<Identifier>> errorHandler) {
+  @Override
+public void setErrorHandler(ErrorHandler<SourceRoute<Identifier>> errorHandler) {
     this.errorHandler = errorHandler;
   }
 
-  public void acceptMessages(boolean b) {
+  @Override
+public void acceptMessages(boolean b) {
     etl.acceptMessages(b);
   }
 
-  public void acceptSockets(boolean b) {
+  @Override
+public void acceptSockets(boolean b) {
     etl.acceptSockets(b);
   }
 
-  public SourceRoute getLocalIdentifier() {
+  @Override
+public SourceRoute getLocalIdentifier() {
     return localIdentifier;
   }
   
-  public void destroy() {
+  @Override
+public void destroy() {
     etl.destroy();
   }
 
-  public void addSourceRouteTap(SourceRouteTap tap) {
+  @Override
+public void addSourceRouteTap(SourceRouteTap tap) {
     taps.add(tap);
   }
 
-  public boolean removeSourceRouteTap(SourceRouteTap tap) {
+  @Override
+public boolean removeSourceRouteTap(SourceRouteTap tap) {
     return taps.remove(tap);
   }
 

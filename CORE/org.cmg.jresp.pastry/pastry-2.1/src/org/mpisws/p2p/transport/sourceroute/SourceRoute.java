@@ -135,7 +135,8 @@ public abstract class SourceRoute<Identifier> {
    *
    * @return The hashCode
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     int result = 399388937;
     
     for (Identifier i : path)
@@ -150,7 +151,8 @@ public abstract class SourceRoute<Identifier> {
    * @param o The source route to compare to
    * @return The equality
    */
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     if (o == null)
       return false;
     
@@ -167,7 +169,8 @@ public abstract class SourceRoute<Identifier> {
    * @param path The path
    * @return THe string
    */
-  public String toString() {
+  @Override
+public String toString() {
     StringBuffer result = new StringBuffer();
     result.append("{");
     

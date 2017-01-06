@@ -112,11 +112,13 @@ public class LookupService implements Application {
    * 
    * @see rice.p2p.commonapi.Application#forward(rice.p2p.commonapi.RouteMessage)
    */
-  public boolean forward(RouteMessage message) {
+  @Override
+public boolean forward(RouteMessage message) {
     return true;
   }
 
-  public void deliver(Id id, Message message) {
+  @Override
+public void deliver(Id id, Message message) {
     if (message instanceof NodeLookupQuery) {
       NodeLookupQuery query = (NodeLookupQuery) message;
 
@@ -157,7 +159,8 @@ public class LookupService implements Application {
     }
   }
 
-  public void update(NodeHandle handle, boolean joined) {
+  @Override
+public void update(NodeHandle handle, boolean joined) {
     // do nothing
     // this is part of the Application interface, but we don't care about
     // updates
@@ -182,7 +185,8 @@ public class LookupService implements Application {
    */
   public void requestNodeHandles(final Id id, final int num, final Continuation<NodeHandleSet, Exception> cont) {
     endpoint.getEnvironment().getSelectorManager().invoke(new Runnable() {
-      public void run() {
+      @Override
+	public void run() {
         sendMessageWithRetries(id, num, cont);
       }
     });
@@ -195,7 +199,8 @@ public class LookupService implements Application {
 
       long cum = 0; // how long we've been waiting total
 
-      public void receiveException(Exception exception) {
+      @Override
+	public void receiveException(Exception exception) {
         if (exception instanceof NodeLookupTimeoutException) {
           cum += t;
           // have we hit our final timeout?
@@ -218,7 +223,8 @@ public class LookupService implements Application {
         }
       }
 
-      public void receiveResult(NodeHandleSet result) {
+      @Override
+	public void receiveResult(NodeHandleSet result) {
         cont.receiveResult(result);
       }
     }, firstTimeout);
@@ -261,13 +267,16 @@ public class LookupService implements Application {
    */
   public void requestNodeHandle(final Id id, final Continuation<NodeHandle, Exception> cont) {
     endpoint.getEnvironment().getSelectorManager().invoke(new Runnable() {
-      public void run() {
+      @Override
+	public void run() {
         sendMessageWithRetries(id, 1, new Continuation<NodeHandleSet, Exception>() {
-          public void receiveException(Exception exception) {
+          @Override
+		public void receiveException(Exception exception) {
             cont.receiveException(exception);
           }
 
-          public void receiveResult(NodeHandleSet result) {
+          @Override
+		public void receiveResult(NodeHandleSet result) {
             if (result.size() != 1) {
               // this really shouldn't happen
               receiveException(new IndexOutOfBoundsException("Expected 1 result, got " + result.size()));
@@ -293,7 +302,8 @@ public class LookupService implements Application {
       this.seqno = seqno;
     }
 
-    public int getPriority() {
+    @Override
+	public int getPriority() {
       return 0;
     }
 
@@ -316,7 +326,8 @@ public class LookupService implements Application {
       this.source = localHandle;
     }
 
-    public int getPriority() {
+    @Override
+	public int getPriority() {
       return 0;
     }
   }
@@ -336,7 +347,8 @@ public class LookupService implements Application {
       this.seqno = seqno;
     }
 
-    public int getPriority() {
+    @Override
+	public int getPriority() {
       return 0;
     }
   }

@@ -37,16 +37,8 @@ advised of the possibility of such damage.
 package rice.pastry.testing;
 
 import rice.environment.Environment;
-import rice.environment.params.simple.SimpleParameters;
-import rice.environment.time.simulated.DirectTimeSource;
-import rice.pastry.*;
-import rice.pastry.direct.*;
-import rice.pastry.standard.*;
-import rice.pastry.join.*;
-
 import java.util.*;
 import java.io.*;
-import java.lang.*;
 
 /**
  * DirectPastryPingTest

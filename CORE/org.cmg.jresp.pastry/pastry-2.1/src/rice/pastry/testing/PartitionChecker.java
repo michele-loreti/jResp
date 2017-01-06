@@ -45,7 +45,6 @@ import java.util.*;
 
 import rice.environment.Environment;
 import rice.pastry.*;
-import rice.pastry.dist.DistPastryNodeFactory;
 import rice.pastry.leafset.LeafSet;
 import rice.pastry.socket.*;
 
@@ -99,7 +98,7 @@ public class PartitionChecker {
     
     
     while(unmatchedBootstraps.size() > 0) {
-      rings.add(buildRing(factory, (InetSocketAddress)(unmatchedBootstraps.iterator().next()))); 
+      rings.add(buildRing(factory, (unmatchedBootstraps.iterator().next()))); 
     }
     Collections.sort(rings);
     Iterator<Ring> i = rings.iterator();
@@ -174,7 +173,8 @@ public class PartitionChecker {
 //            System.out.println("Fetching leafset of " + handle + " (thread " + numThreads + " of "+MAX_THREADS+")");
             
             Thread t = new Thread() {
-              public void run() {  
+              @Override
+			public void run() {  
                 try {
                   LeafSet ls = getLeafSet(handle);
 //                  System.out.println("Response:"+handle+" "+ring.getName()+" "+ls);
@@ -290,7 +290,8 @@ public class PartitionChecker {
       nodes.add(snh);
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
       String s = nodes.size()+":"+myBootstraps.size()+": boots:";
       synchronized(myBootstraps) {
         Iterator<InetSocketAddress> i = myBootstraps.iterator();
@@ -311,8 +312,9 @@ public class PartitionChecker {
       return s;
     }
 
-    public int compareTo(Ring arg0) {
-      Ring that = (Ring)arg0;
+    @Override
+	public int compareTo(Ring arg0) {
+      Ring that = arg0;
       return this.size() - that.size();
 //      return that.size() - this.size();
     }

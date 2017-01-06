@@ -56,7 +56,8 @@ public class JavaSerializedGCPastContentHandle implements RawGCPastContentHandle
     this.handle = handle;
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     try {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -75,19 +76,23 @@ public class JavaSerializedGCPastContentHandle implements RawGCPastContentHandle
     }
   }
 
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "JSPCH ["+handle+"]"; 
   }
 
-  public Id getId() {
+  @Override
+public Id getId() {
     return handle.getId();
   }
 
-  public NodeHandle getNodeHandle() {
+  @Override
+public NodeHandle getNodeHandle() {
     return handle.getNodeHandle();
   }
   
@@ -95,11 +100,13 @@ public class JavaSerializedGCPastContentHandle implements RawGCPastContentHandle
     return handle; 
   }
 
-  public long getVersion() {
+  @Override
+public long getVersion() {
     return handle.getVersion();
   }
 
-  public long getExpiration() {
+  @Override
+public long getExpiration() {
     return handle.getExpiration();
   }
 }

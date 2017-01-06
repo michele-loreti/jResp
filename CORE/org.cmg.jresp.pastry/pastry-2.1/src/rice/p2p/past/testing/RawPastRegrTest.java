@@ -46,14 +46,10 @@ import rice.p2p.commonapi.testing.*;
 import rice.p2p.past.*;
 import rice.p2p.past.messaging.*;
 import rice.p2p.past.rawserialization.*;
-import rice.p2p.replication.*;
-
 import rice.persistence.*;
 
 import java.io.*;
 import java.util.*;
-import java.net.*;
-import java.io.Serializable;
 
 /**
  * @(#) PastRegrTest.java
@@ -91,7 +87,8 @@ public class RawPastRegrTest extends CommonAPITest {
     
     if (PROTOCOL == PROTOCOL_DIRECT) {
       new Thread() {
-        public void run() {
+        @Override
+		public void run() {
           while (running) {
             try {
               sleep(50);
@@ -111,7 +108,8 @@ public class RawPastRegrTest extends CommonAPITest {
    * @param node The newly created node
    * @param num The number of this node
    */
-  protected void processNode(int num, Node node) {
+  @Override
+protected void processNode(int num, Node node) {
     try {
       storages[num] = new StorageManagerImpl(FACTORY,
                                              new PersistentStorage(FACTORY, "root-" + num, ".", 1000000, environment),
@@ -119,7 +117,8 @@ public class RawPastRegrTest extends CommonAPITest {
       pasts[num] = new PastImpl(node, storages[num], REPLICATION_FACTOR, INSTANCE);
       pasts[num].setContentDeserializer(new PastContentDeserializer() {
       
-        public PastContent deserializePastContent(InputBuffer buf, Endpoint endpoint,
+        @Override
+		public PastContent deserializePastContent(InputBuffer buf, Endpoint endpoint,
             short contentType) throws IOException {
           switch(contentType) {
             case TestPastContent.TYPE:
@@ -136,7 +135,8 @@ public class RawPastRegrTest extends CommonAPITest {
       throw new RuntimeException(e);
     }
     pasts[num].setContentHandleDeserializer(new PastContentHandleDeserializer() {    
-      public PastContentHandle deserializePastContentHandle(InputBuffer buf, Endpoint endpoint,
+      @Override
+	public PastContentHandle deserializePastContentHandle(InputBuffer buf, Endpoint endpoint,
           short contentType) throws IOException {
         switch(contentType) {
           case TestPastContentHandle.TYPE:
@@ -151,7 +151,8 @@ public class RawPastRegrTest extends CommonAPITest {
    * Method which should run the test - this is called once all of the
    * nodes have been created and are ready.
    */
-  protected void runTest() {
+  @Override
+protected void runTest() {
     if (NUM_NODES < 2) {
       System.out.println("The DistPastRegrTest must be run with at least 2 nodes for proper testing.  Use the '-nodes n' to specify the number of nodes.");
       return;
@@ -177,14 +178,16 @@ public class RawPastRegrTest extends CommonAPITest {
     // Check file doesn't exist
     stepStart("Initial Lookup");
     local.lookup(remoteId, new TestCommand() {
-      public void receive(Object result) throws Exception {
+      @Override
+	public void receive(Object result) throws Exception {
         assertTrue("File returned should be null", result == null);
         stepDone();
 
         // Insert file
         stepStart("File Insertion");
         local.insert(file, new TestCommand() {
-          public void receive(Object result) throws Exception {
+          @Override
+		public void receive(Object result) throws Exception {
             assertTrue("Insert of file result should not be null", result != null);
             assertTrue("Insert of file should return Boolean[]", result instanceof Boolean[]);
        //     assertTrue("Insert of file should return correct sized Boolean[]", (((Boolean[]) result).length == REPLICATION_FACTOR) ||
@@ -204,7 +207,8 @@ public class RawPastRegrTest extends CommonAPITest {
             // Check file exists
             stepStart("Remote File Lookup");
             local.lookup(remoteId, new TestCommand() {
-              public void receive(Object result) throws Exception {
+              @Override
+			public void receive(Object result) throws Exception {
                 assertTrue("File should not be null", result != null);
                 assertEquals("Lookup of file should be correct",
                              file,
@@ -214,7 +218,8 @@ public class RawPastRegrTest extends CommonAPITest {
                 // Lookup file locally
                 stepStart("Local File Lookup");
                 remote.getStorageManager().getObject(remoteId, new TestCommand() {
-                  public void receive(Object result) throws Exception {
+                  @Override
+				public void receive(Object result) throws Exception {
                     assertTrue("File should be inserted at known node",
                                result != null);
                     assertEquals("Retrieved local file should be the same",
@@ -254,7 +259,8 @@ public class RawPastRegrTest extends CommonAPITest {
     // Insert file
     stepStart("File Insertion");
     local.insert(oldFile, new TestCommand() {
-      public void receive(Object result) throws Exception {
+      @Override
+	public void receive(Object result) throws Exception {
         assertTrue("Insert of file result should not be null", result != null);
         assertTrue("Insert of file should return Boolean[]", result instanceof Boolean[]);
      //   assertTrue("Insert of file should return correct sized Boolean[]", (((Boolean[]) result).length == REPLICATION_FACTOR) ||
@@ -274,7 +280,8 @@ public class RawPastRegrTest extends CommonAPITest {
         // Check file exists
         stepStart("Remote File Lookup");
         local.lookup(remoteId, new TestCommand() {
-          public void receive(Object result) throws Exception {
+          @Override
+		public void receive(Object result) throws Exception {
             assertTrue("File should not be null", result != null);
             assertEquals("Lookup of file should be correct",
                          oldFile,
@@ -284,7 +291,8 @@ public class RawPastRegrTest extends CommonAPITest {
             // Insert overwriting file
             stepStart("Overwriting File Insertion");
             local.insert(newFile, new TestCommand() {
-              public void receive(Object result) throws Exception {
+              @Override
+			public void receive(Object result) throws Exception {
                 assertTrue("Insert of file result should not be null", result != null);
                 assertTrue("Insert of file should return Boolean[]", result instanceof Boolean[]);
           //      assertTrue("Insert of file should return correct sized Boolean[]", (((Boolean[]) result).length == REPLICATION_FACTOR) ||
@@ -304,7 +312,8 @@ public class RawPastRegrTest extends CommonAPITest {
                 // Check correct file exists
                 stepStart("Remote Overwriting File Lookup");
                 local.lookup(remoteId, new TestCommand() {
-                  public void receive(Object result) throws Exception {
+                  @Override
+				public void receive(Object result) throws Exception {
                     assertTrue("Overwriting file should not be null", result != null);
                     assertEquals("Lookup of overwriting file should be correct version",
                                  newFile,
@@ -314,7 +323,8 @@ public class RawPastRegrTest extends CommonAPITest {
                     // Insert overwriting file
                     stepStart("Non-overwriting File Insertion");
                     local.insert(newNewFile, new TestCommand() {
-                      public void receive(Object result) throws Exception {
+                      @Override
+					public void receive(Object result) throws Exception {
                         assertTrue("Insert of file result should not be null", result != null);
                         assertTrue("Insert of file should return Boolean[]", result instanceof Boolean[]);
                   //      assertTrue("Insert of file should return correct sized Boolean[]", (((Boolean[]) result).length == REPLICATION_FACTOR) ||
@@ -334,7 +344,8 @@ public class RawPastRegrTest extends CommonAPITest {
                         // Check correct file exists
                         stepStart("Remote Non-Overwriting File Lookup");
                         local.lookup(remoteId, new TestCommand() {
-                          public void receive(Object result) throws Exception {
+                          @Override
+						public void receive(Object result) throws Exception {
                             assertTrue("Non-Overwriting file should not be null", result != null);
                             assertEquals("Lookup of non-overwriting file should be correct (second) version",
                                          newFile,
@@ -468,7 +479,8 @@ public class RawPastRegrTest extends CommonAPITest {
     // Insert file
     stepStart("File 1 Insertion");
     remote1.getStorageManager().store(id, null, file1, new TestCommand() {
-      public void receive(Object result) throws Exception {
+      @Override
+	public void receive(Object result) throws Exception {
         assertTrue("Storage of file 1 should succeed", ((Boolean)result).booleanValue());
 
         stepDone();
@@ -476,7 +488,8 @@ public class RawPastRegrTest extends CommonAPITest {
         // Insert second file
         stepStart("File 2 Insertion");
         remote2.getStorageManager().store(id, null, file2, new TestCommand() {
-          public void receive(Object result) throws Exception {
+          @Override
+		public void receive(Object result) throws Exception {
             assertTrue("Storage of file 2 should succeed", ((Boolean)result).booleanValue());
 
             stepDone();
@@ -484,7 +497,8 @@ public class RawPastRegrTest extends CommonAPITest {
             // Retrieve first file
             stepStart("File 1 Fetch");
             local.fetch(handle1, new TestCommand() {
-              public void receive(Object result) throws Exception {
+              @Override
+			public void receive(Object result) throws Exception {
                 assertTrue("Result should be non-null", result != null);
                 assertEquals("Result should be correct", file1, result);
                 assertTrue("Result should not be file 2", (! file2.equals(result)));
@@ -496,7 +510,8 @@ public class RawPastRegrTest extends CommonAPITest {
                 // Retrieve second file
                 stepStart("File 2 Fetch");
                 local.fetch(handle2, new TestCommand() {
-                  public void receive(Object result) throws Exception {
+                  @Override
+				public void receive(Object result) throws Exception {
                     assertTrue("Result should be non-null", result != null);
                     assertEquals("Result should be correct", file2, result);
                     assertTrue("Result should not be file 1", (! file1.equals(result)));
@@ -513,7 +528,8 @@ public class RawPastRegrTest extends CommonAPITest {
                     // remove file
                     stepStart("File 1 Removal");
                     remote1.getStorageManager().unstore(id, new TestCommand() {
-                      public void receive(Object result) throws Exception {
+                      @Override
+					public void receive(Object result) throws Exception {
                         assertTrue("Removal of file 1 should succeed", ((Boolean)result).booleanValue());
 
                         stepDone();
@@ -521,7 +537,8 @@ public class RawPastRegrTest extends CommonAPITest {
                         // remove second file
                         stepStart("File 2 Removal");
                         remote2.getStorageManager().unstore(id, new TestCommand() {
-                          public void receive(Object result) throws Exception {
+                          @Override
+						public void receive(Object result) throws Exception {
                             assertTrue("Removal of file 2 should succeed", ((Boolean)result).booleanValue());
 
                             stepDone();
@@ -562,7 +579,8 @@ public class RawPastRegrTest extends CommonAPITest {
     // Insert file
     stepStart("File Insertion");
     local.insert(file, new TestCommand() {
-      public void receive(Object result) throws Exception {
+      @Override
+	public void receive(Object result) throws Exception {
         assertTrue("Insert of file result should not be null", result != null);
         assertTrue("Insert of file should return Boolean[]", result instanceof Boolean[]);
    //     assertTrue("Insert of file should return correct sized Boolean[]", (((Boolean[]) result).length == REPLICATION_FACTOR) ||
@@ -583,7 +601,8 @@ public class RawPastRegrTest extends CommonAPITest {
         // Check file exists (at 1 replica)
         stepStart("Remote Handles Lookup - 1 Replica");
         local.lookupHandles(remoteId, 1, new TestCommand() {
-          public void receive(Object result) throws Exception {
+          @Override
+		public void receive(Object result) throws Exception {
             assertTrue("Replicas should not be null", result != null);
             assertTrue("Replicas should be handle[]", result instanceof PastContentHandle[]);
             assertTrue("Only 1 replica should be returned", ((PastContentHandle[]) result).length == 1);
@@ -598,7 +617,8 @@ public class RawPastRegrTest extends CommonAPITest {
             // Check file exists (at all replicas)
             stepStart("Remote Handles Lookup - All Replicas");
             local.lookupHandles(remoteId, REPLICATION_FACTOR+1, new TestCommand() {
-              public void receive(Object result) throws Exception {
+              @Override
+			public void receive(Object result) throws Exception {
                 assertTrue("Replicas should not be null", result != null);
                 assertTrue("Replicas should be handle[]", result instanceof PastContentHandle[]);
 
@@ -626,7 +646,8 @@ public class RawPastRegrTest extends CommonAPITest {
                 // Check file exists (at a huge number of replicas)
                 stepStart("Remote Handles Lookup - 12 Replicas");
                 local.lookupHandles(remoteId, 12, new TestCommand() {
-                  public void receive(Object result) throws Exception {
+                  @Override
+				public void receive(Object result) throws Exception {
                     assertTrue("Replicas should not be null", result != null);
                     assertTrue("Replicas should be handle[]", result instanceof PastContentHandle[]);
 
@@ -692,7 +713,8 @@ public class RawPastRegrTest extends CommonAPITest {
 
     // check cache
     local.getStorageManager().getCache().cache(id1, null, file1, new TestCommand() {
-      public void receive(Object result) throws Exception {
+      @Override
+	public void receive(Object result) throws Exception {
         assertTrue("Object should not be null", result != null);
         assertTrue("Object should be True", result.equals(new Boolean(true)));
 
@@ -701,7 +723,8 @@ public class RawPastRegrTest extends CommonAPITest {
         // Check file exists
         stepStart("Local Lookup Satisfied by Cache");
         local.lookup(id1, new TestCommand() {
-          public void receive(Object result) throws Exception {
+          @Override
+		public void receive(Object result) throws Exception {
             assertTrue("File should not be null", result != null);
             assertEquals("Lookup of file should be correct",
                          file1,
@@ -722,7 +745,8 @@ public class RawPastRegrTest extends CommonAPITest {
 
             // check cache
             local.getStorageManager().getObject(id2, new TestCommand() {
-              public void receive(Object result) throws Exception {
+              @Override
+			public void receive(Object result) throws Exception {
                 assertTrue("Object should be null", result == null);
 
                 stepDone();
@@ -739,7 +763,8 @@ public class RawPastRegrTest extends CommonAPITest {
 
                 // check cache
                 local.getStorageManager().getObject(id2, new TestCommand() {
-                  public void receive(Object result) throws Exception {
+                  @Override
+				public void receive(Object result) throws Exception {
                   //  assertTrue("Object should not be null", result != null);
                   //  assertTrue("Object should be correct", result.equals(file3));
 
@@ -841,7 +866,8 @@ public class RawPastRegrTest extends CommonAPITest {
    * Common superclass for test commands.
    */
   protected class TestCommand implements Continuation {
-    public void receiveResult(Object result) {
+    @Override
+	public void receiveResult(Object result) {
       try {
         receive(result);
       }
@@ -850,7 +876,8 @@ public class RawPastRegrTest extends CommonAPITest {
       }
     }
     public void receive(Object result) throws Exception {}
-    public void receiveException(Exception e) {
+    @Override
+	public void receiveException(Exception e) {
       stepException(e);
     }
   }
@@ -859,11 +886,13 @@ public class RawPastRegrTest extends CommonAPITest {
     * Common superclass for test commands which should throw an exception
    */
   protected class TestExceptionCommand implements Continuation {
-    public void receiveResult(Object result) {
+    @Override
+	public void receiveResult(Object result) {
       stepDone(FAILURE, "Command should throw an exception - got " + result);
     }
     public void receive(Object result) throws Exception {}
-    public void receiveException(Exception e) {
+    @Override
+	public void receiveException(Exception e) {
       try {
         receive(e);
       }
@@ -887,34 +916,41 @@ public class RawPastRegrTest extends CommonAPITest {
       this.id = id;
     }
 
-    public PastContent checkInsert(Id id, PastContent existingContent) throws PastException {
+    @Override
+	public PastContent checkInsert(Id id, PastContent existingContent) throws PastException {
       existing = (RawPastContent)existingContent;
       return this;
     }
 
-    public PastContentHandle getHandle(Past past) {
+    @Override
+	public PastContentHandle getHandle(Past past) {
       return new TestPastContentHandle(past, id);
     }
 
-    public Id getId() {
+    @Override
+	public Id getId() {
       return id;
     }
 
-    public boolean isMutable() {
+    @Override
+	public boolean isMutable() {
       return true;
     }
 
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
       if (! (o instanceof TestPastContent)) return false;
 
       return ((TestPastContent) o).id.equals(id);
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
       return "TestPastContent(" + id + ")";
     }
 
-    public short getType() {
+    @Override
+	public short getType() {
       return TYPE;
     }
 
@@ -926,7 +962,8 @@ public class RawPastRegrTest extends CommonAPITest {
       }
     }
     
-    public void serialize(OutputBuffer buf) throws IOException {
+    @Override
+	public void serialize(OutputBuffer buf) throws IOException {
       buf.writeShort(id.getType());
       id.serialize(buf);
       if (existing == null) {
@@ -949,18 +986,21 @@ public class RawPastRegrTest extends CommonAPITest {
       this.version = version;
     }
 
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
       if (! (o instanceof VersionedTestPastContent)) return false;
 
       return (((VersionedTestPastContent) o).id.equals(id) &&
               (((VersionedTestPastContent) o).version == version));
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
       return "VersionedTestPastContent(" + id + ", " + version + ")";
     }
     
-    public short getType() {
+    @Override
+	public short getType() {
       return TYPE; 
     }
     
@@ -969,7 +1009,8 @@ public class RawPastRegrTest extends CommonAPITest {
       version = buf.readInt();
     }
     
-    public void serialize(OutputBuffer buf) throws IOException {
+    @Override
+	public void serialize(OutputBuffer buf) throws IOException {
       super.serialize(buf);
       buf.writeInt(version);
     }
@@ -982,15 +1023,18 @@ public class RawPastRegrTest extends CommonAPITest {
       super(id, version);
     }
     
-    public PastContent checkInsert(Id id, PastContent existingContent) throws PastException {
+    @Override
+	public PastContent checkInsert(Id id, PastContent existingContent) throws PastException {
       return existingContent;
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
       return "NonOverwritingTestPastContent(" + id + ", " + version + ")";
     }
     
-    public short getType() {
+    @Override
+	public short getType() {
       return TYPE; 
     }
     
@@ -999,7 +1043,8 @@ public class RawPastRegrTest extends CommonAPITest {
     }
     
     
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
       if (! (o instanceof NonOverwritingTestPastContent)) return false;
 
       return (((NonOverwritingTestPastContent) o).id.equals(id) &&
@@ -1013,11 +1058,13 @@ public class RawPastRegrTest extends CommonAPITest {
       super(id);
     }
 
-    public boolean isMutable() {
+    @Override
+	public boolean isMutable() {
       return false;
     }
 
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
       if (! (o instanceof NonMutableTestPastContent)) return false;
 
       return ((NonMutableTestPastContent) o).id.equals(id);
@@ -1039,15 +1086,18 @@ public class RawPastRegrTest extends CommonAPITest {
       this.id = id;
     }
 
-    public Id getId() {
+    @Override
+	public Id getId() {
       return id;
     }
 
-    public NodeHandle getNodeHandle() {
+    @Override
+	public NodeHandle getNodeHandle() {
       return handle;
     }
     
-    public short getType() {
+    @Override
+	public short getType() {
       return TYPE; 
     }
     
@@ -1056,7 +1106,8 @@ public class RawPastRegrTest extends CommonAPITest {
       id = endpoint.readId(buf, buf.readShort());
     }
     
-    public void serialize(OutputBuffer buf) throws IOException {
+    @Override
+	public void serialize(OutputBuffer buf) throws IOException {
       handle.serialize(buf);
       buf.writeShort(id.getType());
       id.serialize(buf);
@@ -1080,38 +1131,47 @@ public class RawPastRegrTest extends CommonAPITest {
       this.message = message;
     }
     
-    public Id getDestinationId() {
+    @Override
+	public Id getDestinationId() {
       return id;
     }
 
-    public NodeHandle getNextHopHandle() {
+    @Override
+	public NodeHandle getNextHopHandle() {
       return nextHop;
     }
 
     /**
      * @deprecated
      */
-    public Message getMessage() {
+    @Deprecated
+	@Override
+	public Message getMessage() {
       return message;
     }
 
-    public Message getMessage(MessageDeserializer md) {
+    @Override
+	public Message getMessage(MessageDeserializer md) {
       return message;
     }
 
-    public void setDestinationId(Id id) {
+    @Override
+	public void setDestinationId(Id id) {
       this.id = id;
     }
 
-    public void setNextHopHandle(NodeHandle nextHop) {
+    @Override
+	public void setNextHopHandle(NodeHandle nextHop) {
       this.nextHop = nextHop;
     }
 
-    public void setMessage(Message message) {
+    @Override
+	public void setMessage(Message message) {
       this.message = message;
     }
     
-    public void setMessage(RawMessage message) {
+    @Override
+	public void setMessage(RawMessage message) {
       this.message = message;
     }
   }

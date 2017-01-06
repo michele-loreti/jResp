@@ -39,7 +39,6 @@ advised of the possibility of such damage.
  */
 package rice.pastry.direct;
 
-import rice.pastry.ScheduledMessage;
 import rice.selector.TimerTask;
 
 public class DirectTimerTask extends TimerTask {
@@ -62,11 +61,13 @@ public class DirectTimerTask extends TimerTask {
     this(md,nextExecutionTime,-1,false);
   }
   
-  public void run() {
+  @Override
+public void run() {
     md.deliver();
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "DirectTT for " + md.msg + " to "+md.node;
   }
   

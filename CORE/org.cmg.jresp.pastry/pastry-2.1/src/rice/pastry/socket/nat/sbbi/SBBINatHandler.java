@@ -70,7 +70,8 @@ public class SBBINatHandler implements NATHandler {
     this.localAddress = localAddress;
   }
 
-  public synchronized InetAddress findFireWall(InetAddress bindAddress)
+  @Override
+public synchronized InetAddress findFireWall(InetAddress bindAddress)
       throws IOException {
 //    NetworkInterface ni = NetworkInterface.getByInetAddress(bindAddress);
     if (searchedForFireWall)
@@ -120,7 +121,8 @@ public class SBBINatHandler implements NATHandler {
    */
   int findPortTries = 0;
 
-  public int findAvailableFireWallPort(int internal, int external, int tries, String appName)
+  @Override
+public int findAvailableFireWallPort(int internal, int external, int tries, String appName)
       throws IOException {
     try {
       findPortTries++;
@@ -321,7 +323,8 @@ public class SBBINatHandler implements NATHandler {
     return ret;
   }
 
-  public void openFireWallPort(int local, int external, String appName) throws IOException {
+  @Override
+public void openFireWallPort(int local, int external, String appName) throws IOException {
     try {
       boolean mapped = true;
       mapped = fireWall.addPortMapping(appName, null, local, external, localAddress.getHostAddress(),
@@ -344,7 +347,8 @@ public class SBBINatHandler implements NATHandler {
     }
   }
 
-  public InetAddress getFireWallExternalAddress() {
+  @Override
+public InetAddress getFireWallExternalAddress() {
     return fireWallExternalAddress;
   }
 }

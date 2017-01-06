@@ -46,7 +46,6 @@ import rice.environment.logging.*;
 import rice.environment.random.RandomSource;
 import rice.environment.random.simple.SimpleRandomSource;
 import rice.environment.time.TimeSource;
-import rice.environment.time.simulated.DirectTimeSource;
 
 /**
  * This class is the class which handles the selector, and listens for activity.
@@ -245,7 +244,8 @@ public class SelectorManager extends Thread implements Timer, Destructable {
    * This method starts the socket manager listening for events. It is designed
    * to be started when this thread's start() method is invoked.
    */
-  public void run() {
+  @Override
+public void run() {
     //System.out.println("SelectorManager starting..."+Thread.currentThread());
     if (logger.level <= Logger.INFO) logger.log("SelectorManager -- " + instance + " starting...");
 
@@ -266,7 +266,7 @@ public class SelectorManager extends Thread implements Timer, Destructable {
           doSelections();
           int selectTime = SelectorManager.TIMEOUT;
           if (timerQueue.size() > 0) {
-            TimerTask first = (TimerTask) timerQueue.peek();
+            TimerTask first = timerQueue.peek();
             selectTime = (int) (first.scheduledExecutionTime() - timeSource
                 .currentTimeMillis());
           }
@@ -277,7 +277,7 @@ public class SelectorManager extends Thread implements Timer, Destructable {
             Iterator<SelectionKey> i = cancelledKeys.iterator();
 
             while (i.hasNext())
-              ((SelectionKey) i.next()).cancel();
+              i.next().cancel();
 
             cancelledKeys.clear();
 
@@ -311,7 +311,8 @@ public class SelectorManager extends Thread implements Timer, Destructable {
     if (logger.level <= Logger.INFO) logger.log("Selector "+instance+" shutting down.");
   }
   
-  @SuppressWarnings("deprecation")
+  @Override
+@SuppressWarnings("deprecation")
   public void destroy() {
     if (logger.level <= Logger.FINE) {
       logger.logException("destroying SelectorManager", new Exception("Stack Trace"));
@@ -343,7 +344,7 @@ public class SelectorManager extends Thread implements Timer, Destructable {
     synchronized (loopObservers) {
       Iterator<LoopObserver> i = loopObservers.iterator();
       while (i.hasNext()) {
-        LoopObserver lo = (LoopObserver) i.next();
+        LoopObserver lo = i.next();
         if (lo.delayInterest() <= diff) {
           lo.loopTime((int) diff);
         }
@@ -376,7 +377,7 @@ public class SelectorManager extends Thread implements Timer, Destructable {
       for (int i = 0; i < keys.length; i++) {
         String keyclass = keys[i].getClass().getName();
         if (histo.containsKey(keyclass)) {
-          histo.put(keyclass, new Integer(((Integer)histo.get(keyclass)).intValue() + 1));
+          histo.put(keyclass, new Integer(histo.get(keyclass).intValue() + 1));
         } else {
           histo.put(keyclass, new Integer(1));
         }
@@ -384,7 +385,7 @@ public class SelectorManager extends Thread implements Timer, Destructable {
       logger.log("begin selection keys by class");
       Iterator<String> it = histo.keySet().iterator();
       while (it.hasNext()) {
-        String name = (String)it.next();
+        String name = it.next();
         logger.log("Selection Key: " + name + ": "+histo.get(name));
       }
       logger.log("end selection keys by class");
@@ -438,7 +439,7 @@ public class SelectorManager extends Thread implements Timer, Destructable {
     }
 
     while (i.hasNext()) {
-      Runnable run = (Runnable) i.next();
+      Runnable run = i.next();
       try {
         run.run();
       } catch (RuntimeException e) {
@@ -463,7 +464,7 @@ public class SelectorManager extends Thread implements Timer, Destructable {
     }
 
     while (i2.hasNext()) {
-      SelectionKey key = (SelectionKey) i2.next();
+      SelectionKey key = i2.next();
       if (key.isValid() && (key.attachment() != null))
         ((SelectionKeyHandler) key.attachment()).modifyKey(key);
     }
@@ -477,7 +478,7 @@ public class SelectorManager extends Thread implements Timer, Destructable {
    */
   protected synchronized Runnable getInvocation() {
     if (invocations.size() > 0)
-      return (Runnable) invocations.removeFirst();
+      return invocations.removeFirst();
     else
       return null;
   }
@@ -549,7 +550,7 @@ public class SelectorManager extends Thread implements Timer, Destructable {
    */
   protected SelectionKey[] selectedKeys() throws IOException {
     Set<SelectionKey> s = selector.selectedKeys();
-    SelectionKey[] k = (SelectionKey[])s.toArray(new SelectionKey[0]);
+    SelectionKey[] k = s.toArray(new SelectionKey[0]);
     // randomize k
     for (int c = 0; c < k.length; c++) {
       SelectionKey temp = k[c];
@@ -575,12 +576,14 @@ public class SelectorManager extends Thread implements Timer, Destructable {
    * 
    * @param task The task to run
    */
-  public TimerTask schedule(TimerTask task) {
+  @Override
+public TimerTask schedule(TimerTask task) {
     addTask(task);
     return task;
   }
   
-  public TimerTask schedule(TimerTask task, long delay) {
+  @Override
+public TimerTask schedule(TimerTask task, long delay) {
     task.setNextExecutionTime(timeSource.currentTimeMillis() + delay);
     addTask(task);
     return task;
@@ -594,7 +597,8 @@ public class SelectorManager extends Thread implements Timer, Destructable {
    * @param delay The delay before first running, in milliseconds
    * @param period The period with which to run in milliseconds
    */
-  public TimerTask schedule(TimerTask task, long delay, long period) {
+  @Override
+public TimerTask schedule(TimerTask task, long delay, long period) {
     task.setNextExecutionTime(timeSource.currentTimeMillis() + delay);
     task.period = (int) period;
     addTask(task);
@@ -609,7 +613,8 @@ public class SelectorManager extends Thread implements Timer, Destructable {
    * @param delay The delay before first running in milliseconds
    * @param period The period with which to run in milliseconds
    */
-  public TimerTask scheduleAtFixedRate(TimerTask task, long delay, long period) {
+  @Override
+public TimerTask scheduleAtFixedRate(TimerTask task, long delay, long period) {
     task.setNextExecutionTime(timeSource.currentTimeMillis() + delay);
     task.period = (int) period;
     task.fixedRate = true;
@@ -679,7 +684,7 @@ public class SelectorManager extends Thread implements Timer, Destructable {
   public long getNextTaskExecutionTime() {
 //    if (!invocations.isEmpty()) return timeSource.currentTimeMillis();
     if (timerQueue.size() > 0) {
-      TimerTask next = (TimerTask) timerQueue.peek();
+      TimerTask next = timerQueue.peek();
       //System.out.println(next);
       return next.scheduledExecutionTime();
     }
@@ -700,7 +705,7 @@ public class SelectorManager extends Thread implements Timer, Destructable {
       boolean done = false;
       while (!done) {
         if (timerQueue.size() > 0) {
-          TimerTask next = (TimerTask) timerQueue.peek();
+          TimerTask next = timerQueue.peek();
           if (next.scheduledExecutionTime() <= now) {
             executeNow.add(next);
             //System.out.println("Removing:"+next);
@@ -735,7 +740,7 @@ public class SelectorManager extends Thread implements Timer, Destructable {
         synchronized (this) {
           i = addBack.iterator();
           while (i.hasNext()) {
-            TimerTask tt = (TimerTask) i.next();
+            TimerTask tt = i.next();
             //System.out.println("SM.addBack("+tt+")");
             timerQueue.add(tt);
           }
@@ -750,7 +755,7 @@ public class SelectorManager extends Thread implements Timer, Destructable {
     synchronized (this) {
       i = addBack.iterator();
       while (i.hasNext()) {
-        TimerTask tt = (TimerTask) i.next();
+        TimerTask tt = i.next();
         //System.out.println("SM.addBack("+tt+")");
         timerQueue.add(tt);
       }

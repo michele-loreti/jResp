@@ -69,7 +69,8 @@ public class ReminderMessage implements Message {
    *
    * @return This message's priority
    */
-  public int getPriority() {
+  @Override
+public int getPriority() {
     return MEDIUM_PRIORITY;
   }
   

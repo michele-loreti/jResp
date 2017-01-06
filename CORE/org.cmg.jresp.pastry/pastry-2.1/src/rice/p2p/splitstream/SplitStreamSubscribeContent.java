@@ -38,10 +38,7 @@ package rice.p2p.splitstream;
 
 import java.io.*;
 
-import rice.*;
-import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
-import rice.p2p.scribe.*;
 import rice.p2p.scribe.rawserialization.RawScribeContent;
 
 /**
@@ -88,11 +85,13 @@ public class SplitStreamSubscribeContent implements RawScribeContent {
   }
   
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)0);
     buf.writeInt(stage);
   }

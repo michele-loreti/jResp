@@ -38,13 +38,11 @@ package org.mpisws.p2p.transport.peerreview.history.logentry;
 
 import java.io.IOException;
 
-import org.mpisws.p2p.transport.peerreview.PeerReviewConstants;
 import org.mpisws.p2p.transport.util.Serializer;
 
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
 import rice.p2p.commonapi.rawserialization.RawSerializable;
-import rice.p2p.util.rawserialization.SimpleInputBuffer;
 
 /**
   EVT_ACK
@@ -84,11 +82,13 @@ public class EvtAck<Identifier extends RawSerializable> extends HistoryEvent {
     buf.read(signature);
   }
 
-  public short getType() {
+  @Override
+public short getType() {
     return EVT_SENDSIGN;
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     remoteId.serialize(buf);
     buf.writeLong(ackedSeq);
     buf.writeLong(hisSeq);

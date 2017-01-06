@@ -39,12 +39,9 @@ package rice.pastry.transport;
 import java.util.Map;
 
 import org.mpisws.p2p.transport.MessageRequestHandle;
-import org.mpisws.p2p.transport.multiaddress.MultiInetSocketAddress;
-
 import rice.p2p.commonapi.rawserialization.RawMessage;
 import rice.pastry.NodeHandle;
 import rice.pastry.messaging.Message;
-import rice.pastry.socket.TransportLayerNodeHandle;
 
 public class PMessageReceiptImpl implements PMessageReceipt {
   MessageRequestHandle<NodeHandle, RawMessage> internal;
@@ -57,16 +54,19 @@ public class PMessageReceiptImpl implements PMessageReceipt {
     this.options = options;
   }
 
-  public NodeHandle getIdentifier() {
+  @Override
+public NodeHandle getIdentifier() {
     if (internal == null) return null;
-    return (NodeHandle)internal.getIdentifier();
+    return internal.getIdentifier();
   }
 
-  public Message getMessage() {
+  @Override
+public Message getMessage() {
     return message;
   }
 
-  public Map<String, Object> getOptions() {
+  @Override
+public Map<String, Object> getOptions() {
     return options;
 //    return internal.getOptions();
   }
@@ -82,7 +82,8 @@ public class PMessageReceiptImpl implements PMessageReceipt {
    * 
    * @return true if it has been cancelled for sure, false if it may/may-not be cancelled
    */
-  public boolean cancel() {    
+  @Override
+public boolean cancel() {    
     boolean callCancel = false;
     synchronized(this) {
       if (cancelled) return false;
@@ -121,7 +122,8 @@ public class PMessageReceiptImpl implements PMessageReceipt {
     return cancelled;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "PMsgRecptI{"+message+","+getIdentifier()+"}";
   }
 }

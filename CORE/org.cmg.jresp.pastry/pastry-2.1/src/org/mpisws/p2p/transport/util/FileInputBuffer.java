@@ -41,8 +41,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-
 import rice.environment.logging.Logger;
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 
@@ -59,7 +57,8 @@ public class FileInputBuffer extends DataInputStream implements InputBuffer {
     this(new File(fileName), logger);
   }
 
-  public int bytesRemaining() {
+  @Override
+public int bytesRemaining() {
     try {
       return this.available();
     } catch (IOException ioe) {
@@ -68,7 +67,8 @@ public class FileInputBuffer extends DataInputStream implements InputBuffer {
     }
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return "FIB{"+file+"}";
   }
   

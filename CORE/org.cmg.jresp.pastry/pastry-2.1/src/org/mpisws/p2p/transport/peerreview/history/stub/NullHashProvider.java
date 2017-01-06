@@ -46,11 +46,13 @@ public class NullHashProvider implements HashProvider {
 
   public static final byte[] EMPTY_HASH = new byte[0];
   
-  public byte[] hash(long seq, short type, byte[] nodeHash, byte[] contentHash) {
+  @Override
+public byte[] hash(long seq, short type, byte[] nodeHash, byte[] contentHash) {
     return EMPTY_HASH;
   }
 
-  public byte[] hash(ByteBuffer... hashMe) {
+  @Override
+public byte[] hash(ByteBuffer... hashMe) {
     return EMPTY_HASH;
   }
 
@@ -58,11 +60,13 @@ public class NullHashProvider implements HashProvider {
     return EMPTY_HASH;
   }
 
-  public byte[] getEmptyHash() {
+  @Override
+public byte[] getEmptyHash() {
     return EMPTY_HASH;
   }
 
-  public short getHashSizeBytes() {
+  @Override
+public short getHashSizeBytes() {
     return 0;
   }
 

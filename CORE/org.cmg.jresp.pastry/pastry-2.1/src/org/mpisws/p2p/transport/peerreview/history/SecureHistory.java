@@ -42,9 +42,6 @@ import java.nio.ByteBuffer;
 import org.mpisws.p2p.transport.peerreview.PeerReviewConstants;
 import org.mpisws.p2p.transport.peerreview.audit.LogSnippet;
 
-import rice.p2p.commonapi.rawserialization.OutputBuffer;
-import rice.p2p.util.RandomAccessFileIOBuffer;
-
 public interface SecureHistory extends PeerReviewConstants {
   public long getNumEntries();
   public long getBaseSeq();

@@ -39,11 +39,9 @@ package rice.p2p.scribe.messaging;
 
 import java.io.IOException;
 
-import rice.*;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
 import rice.p2p.scribe.*;
-import rice.p2p.scribe.rawserialization.ScribeContentDeserializer;
 
 /**
  * @(#) UnsubscribeMessage.java
@@ -71,11 +69,13 @@ public class DropMessage extends ScribeMessage {
   }
 
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE; 
   }  
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)0); // version
     super.serialize(buf);
   }

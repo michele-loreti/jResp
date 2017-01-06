@@ -41,9 +41,6 @@ package org.mpisws.p2p.transport.liveness;
 
 import java.util.Map;
 
-import org.mpisws.p2p.transport.TransportLayer;
-import org.mpisws.p2p.transport.sourceroute.SourceRoute;
-
 /**
  * Expands the Transport Layer to include pings and liveness checks.
  * 

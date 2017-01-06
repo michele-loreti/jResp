@@ -64,29 +64,35 @@ public class NonAggregate implements RawPastContent {
     this.content = subContent;
   }
   
-  public PastContent checkInsert(Id id, PastContent existingContent) throws PastException {
+  @Override
+public PastContent checkInsert(Id id, PastContent existingContent) throws PastException {
     content = (RawPastContent)content.checkInsert(id, ((NonAggregate)existingContent).content);
     return this;
   }
 
-  public PastContentHandle getHandle(Past local) {
+  @Override
+public PastContentHandle getHandle(Past local) {
     return content.getHandle(local);
   }
 
-  public Id getId() {
+  @Override
+public Id getId() {
     return content.getId();
   }
 
-  public boolean isMutable() {
+  @Override
+public boolean isMutable() {
     return content.isMutable();
   }
   
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE; 
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)0); // version        
     buf.writeShort(content.getType());
     content.serialize(buf);

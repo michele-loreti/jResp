@@ -42,7 +42,6 @@ import rice.pastry.messaging.*;
 import rice.pastry.routing.*;
 
 import java.io.IOException;
-import java.util.*;
 
 /**
  * RegrTestApp
@@ -74,7 +73,8 @@ public class RegrTestApp extends CommonAPIAppl {
     this.prg = prg;
   }
 
-  public int getAddress() {
+  @Override
+public int getAddress() {
     return addr;
   }
 
@@ -95,7 +95,8 @@ public class RegrTestApp extends CommonAPIAppl {
    * Makes sure the message was delivered to the correct node by crossrefrencing the 
    * sorted nodes list in the simulator.
    */
-  public void deliver(Id key, Message msg) {
+  @Override
+public void deliver(Id key, Message msg) {
 
     /*
      * System.out.print(msg); System.out.println(" received at " +
@@ -139,7 +140,8 @@ public class RegrTestApp extends CommonAPIAppl {
 
   //public boolean enrouteMessage(Message msg, Id key, Id nextHop,
   // SendOptions opt) {
-  public void forward(RouteMessage rm) {
+  @Override
+public void forward(RouteMessage rm) {
     /*
      * System.out.print(msg); System.out.println(" at " + getNodeId());
      */
@@ -178,7 +180,8 @@ public class RegrTestApp extends CommonAPIAppl {
   }
 
   //public void leafSetChange(NodeHandle nh, boolean wasAdded) {
-  public void update(NodeHandle nh, boolean wasAdded) {
+  @Override
+public void update(NodeHandle nh, boolean wasAdded) {
     final Id nid = nh.getNodeId();
 
     /*
@@ -232,7 +235,8 @@ public class RegrTestApp extends CommonAPIAppl {
     }
   }
 
-  public void routeSetChange(NodeHandle nh, boolean wasAdded) {
+  @Override
+public void routeSetChange(NodeHandle nh, boolean wasAdded) {
     Id nid = nh.getNodeId();
 
     /*
@@ -255,7 +259,8 @@ public class RegrTestApp extends CommonAPIAppl {
    * send and receive messages
    */
 
-  public void notifyReady() {
+  @Override
+public void notifyReady() {
     //if (getLeafSet().size() == 0) System.out.println("notifyReady at " +
     // getNodeId() + " : leafset is empty!!");
   }
@@ -283,7 +288,8 @@ class RTMessage extends Message {
     target = tgt;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     String s = "";
     s += "RTMsg from " + sourceNode + " to " + target;
     return s;

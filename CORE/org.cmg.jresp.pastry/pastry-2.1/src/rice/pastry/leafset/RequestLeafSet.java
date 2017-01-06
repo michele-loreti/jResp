@@ -90,7 +90,8 @@ public class RequestLeafSet extends PRawMessage implements Serializable {
     return getSender();
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     String s = "";
 
     s += "RequestLeafSet("+getSender()+","+timeStamp+")";
@@ -99,11 +100,13 @@ public class RequestLeafSet extends PRawMessage implements Serializable {
   }
   
   /***************** Raw Serialization ***************************************/  
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)0); // version    
     buf.writeLong(timeStamp);
   }

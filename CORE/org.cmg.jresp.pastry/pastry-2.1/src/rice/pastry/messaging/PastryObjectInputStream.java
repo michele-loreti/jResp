@@ -68,7 +68,8 @@ public class PastryObjectInputStream extends ObjectInputStream {
     enableResolveObject(true);
   }
 
-  protected Object resolveObject(Object input) throws IOException {
+  @Override
+protected Object resolveObject(Object input) throws IOException {
     if (input instanceof NodeHandle) {
 //      System.out.println("POIS.resolveObject("+input+"@"+System.identityHashCode(input)+"):"+node);
       if (node != null) {

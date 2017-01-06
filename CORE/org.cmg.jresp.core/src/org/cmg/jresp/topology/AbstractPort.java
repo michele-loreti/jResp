@@ -224,6 +224,7 @@ public abstract class AbstractPort implements MessageSender, MessageReceiver {
 		send(l.getAddress(), new GroupQueryReply(source, session, l.getName(), t));
 	}
 
+	@Override
 	public void sendAttributeRequest(PointToPoint l, String name, int session, String[] attrs)
 			throws IOException, InterruptedException {
 		PointToPoint source = new PointToPoint(name, getAddress());

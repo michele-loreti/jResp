@@ -51,7 +51,6 @@ import java.util.*;
 import rice.*;
 import rice.Continuation.*;
 import rice.p2p.commonapi.*;
-import rice.p2p.util.*;
 
 /**
  * This class provides both persistent and caching services to
@@ -94,7 +93,8 @@ public class StorageManagerImpl implements StorageManager {
    *
    * @return The storage of this storage manager
    */
-  public Storage getStorage() {
+  @Override
+public Storage getStorage() {
     return storage;
   }
 
@@ -103,7 +103,8 @@ public class StorageManagerImpl implements StorageManager {
    *
    * @return The cache of this storage manager
    */
-  public Cache getCache() {
+  @Override
+public Cache getCache() {
     return cache;
   }
 
@@ -113,7 +114,8 @@ public class StorageManagerImpl implements StorageManager {
    * @param id The id of the object in question.
    * @return Whether or not an object is present at id.
    */
-  public boolean exists(Id id) {
+  @Override
+public boolean exists(Id id) {
     return storage.exists(id);
   }
   
@@ -125,12 +127,15 @@ public class StorageManagerImpl implements StorageManager {
    * @param newId The new id of the object in question.
    * @param c The command to run once the operation is complete
    */
-  public void rename(final Id oldId, final Id newId, Continuation c) {
+  @Override
+public void rename(final Id oldId, final Id newId, Continuation c) {
     cache.rename(oldId, newId, new StandardContinuation(c) {
-      public void receiveResult(Object o) {
+      @Override
+	public void receiveResult(Object o) {
         storage.rename(oldId, newId, parent);
       }
-      public String toString() { return "rename of " + oldId + " to " + newId; }
+      @Override
+	public String toString() { return "rename of " + oldId + " to " + newId; }
     });
   }
 
@@ -141,16 +146,19 @@ public class StorageManagerImpl implements StorageManager {
    * @param id The id of the object in question.
    * @param c The command to run once the operation is complete
    */
-  public void getObject(final Id id, Continuation c) {
+  @Override
+public void getObject(final Id id, Continuation c) {
     cache.getObject(id, new StandardContinuation(c) {
-      public void receiveResult(Object o) {
+      @Override
+	public void receiveResult(Object o) {
         if (o != null) {
           parent.receiveResult(o);
         } else {
           storage.getObject(id, parent);
         }
       }
-      public String toString() { return "getObject of " + id; }
+      @Override
+	public String toString() { return "getObject of " + id; }
     });    
   }
   
@@ -162,7 +170,8 @@ public class StorageManagerImpl implements StorageManager {
    * @param id The id for which the metadata is needed
    * @return The metadata, or null of non exists
    */
-  public Serializable getMetadata(Id id) {
+  @Override
+public Serializable getMetadata(Id id) {
     return storage.getMetadata(id);
   }  
   
@@ -175,12 +184,15 @@ public class StorageManagerImpl implements StorageManager {
    * @param metadata The metadata to store
    * @param c The command to run once the operation is complete
    */
-  public void setMetadata(final Id id, final Serializable metadata, Continuation command) {
+  @Override
+public void setMetadata(final Id id, final Serializable metadata, Continuation command) {
     cache.setMetadata(id, metadata, new StandardContinuation(command) {
-      public void receiveResult(Object o) {
+      @Override
+	public void receiveResult(Object o) {
         storage.setMetadata(id, metadata, parent);
       }
-      public String toString() { return "setMetadata of " + id; }
+      @Override
+	public String toString() { return "setMetadata of " + id; }
     });
   }
 
@@ -196,7 +208,8 @@ public class StorageManagerImpl implements StorageManager {
    * @param range The range to query
    * @return The idset containg the keys
    */
-  public IdSet scan(IdRange range){
+  @Override
+public IdSet scan(IdRange range){
     return storage.scan(range);
   }
   
@@ -208,7 +221,8 @@ public class StorageManagerImpl implements StorageManager {
    *
    * @return The idset containg the keys 
    */
-  public IdSet scan() {
+  @Override
+public IdSet scan() {
     return storage.scan();
   }
   
@@ -219,7 +233,8 @@ public class StorageManagerImpl implements StorageManager {
    * @param range The range to query  
    * @return The map containg the keys 
    */
-  public SortedMap scanMetadata(IdRange range) {
+  @Override
+public SortedMap scanMetadata(IdRange range) {
     return storage.scanMetadata(range);
   }
   
@@ -229,7 +244,8 @@ public class StorageManagerImpl implements StorageManager {
    *
    * @return The treemap mapping ids to metadata 
    */
-  public SortedMap scanMetadata() {
+  @Override
+public SortedMap scanMetadata() {
     return storage.scanMetadata();
   }
   
@@ -240,7 +256,8 @@ public class StorageManagerImpl implements StorageManager {
    * @param value The maximal metadata value 
    * @return The submapping
    */
-  public SortedMap scanMetadataValuesHead(Object value) {
+  @Override
+public SortedMap scanMetadataValuesHead(Object value) {
     return storage.scanMetadataValuesHead(value);
   }
   
@@ -249,7 +266,8 @@ public class StorageManagerImpl implements StorageManager {
    *
    * @return The submapping
    */
-  public SortedMap scanMetadataValuesNull() {
+  @Override
+public SortedMap scanMetadataValuesNull() {
     return storage.scanMetadataValuesNull();
   }
 
@@ -260,7 +278,8 @@ public class StorageManagerImpl implements StorageManager {
    *
    * @param c The command to run once the operation is complete
    */
-  public long getTotalSize() {
+  @Override
+public long getTotalSize() {
     return cache.getTotalSize() + storage.getTotalSize();
   }
   
@@ -269,7 +288,8 @@ public class StorageManagerImpl implements StorageManager {
    *
    * @return The number of ids in the catalog
    */
-  public int getSize() {
+  @Override
+public int getSize() {
     return storage.getSize();
   }
 
@@ -289,7 +309,8 @@ public class StorageManagerImpl implements StorageManager {
    * @param obj The object to store.
    * @param c The command to run once the operation is complete
    */
-  public void store(Id id, Serializable metadata, Serializable obj, Continuation c) {
+  @Override
+public void store(Id id, Serializable metadata, Serializable obj, Continuation c) {
     storage.store(id, metadata, obj, c);
   }
 
@@ -304,7 +325,8 @@ public class StorageManagerImpl implements StorageManager {
    * @param pid The object's persistence id
    * @param c The command to run once the operation is complete
    */
-  public void unstore(Id id, Continuation c) {
+  @Override
+public void unstore(Id id, Continuation c) {
     storage.unstore(id, c);
   }
 
@@ -325,7 +347,8 @@ public class StorageManagerImpl implements StorageManager {
    * @param obj The object to cache.
    * @param c The command to run once the operation is complete
    */
-  public void cache(Id id, Serializable metadata, Serializable obj, Continuation c) {
+  @Override
+public void cache(Id id, Serializable metadata, Serializable obj, Continuation c) {
     cache.cache(id, metadata, obj, c);
   }
 
@@ -340,7 +363,8 @@ public class StorageManagerImpl implements StorageManager {
    * @param pid The object's id
    * @param c The command to run once the operation is complete
    */
-  public void uncache(Id id, Continuation c) {
+  @Override
+public void uncache(Id id, Continuation c) {
     cache.uncache(id, c);
   }
 
@@ -351,7 +375,8 @@ public class StorageManagerImpl implements StorageManager {
    *
    * @param c The command to run once the operation is complete
    */
-  public long getMaximumSize() {
+  @Override
+public long getMaximumSize() {
     return cache.getMaximumSize();
   }
 
@@ -366,7 +391,8 @@ public class StorageManagerImpl implements StorageManager {
    * @param size The new maximum size, in bytes, of the cache.
    * @param c The command to run once the operation is complete
    */
-  public void setMaximumSize(int size, Continuation c) {
+  @Override
+public void setMaximumSize(int size, Continuation c) {
     cache.setMaximumSize(size, c);
   }
   
@@ -376,9 +402,11 @@ public class StorageManagerImpl implements StorageManager {
    *
    * @param c The command to run once done
    */
-  public void flush(Continuation c) {
+  @Override
+public void flush(Continuation c) {
     cache.flush(new StandardContinuation(c) {
-      public void receiveResult(Object o) {
+      @Override
+	public void receiveResult(Object o) {
         storage.flush(parent);
       }
     });

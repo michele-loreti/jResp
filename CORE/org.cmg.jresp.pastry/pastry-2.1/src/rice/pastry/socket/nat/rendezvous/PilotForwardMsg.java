@@ -39,7 +39,6 @@ package rice.pastry.socket.nat.rendezvous;
 import java.io.IOException;
 
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
-import rice.pastry.NodeHandle;
 import rice.pastry.messaging.PRawMessage;
 
 public class PilotForwardMsg extends PRawMessage {
@@ -55,11 +54,13 @@ public class PilotForwardMsg extends PRawMessage {
     this.target = target;
   }
 
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)0); // version
     target.serialize(buf);
     msg.serialize(buf);
@@ -73,7 +74,8 @@ public class PilotForwardMsg extends PRawMessage {
     return target;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "PFM{"+msg+"->"+target+"}";
   }
 

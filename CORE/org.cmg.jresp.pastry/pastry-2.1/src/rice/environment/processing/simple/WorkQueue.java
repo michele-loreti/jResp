@@ -85,7 +85,7 @@ public class WorkQueue {
     }
     
     if (!running) return null;
-    return (WorkRequest) q.remove(0);
+    return q.remove(0);
   }
   
   public void destroy() {

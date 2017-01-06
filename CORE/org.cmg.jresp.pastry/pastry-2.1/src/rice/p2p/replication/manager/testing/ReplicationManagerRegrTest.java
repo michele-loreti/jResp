@@ -41,8 +41,6 @@ import java.io.*;
 import rice.Continuation;
 import rice.environment.Environment;
 import rice.environment.params.Parameters;
-import rice.environment.params.simple.SimpleParameters;
-import rice.environment.time.simulated.DirectTimeSource;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.testing.CommonAPITest;
 import rice.p2p.replication.manager.*;
@@ -111,7 +109,8 @@ public class ReplicationManagerRegrTest extends CommonAPITest {
    * @param node The newly created node
    * @param num The number of this node
    */
-  protected void processNode(int num, Node node) {
+  @Override
+protected void processNode(int num, Node node) {
     clients[num] = new TestReplicationManagerClient(node);
     replications[num] = new ReplicationManagerImpl(node, clients[num], REPLICATION_FACTOR, INSTANCE);
   }
@@ -120,7 +119,8 @@ public class ReplicationManagerRegrTest extends CommonAPITest {
    * Method which should run the test - this is called once all of the nodes have been created and
    * are ready.
    */
-  protected void runTest() {
+  @Override
+protected void runTest() {
     for (int i=0; i<NUM_NODES; i++)
       simulate(); 
     
@@ -358,7 +358,8 @@ public class ReplicationManagerRegrTest extends CommonAPITest {
     for ( int i=0; i<NUM_NODES; i++) {
       final int j = i;
       environment.getSelectorManager().invoke(new Runnable() {      
-        public void run() {
+        @Override
+		public void run() {
           replications[j].getReplication().replicate();      
         }      
       });
@@ -402,17 +403,20 @@ public class ReplicationManagerRegrTest extends CommonAPITest {
       this.node = node;
     }
     
-    public void fetch(Id id, NodeHandle hint, Continuation command) {
+    @Override
+	public void fetch(Id id, NodeHandle hint, Continuation command) {
       set.addId(id);
       command.receiveResult(new Boolean(true));
     }
     
-    public void remove(Id id, Continuation command) {
+    @Override
+	public void remove(Id id, Continuation command) {
       set.removeId(id);
       command.receiveResult(new Boolean(true));
     }
     
-    public IdSet scan(IdRange range) {
+    @Override
+	public IdSet scan(IdRange range) {
       return set.subSet(range);
     }
     
@@ -420,21 +424,25 @@ public class ReplicationManagerRegrTest extends CommonAPITest {
       set.addId(id);
     }
     
-    public boolean exists(Id id) {
+    @Override
+	public boolean exists(Id id) {
       return set.isMemberId(id);
     }
 
-    public void existsInOverlay(Id id, Continuation command) {
+    @Override
+	public void existsInOverlay(Id id, Continuation command) {
       // XXX we don't test this new functionality yet
       command.receiveResult(Boolean.TRUE);
     }
 
-    public void reInsert(Id id, Continuation command) {
+    @Override
+	public void reInsert(Id id, Continuation command) {
       // XXX we don't test this new functionality yet
       command.receiveResult(Boolean.TRUE);
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
       String s = "TRMC:"+node;
 //      for (int i = 0; i < 4; i++) {
 //        s+=" r"+i+":"+endpoint.range(node.getLocalNodeHandle(),i,node.getLocalNodeHandle().getId(), true); 

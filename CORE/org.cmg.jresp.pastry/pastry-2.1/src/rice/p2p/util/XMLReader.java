@@ -38,11 +38,8 @@ advised of the possibility of such damage.
 package rice.p2p.util;
 
 import java.io.*;
-import java.util.*;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 /**
  * XMLReader is a utility class used by XMLObjectInputStreamm to perform the actual
@@ -131,7 +128,7 @@ public class XMLReader {
    * @throws IOException If an error occurs
    */
   public void readHeader() throws IOException {
-    assertEvent(xpp.START_DOCUMENT);
+    assertEvent(XmlPullParser.START_DOCUMENT);
     readStartTag("jsx");
   }
   
@@ -151,7 +148,7 @@ public class XMLReader {
    * @throws IOException If a the assertion failed
    */
   public void assertStartTag() throws IOException {
-    assertEvent(xpp.START_TAG);
+    assertEvent(XmlPullParser.START_TAG);
   }
   
   /**
@@ -160,7 +157,7 @@ public class XMLReader {
    * @throws IOException If a the assertion failed
    */
   public void assertEndTag() throws IOException {
-    assertEvent(xpp.END_TAG);
+    assertEvent(XmlPullParser.END_TAG);
   }
   
   /**
@@ -183,7 +180,7 @@ public class XMLReader {
    * @throws IOException If a the assertion failed
    */
   public void assertEndTag(String name) throws IOException {
-    assertEvent(xpp.END_TAG);
+    assertEvent(XmlPullParser.END_TAG);
     
     if (! xpp.getName().equals(name))
       throw new IOException("Expected end tag '" + name + "', got a '" + xpp.getName()+"'");
@@ -255,7 +252,7 @@ public class XMLReader {
     try { 
       eventType = xpp.next();
       
-      if ((eventType == xpp.TEXT) && (xpp.isWhitespace()))
+      if ((eventType == XmlPullParser.TEXT) && (xpp.isWhitespace()))
         step();
     } catch (XmlPullParserException e) {
       throw new IOException("XML Exception thrown: " + e);
@@ -268,7 +265,7 @@ public class XMLReader {
    * @return Whether or not a start doucment just happened
    */
   public boolean isStartDocument() {
-    return (eventType == xpp.START_DOCUMENT);
+    return (eventType == XmlPullParser.START_DOCUMENT);
   }
   
   /**
@@ -277,7 +274,7 @@ public class XMLReader {
    * @return Whether or not a end doucment just happened
    */
   public boolean isEndDocument() {
-    return (eventType == xpp.END_DOCUMENT);
+    return (eventType == XmlPullParser.END_DOCUMENT);
   }
   
   /**
@@ -286,7 +283,7 @@ public class XMLReader {
    * @return Whether or not a start tag just happened
    */ 
   public boolean isStartTag() {
-    return (eventType == xpp.START_TAG);
+    return (eventType == XmlPullParser.START_TAG);
   }
   
   /**
@@ -295,7 +292,7 @@ public class XMLReader {
    * @return Whether or not a end tag just happened
    */
   public boolean isEndTag() {
-    return (eventType == xpp.END_TAG);
+    return (eventType == XmlPullParser.END_TAG);
   }
   
   /**
@@ -304,7 +301,7 @@ public class XMLReader {
    * @return Whether or not a end tag just happened
    */
   public boolean isText() {
-    return (eventType == xpp.TEXT);
+    return (eventType == XmlPullParser.TEXT);
   }
   
   /**
@@ -315,7 +312,7 @@ public class XMLReader {
    * @throws IOException If the current event is not a start tag
    */
   public String getAttribute(String name) throws IOException {
-    assertEvent(xpp.START_TAG);
+    assertEvent(XmlPullParser.START_TAG);
     String result = xpp.getAttributeValue(null, name);
       
     return result;
@@ -329,7 +326,7 @@ public class XMLReader {
    */
   public String getStartTag() throws IOException {
     try {
-      assertEvent(xpp.START_TAG);
+      assertEvent(XmlPullParser.START_TAG);
       return xpp.getName();
     } catch (IOException e) {
       throw new IOException("getStartTag called, caused " + e);
@@ -344,7 +341,7 @@ public class XMLReader {
    */
   public String getEndTag() throws IOException {
     try {
-      assertEvent(xpp.END_TAG);
+      assertEvent(XmlPullParser.END_TAG);
       return xpp.getName();
     } catch (IOException e) {
       throw new IOException("getEndTag called, caused " + e);

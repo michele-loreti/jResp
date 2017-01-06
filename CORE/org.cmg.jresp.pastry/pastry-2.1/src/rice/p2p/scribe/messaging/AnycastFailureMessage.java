@@ -38,11 +38,6 @@ advised of the possibility of such damage.
 package rice.p2p.scribe.messaging;
 
 import java.io.IOException;
-import java.util.*;
-
-// import rice.replay.*;
-import rice.pastry.PastryNode;
-import rice.*;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
@@ -97,7 +92,8 @@ public class AnycastFailureMessage extends ScribeMessage {
     return content;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     String s = "AnycastFailureMessage: ";
     s = s + "Source= " + source + " Topic= " + topic + "ScribeContent= "
         + content;
@@ -105,11 +101,13 @@ public class AnycastFailureMessage extends ScribeMessage {
   }
 
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)0); // version
     super.serialize(buf); 
     

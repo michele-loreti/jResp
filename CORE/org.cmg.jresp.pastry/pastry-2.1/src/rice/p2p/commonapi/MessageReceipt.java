@@ -36,8 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package rice.p2p.commonapi;
 
-import org.mpisws.p2p.transport.MessageRequestHandle;
-
 /**
  * Returned by a call to endpoint.route().  
  * 

@@ -39,8 +39,6 @@ advised of the possibility of such damage.
  */
 package rice.p2p.commonapi.exception;
 
-import rice.p2p.commonapi.NodeHandle;
-
 /**
  * Raised if there is no acceptor socket available.
  * 

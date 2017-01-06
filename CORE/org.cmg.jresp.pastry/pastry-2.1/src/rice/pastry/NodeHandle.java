@@ -41,8 +41,6 @@ import rice.environment.logging.Logger;
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
 import rice.p2p.commonapi.rawserialization.RawSerializable;
 import rice.pastry.messaging.*;
-import rice.pastry.socket.TransportLayerNodeHandle;
-
 import java.io.*;
 import java.util.*;
 
@@ -73,7 +71,8 @@ public abstract class NodeHandle extends rice.p2p.commonapi.NodeHandle implement
    */
   public abstract Id getNodeId();
 
-  public rice.p2p.commonapi.Id getId() {
+  @Override
+public rice.p2p.commonapi.Id getId() {
     return getNodeId();
   }
 
@@ -85,7 +84,9 @@ public abstract class NodeHandle extends rice.p2p.commonapi.NodeHandle implement
    * 
    * @deprecated use PastryNode.isAlive(NodeHandle) 
    */
-  public final boolean isAlive() {
+  @Deprecated
+@Override
+public final boolean isAlive() {
     return getLiveness() < LIVENESS_DEAD; 
   }
 
@@ -104,7 +105,8 @@ public abstract class NodeHandle extends rice.p2p.commonapi.NodeHandle implement
    *
    * @return true if node is currently alive.
    */
-  public boolean checkLiveness() {
+  @Override
+public boolean checkLiveness() {
     return ping();
   }
 
@@ -118,7 +120,9 @@ public abstract class NodeHandle extends rice.p2p.commonapi.NodeHandle implement
    * @deprecated use PastryNode.proximity() or Endpoint.proximity()
    * @return the proximity metric value
    */
-  public abstract int proximity();
+  @Deprecated
+@Override
+public abstract int proximity();
 
   /**
    * Ping the node. Refreshes the cached liveness status and proximity value of the Pastry node associated
@@ -158,7 +162,8 @@ public abstract class NodeHandle extends rice.p2p.commonapi.NodeHandle implement
    * @param obj a nodehandle object
    * @return true if they are equal, false otherwise.
    */
-  public abstract boolean equals(Object obj);
+  @Override
+public abstract boolean equals(Object obj);
 
   /**
    * Method which is used by Pastry to start the bootstrapping process on the 
@@ -179,15 +184,18 @@ public abstract class NodeHandle extends rice.p2p.commonapi.NodeHandle implement
    *
    * @return a hash code.
    */
-  public abstract int hashCode();
+  @Override
+public abstract int hashCode();
   
   /**
    * @deprecated use PastryNode.send() or Endpoint.send()
    * @param msg
    */
-  public abstract void receiveMessage(Message msg);
+  @Deprecated
+public abstract void receiveMessage(Message msg);
 
-  public abstract void serialize(OutputBuffer buf) throws IOException;
+  @Override
+public abstract void serialize(OutputBuffer buf) throws IOException;
   
   /****************** Overriding of the Observer pattern to include priority **********/
   
@@ -204,8 +212,9 @@ public abstract class NodeHandle extends rice.p2p.commonapi.NodeHandle implement
       pri = priority;
     }
 
-    public int compareTo(ObsPri o) {
-      ObsPri that = (ObsPri)o;
+    @Override
+	public int compareTo(ObsPri o) {
+      ObsPri that = o;
       int ret = that.pri - pri;
       if (ret == 0) {
         if (that.equals(o)) {
@@ -218,7 +227,8 @@ public abstract class NodeHandle extends rice.p2p.commonapi.NodeHandle implement
       return ret;
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
       return obs+":"+pri;      
     }
   }
@@ -232,7 +242,8 @@ public abstract class NodeHandle extends rice.p2p.commonapi.NodeHandle implement
     obs = new ArrayList<ObsPri>();
   }
   
-  public void addObserver(Observer o) {
+  @Override
+public void addObserver(Observer o) {
     addObserver(o, 0);  
   }
   
@@ -272,7 +283,8 @@ public abstract class NodeHandle extends rice.p2p.commonapi.NodeHandle implement
 //    super.addObserver(o); 
   }
   
-  public void deleteObserver(Observer o) {
+  @Override
+public void deleteObserver(Observer o) {
     if (logger.level <= Logger.FINER) logger.log(this+".deleteObserver("+o+")");
 //    super.deleteObserver(o); 
     synchronized (obs) {
@@ -288,7 +300,8 @@ public abstract class NodeHandle extends rice.p2p.commonapi.NodeHandle implement
     }
   }
   
-  public void notifyObservers(Object arg) {
+  @Override
+public void notifyObservers(Object arg) {
     List<ObsPri> l;
     synchronized(obs) {
       l = new ArrayList<ObsPri>(obs);    
@@ -302,11 +315,13 @@ public abstract class NodeHandle extends rice.p2p.commonapi.NodeHandle implement
     }    
   }
 
-  public synchronized int countObservers() {
+  @Override
+public synchronized int countObservers() {
     return obs.size();
   }
 
-  public synchronized void deleteObservers() {
+  @Override
+public synchronized void deleteObservers() {
     obs.clear();
   }
 

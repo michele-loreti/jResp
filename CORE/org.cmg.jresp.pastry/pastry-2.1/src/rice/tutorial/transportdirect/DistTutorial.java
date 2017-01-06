@@ -45,10 +45,7 @@ import java.util.Vector;
 
 import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.direct.DirectTransportLayer;
-import org.mpisws.p2p.transport.proximity.ProximityProvider;
-
 import rice.environment.Environment;
-import rice.environment.logging.Logger;
 import rice.p2p.commonapi.Id;
 import rice.pastry.NodeHandle;
 import rice.pastry.NodeIdFactory;
@@ -56,11 +53,9 @@ import rice.pastry.PastryNode;
 import rice.pastry.PastryNodeFactory;
 import rice.pastry.direct.EuclideanNetwork;
 import rice.pastry.direct.NetworkSimulator;
-import rice.pastry.direct.NodeRecord;
 import rice.pastry.leafset.LeafSet;
 import rice.pastry.socket.SocketPastryNodeFactory;
 import rice.pastry.standard.RandomNodeIdFactory;
-import rice.pastry.transport.NodeHandleAdapter;
 
 /**
  * This tutorial shows how to setup a FreePastry node using the Socket Protocol.
@@ -151,7 +146,7 @@ public class DistTutorial {
       // for each app
       Iterator<MyApp> appIterator = apps.iterator();
       while(appIterator.hasNext()) {
-        MyApp app = (MyApp)appIterator.next();
+        MyApp app = appIterator.next();
         
         // pick a key at random
         Id randId = nidFactory.generateNodeId();
@@ -169,7 +164,7 @@ public class DistTutorial {
     // for each app
     Iterator<MyApp> appIterator = apps.iterator();
     while(appIterator.hasNext()) {
-      MyApp app = (MyApp)appIterator.next();
+      MyApp app = appIterator.next();
       PastryNode node = (PastryNode)app.getNode();
       
       // send directly to my leafset

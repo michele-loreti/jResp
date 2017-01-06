@@ -41,10 +41,8 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
-import org.mpisws.p2p.transport.ListenableTransportLayer;
 import org.mpisws.p2p.transport.MessageRequestHandle;
 import org.mpisws.p2p.transport.SocketCountListener;
 import org.mpisws.p2p.transport.SocketRequestHandle;
@@ -57,15 +55,9 @@ import org.mpisws.p2p.transport.TransportLayerListener;
 import org.mpisws.p2p.transport.util.DefaultCallback;
 import org.mpisws.p2p.transport.util.DefaultErrorHandler;
 
-import rice.Continuation;
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
 import rice.environment.params.Parameters;
-import rice.p2p.commonapi.Cancellable;
-import rice.p2p.commonapi.rawserialization.RawMessage;
-import rice.p2p.util.rawserialization.SimpleOutputBuffer;
-import rice.pastry.NetworkListener;
-import rice.pastry.messaging.Message;
 
 public class WireTransportLayerImpl implements WireTransportLayer, SocketOpeningTransportLayer<InetSocketAddress> {
   // state
@@ -142,15 +134,18 @@ public class WireTransportLayerImpl implements WireTransportLayer, SocketOpening
     }    
   }
   
-  public void setCallback(TransportLayerCallback<InetSocketAddress, ByteBuffer> callback) {
+  @Override
+public void setCallback(TransportLayerCallback<InetSocketAddress, ByteBuffer> callback) {
     this.callback = callback;
   }
 
-  public SocketRequestHandle<InetSocketAddress> openSocket(InetSocketAddress destination, SocketCallback<InetSocketAddress> deliverSocketToMe, Map<String, Object> options) {
+  @Override
+public SocketRequestHandle<InetSocketAddress> openSocket(InetSocketAddress destination, SocketCallback<InetSocketAddress> deliverSocketToMe, Map<String, Object> options) {
     return tcp.openSocket(destination, deliverSocketToMe, options);
   }
 
-  public MessageRequestHandle<InetSocketAddress, ByteBuffer> sendMessage(
+  @Override
+public MessageRequestHandle<InetSocketAddress, ByteBuffer> sendMessage(
       InetSocketAddress destination, 
       ByteBuffer m, 
       MessageCallback<InetSocketAddress, ByteBuffer> deliverAckToMe, 
@@ -182,12 +177,14 @@ public class WireTransportLayerImpl implements WireTransportLayer, SocketOpening
 //    // TODO notify listeners
 //  }
 
-  public InetSocketAddress getLocalIdentifier() {
+  @Override
+public InetSocketAddress getLocalIdentifier() {
     return bindAddress;
   }
 
   boolean destroyed = false;
-  public void destroy() {
+  @Override
+public void destroy() {
     if (logger.level <= Logger.INFO) logger.log("destroy()");
     destroyed = true;
     udp.destroy();
@@ -198,7 +195,8 @@ public class WireTransportLayerImpl implements WireTransportLayer, SocketOpening
     return destroyed;
   }
   
-  public void setErrorHandler(ErrorHandler<InetSocketAddress> handler) {
+  @Override
+public void setErrorHandler(ErrorHandler<InetSocketAddress> handler) {
     if (handler == null) {
       this.errorHandler = new DefaultErrorHandler<InetSocketAddress>(logger);
       return;
@@ -206,11 +204,13 @@ public class WireTransportLayerImpl implements WireTransportLayer, SocketOpening
     this.errorHandler = handler;
   }
 
-  public void acceptMessages(boolean b) {
+  @Override
+public void acceptMessages(boolean b) {
     udp.acceptMessages(b);
   }
 
-  public void acceptSockets(boolean b) {
+  @Override
+public void acceptSockets(boolean b) {
     tcp.acceptSockets(b);
   }
 
@@ -249,14 +249,16 @@ public class WireTransportLayerImpl implements WireTransportLayer, SocketOpening
   Collection<SocketCountListener<InetSocketAddress>> slisteners = 
     new ArrayList<SocketCountListener<InetSocketAddress>>();
 
-  public void addSocketCountListener(
+  @Override
+public void addSocketCountListener(
       SocketCountListener<InetSocketAddress> listener) {
     synchronized(slisteners) {
       slisteners.add(listener);
     }
   }
   
-  public void removeSocketCountListener(
+  @Override
+public void removeSocketCountListener(
       SocketCountListener<InetSocketAddress> listener) {
     synchronized(slisteners) {
       slisteners.remove(listener);

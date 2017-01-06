@@ -40,7 +40,6 @@ advised of the possibility of such damage.
 package rice.environment.time.simple;
 
 import rice.environment.time.TimeSource;
-import rice.selector.SelectorManager;
 
 
 /**
@@ -58,15 +57,18 @@ public class SimpleTimeSource implements TimeSource {
   /**
    * Returns the System.currentTimeMillis();
    */
-  public long currentTimeMillis() {
+  @Override
+public long currentTimeMillis() {
     return System.currentTimeMillis();
   }
 
-  public void sleep(long delay) throws InterruptedException {
+  @Override
+public void sleep(long delay) throws InterruptedException {
     Thread.sleep(delay);
   }
 
-  public void destroy() {
+  @Override
+public void destroy() {
 
   }
 

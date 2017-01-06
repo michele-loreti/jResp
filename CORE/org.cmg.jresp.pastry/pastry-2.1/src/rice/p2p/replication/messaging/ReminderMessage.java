@@ -41,7 +41,6 @@ import java.io.IOException;
 
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
-import rice.p2p.replication.*;
 
 /**
  * @(#) ReminderMessage.java
@@ -65,11 +64,13 @@ public class ReminderMessage extends ReplicationMessage {
   }
   
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     throw new RuntimeException("serialize() not supported in MaintenanceMessage"); 
   }  
 }

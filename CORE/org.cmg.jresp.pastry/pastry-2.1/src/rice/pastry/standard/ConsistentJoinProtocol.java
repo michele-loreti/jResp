@@ -42,7 +42,7 @@ package rice.pastry.standard;
 import java.io.IOException;
 import java.util.*;
 
-import org.mpisws.p2p.transport.liveness.LivenessListener;
+import org.mpisws.p2p.transport.liveness.LivenessTypes;
 
 import rice.environment.logging.Logger;
 import rice.environment.params.Parameters;
@@ -53,7 +53,6 @@ import rice.pastry.leafset.LeafSet;
 import rice.pastry.messaging.Message;
 import rice.pastry.routing.RoutingTable;
 import rice.selector.LoopObserver;
-import rice.selector.SelectorManager;
 import rice.selector.TimerTask;
 
 /**
@@ -106,13 +105,15 @@ public class ConsistentJoinProtocol extends StandardJoinProtocol implements Obse
       this.time = time;
       this.handle = handle;
     }
-    public int compareTo(FailedTime arg0) {
-      FailedTime ft = (FailedTime)arg0;
+    @Override
+	public int compareTo(FailedTime arg0) {
+      FailedTime ft = arg0;
       // note this is backwards, because we want them sorted in reverse order
       return (int)(ft.time-this.time);
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
       return "FT:"+handle+" "+time; 
     }
   }
@@ -207,7 +208,7 @@ public class ConsistentJoinProtocol extends StandardJoinProtocol implements Obse
     public Message deserialize(InputBuffer buf, short type, int priority, NodeHandle sender) throws IOException {
       switch(type) {
         case ConsistentJoinMsg.TYPE:
-          return new ConsistentJoinMsg(buf,pn,(NodeHandle)sender);
+          return new ConsistentJoinMsg(buf,pn,sender);
       }      
       return super.deserialize(buf, type, priority, sender);
     }
@@ -248,14 +249,15 @@ public class ConsistentJoinProtocol extends StandardJoinProtocol implements Obse
     ln.getEnvironment().getSelectorManager().addLoopObserver(this);
     
     cleanupTask = new TimerTask() {    
-      public void run() {
+      @Override
+	public void run() {
         if (logger.level<=Logger.FINE)logger.log("CJP: Cleanup task.");
         synchronized(failed) {
           long now = thePastryNode.getEnvironment().getTimeSource().currentTimeMillis();
           long expiration = now-failedNodeExpirationTime;
           Iterator<FailedTime> i = failed.values().iterator();
           while(i.hasNext()) {
-            FailedTime ft = (FailedTime)i.next();
+            FailedTime ft = i.next();
             if (ft.time < expiration) {
               if (logger.level<=Logger.FINE)logger.log("CJP: Removing "+ft.handle+" from failed set.");
               i.remove(); 
@@ -268,7 +270,8 @@ public class ConsistentJoinProtocol extends StandardJoinProtocol implements Obse
         }
       }   
       
-      public String toString() {
+      @Override
+	public String toString() {
         return "CJP$cleanupTask{"+thePastryNode+"}"+cancelled; 
       }
     };
@@ -279,7 +282,8 @@ public class ConsistentJoinProtocol extends StandardJoinProtocol implements Obse
    * This is where we start out, when the StandardJoinProtocol would call
    * setReady();
    */
-  protected void setReady() {    
+  @Override
+protected void setReady() {    
     if (joinEvent != null) {
       if (logger.level <= Logger.INFO) logger.log("cancelling "+joinEvent);
       joinEvent.cancel();
@@ -340,7 +344,7 @@ public class ConsistentJoinProtocol extends StandardJoinProtocol implements Obse
     
     Iterator<NodeHandle> i = c.iterator();
     while(i.hasNext()) {
-      NodeHandle nh = (NodeHandle)i.next(); 
+      NodeHandle nh = i.next(); 
       if (logger.level <= Logger.FINE) logger.log("CJP: timeout2, still waiting to hear from "+nh);
       //nh.checkLiveness();
       try {
@@ -404,14 +408,15 @@ public class ConsistentJoinProtocol extends StandardJoinProtocol implements Obse
   /**
    * Handle the CJM as in the MSR-TR
    */
-  public void receiveMessage(Message msg) {
+  @Override
+public void receiveMessage(Message msg) {
     if (logger.level <= Logger.FINER) logger.log("CJP: receiveMessage("+msg+")");
     if (msg instanceof ConsistentJoinMsg) {
       ConsistentJoinMsg cjm = (ConsistentJoinMsg)msg;
       // identify node j, the sender of the message
       NodeHandle j = cjm.ls.get(0);
       
-      if (j.getLiveness() > LivenessListener.LIVENESS_SUSPECTED) {
+      if (j.getLiveness() > LivenessTypes.LIVENESS_SUSPECTED) {
         if (logger.level <= Logger.INFO) logger.log("got message from dead node:"+msg);
         j.checkLiveness(); // we got a message from a dead node...
       }
@@ -435,7 +440,7 @@ public class ConsistentJoinProtocol extends StandardJoinProtocol implements Obse
       // checkLiveness on them all
       Iterator<NodeHandle> it = cjm.failed.iterator();
       while(it.hasNext()) {
-        NodeHandle nh = (NodeHandle)it.next(); 
+        NodeHandle nh = it.next(); 
         if (leafSet.member(nh)) {
           if (nh.getLiveness() == NodeHandle.LIVENESS_DEAD) {
             // if we already found them dead, don't bother
@@ -476,7 +481,7 @@ public class ConsistentJoinProtocol extends StandardJoinProtocol implements Obse
       
       Iterator<NodeHandle> it2 = addThese.iterator();
       while(it2.hasNext()) {
-        NodeHandle nh = (NodeHandle)it2.next();
+        NodeHandle nh = it2.next();
         // he's not a member, but he could be
         if (!failed.containsKey(nh) && nh.getLiveness() < NodeHandle.LIVENESS_DEAD) {
           addToLeafSet(nh);
@@ -558,7 +563,7 @@ public class ConsistentJoinProtocol extends StandardJoinProtocol implements Obse
           String toHearFromStr = "";
           Iterator<NodeHandle> i = toHearFrom.iterator();
           while(i.hasNext()) {
-            NodeHandle nh = (NodeHandle)i.next();
+            NodeHandle nh = i.next();
             toHearFromStr+=nh+":"+nh.getLiveness()+",";
           }
           logger.log("CJP: still need to hear from:"+toHearFromStr);
@@ -612,14 +617,15 @@ public class ConsistentJoinProtocol extends StandardJoinProtocol implements Obse
       Collections.sort(l);
       toSend = new HashSet<NodeHandle>();
       for (int i = 0; i < maxFailedEntries; i++) {
-        FailedTime tf = (FailedTime)l.get(i);
+        FailedTime tf = l.get(i);
         toSend.add(tf.handle); 
       }
     }
     thePastryNode.send(nh,new ConsistentJoinMsg(leafSet,toSend,!reply),null,options);      
   }
   
-  public void nodeSetUpdate(NodeSetEventSource set, NodeHandle handle, boolean added) {
+  @Override
+public void nodeSetUpdate(NodeSetEventSource set, NodeHandle handle, boolean added) {
     if (thePastryNode.isReady()) return;
     if (added) {
       if (gotResponse.get(handle) == null) {
@@ -635,7 +641,8 @@ public class ConsistentJoinProtocol extends StandardJoinProtocol implements Obse
   /**
    * Can be PastryNode updates, leafset updates, or nodehandle updates.
    */
-  public void update(Observable arg0, Object arg) {
+  @Override
+public void update(Observable arg0, Object arg) {
     if (logger.level <= Logger.FINEST) logger.log("CJP: update("+arg0+","+arg+")"+arg.getClass().getName());
     
     // we went offline for whatever reason.  Now we need to try to come back online.
@@ -655,7 +662,7 @@ public class ConsistentJoinProtocol extends StandardJoinProtocol implements Obse
         // assume it's a NodeHandle, cause we
         // want to throw the exception if it is something we don't recognize
       NodeHandle nh = (NodeHandle)arg0;
-      if (((Integer) arg) == NodeHandle.DECLARED_DEAD) {
+      if (((Integer) arg) == rice.p2p.commonapi.NodeHandle.DECLARED_DEAD) {
         if (logger.level <= Logger.FINE) logger.log("CJP:"+arg0+" declared dead");
         if (!failed.containsKey(nh)) {
           failed.put(nh, new FailedTime(nh, thePastryNode.getEnvironment().getTimeSource().currentTimeMillis()));
@@ -666,7 +673,7 @@ public class ConsistentJoinProtocol extends StandardJoinProtocol implements Obse
         doneProbing();
       }
   
-      if (((Integer) arg) == NodeHandle.DECLARED_LIVE) {
+      if (((Integer) arg) == rice.p2p.commonapi.NodeHandle.DECLARED_LIVE) {
         failed.remove(nh);
         if (!thePastryNode.isReady()) {
           if (leafSet.test(nh)) {
@@ -686,7 +693,8 @@ public class ConsistentJoinProtocol extends StandardJoinProtocol implements Obse
    * 
    * @return the minimum loop time we are interested in being notified about.
    */
-  public int delayInterest() {
+  @Override
+public int delayInterest() {
     return MAX_TIME_TO_BE_SCHEDULED;
   }
 
@@ -697,19 +705,21 @@ public class ConsistentJoinProtocol extends StandardJoinProtocol implements Obse
    * 
    * @param loopTime the time it took to do a single selection loop.
    */
-  public void loopTime(int loopTime) {
+  @Override
+public void loopTime(int loopTime) {
     // may want to do a full rejoin if this one trips... but make it longer
     // partition handler may handle this anyway
     otherNodesMaySuspectFaulty(loopTime); 
   }
   
-  public void destroy() {
+  @Override
+public void destroy() {
     if (logger.level <= Logger.INFO) logger.log("CJP: destroy() called");
     thePastryNode.getEnvironment().getSelectorManager().removeLoopObserver(this);
     cleanupTask.cancel();
     Iterator<NodeHandle> it2 = observing.iterator();
     while(it2.hasNext()) {
-      NodeHandle nh = (NodeHandle)it2.next();
+      NodeHandle nh = it2.next();
       nh.deleteObserver(this);
       it2.remove();
     }

@@ -39,8 +39,6 @@ advised of the possibility of such damage.
  */
 package rice.p2p.commonapi.rawserialization;
 
-import java.io.IOException;
-
 import rice.p2p.commonapi.Message;
 
 public interface RawMessage extends Message, RawSerializable {

@@ -210,7 +210,7 @@ public class ScelObligationExpression {
 
 	private boolean hasAttributeName(Template a) {
 		for (int i = 0; i < a.length(); i++) {
-			TemplateField el = ((Template) a).getElementAt(i);
+			TemplateField el = a.getElementAt(i);
 			if (el instanceof ActualTemplateField) {
 				if (((ActualTemplateField) el).getValue() instanceof RequestAttributeName) {
 					return true;

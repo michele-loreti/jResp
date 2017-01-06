@@ -41,16 +41,13 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mpisws.p2p.transport.ClosedChannelException;
 import org.mpisws.p2p.transport.ErrorHandler;
 import org.mpisws.p2p.transport.MessageCallback;
 import org.mpisws.p2p.transport.MessageRequestHandle;
 import org.mpisws.p2p.transport.SocketCallback;
 import org.mpisws.p2p.transport.SocketRequestHandle;
-import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.TransportLayerCallback;
 import org.mpisws.p2p.transport.peerreview.history.HashProvider;
-import org.mpisws.p2p.transport.peerreview.history.IndexEntry;
 import org.mpisws.p2p.transport.peerreview.history.SecureHistory;
 import org.mpisws.p2p.transport.util.MessageRequestHandleImpl;
 import org.mpisws.p2p.transport.util.Serializer;
@@ -68,7 +65,6 @@ import rice.environment.random.simple.SimpleRandomSource;
 import rice.environment.time.simulated.DirectTimeSource;
 import rice.p2p.util.MathUtils;
 import rice.selector.SelectorManager;
-import rice.selector.TimerTask;
 
 public class ReplayLayer<Identifier> extends ReplayVerifier<Identifier> {
 
@@ -80,7 +76,8 @@ public class ReplayLayer<Identifier> extends ReplayVerifier<Identifier> {
     this.environment = environment;
   }
   
-  public SocketRequestHandle<Identifier> openSocket(final Identifier i, SocketCallback<Identifier> deliverSocketToMe, final Map<String, Object> options) {
+  @Override
+public SocketRequestHandle<Identifier> openSocket(final Identifier i, SocketCallback<Identifier> deliverSocketToMe, final Map<String, Object> options) {
     try {
       int socketId = openSocket(i);
 //      logger.log("openSocket("+i+"):"+socketId);
@@ -91,15 +88,18 @@ public class ReplayLayer<Identifier> extends ReplayVerifier<Identifier> {
     } catch (IOException ioe) {      
       SocketRequestHandle<Identifier> ret = new SocketRequestHandle<Identifier>(){
 
-        public Identifier getIdentifier() {
+        @Override
+		public Identifier getIdentifier() {
           return i;
         }
 
-        public Map<String, Object> getOptions() {
+        @Override
+		public Map<String, Object> getOptions() {
           return options;
         }
 
-        public boolean cancel() {
+        @Override
+		public boolean cancel() {
           return true;
         }      
       };
@@ -109,7 +109,8 @@ public class ReplayLayer<Identifier> extends ReplayVerifier<Identifier> {
     }
   }
   
-  public MessageRequestHandle<Identifier, ByteBuffer> sendMessage(Identifier i, ByteBuffer m, MessageCallback<Identifier, ByteBuffer> deliverAckToMe, Map<String, Object> options) {
+  @Override
+public MessageRequestHandle<Identifier, ByteBuffer> sendMessage(Identifier i, ByteBuffer m, MessageCallback<Identifier, ByteBuffer> deliverAckToMe, Map<String, Object> options) {
     if (logger.level <= Logger.FINEST) {
       logger.logException("sendMessage("+i+","+m+"):"+MathUtils.toHex(m.array()), new Exception("Stack Trace"));      
     } else if (logger.level <= Logger.FINER) {
@@ -128,25 +129,31 @@ public class ReplayLayer<Identifier> extends ReplayVerifier<Identifier> {
     return ret;
   }
 
-  public Identifier getLocalIdentifier() {
+  @Override
+public Identifier getLocalIdentifier() {
     return localHandle;
   }
 
-  public void setCallback(TransportLayerCallback<Identifier, ByteBuffer> callback) {
+  @Override
+public void setCallback(TransportLayerCallback<Identifier, ByteBuffer> callback) {
     this.callback = callback;
   }
 
-  public void setErrorHandler(ErrorHandler<Identifier> handler) {
+  @Override
+public void setErrorHandler(ErrorHandler<Identifier> handler) {
     // TODO Auto-generated method stub    
   }
 
-  public void destroy() {
+  @Override
+public void destroy() {
   }
 
-  public void acceptMessages(boolean b) {
+  @Override
+public void acceptMessages(boolean b) {
   }
 
-  public void acceptSockets(boolean b) {    
+  @Override
+public void acceptSockets(boolean b) {    
   }
 
   Environment environment;
@@ -207,7 +214,8 @@ public class ReplayLayer<Identifier> extends ReplayVerifier<Identifier> {
     
   }
 
-  public Environment getEnvironment() {
+  @Override
+public Environment getEnvironment() {
     return environment;
   }
 }

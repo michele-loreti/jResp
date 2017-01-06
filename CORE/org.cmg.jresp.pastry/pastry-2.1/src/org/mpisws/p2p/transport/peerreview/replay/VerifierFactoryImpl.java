@@ -57,7 +57,8 @@ public class VerifierFactoryImpl<Handle extends RawSerializable, Identifier exte
     this.logger = peerreview.getEnvironment().getLogManager().getLogger(VerifierFactoryImpl.class, null);
   }
 
-  public Verifier<Handle> getVerifier(SecureHistory history,
+  @Override
+public Verifier<Handle> getVerifier(SecureHistory history,
       Handle localHandle, long firstEntryToReplay, long initialTime,
       Object extInfo) throws IOException {
 //    logger.log("getVerifier("+localHandle+","+initialTime+")");

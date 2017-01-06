@@ -37,9 +37,6 @@ advised of the possibility of such damage.
 package rice.tutorial.deterministicsimulator;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
@@ -47,7 +44,6 @@ import java.util.Vector;
 
 import rice.environment.Environment;
 import rice.p2p.commonapi.Id;
-import rice.p2p.commonapi.Message;
 import rice.p2p.commonapi.rawserialization.RawMessage;
 import rice.pastry.JoinFailedException;
 import rice.pastry.NodeHandle;
@@ -125,7 +121,8 @@ public class DirectTutorial {
           
           // track when the node is finished booting
           node.addObserver(new Observer() {          
-            public void update(Observable o, Object arg) {
+            @Override
+			public void update(Observable o, Object arg) {
               try {
                 if (arg instanceof Boolean) {
                   System.out.println("Finished creating new node "+node+" at "+env.getTimeSource().currentTimeMillis());
@@ -175,7 +172,7 @@ public class DirectTutorial {
         // for each app
         Iterator<MyApp> appIterator = apps.iterator();
         while(appIterator.hasNext()) {
-          MyApp app = (MyApp)appIterator.next();
+          MyApp app = appIterator.next();
           
           // pick a key at random
           Id randId = nidFactory.generateNodeId();
@@ -198,7 +195,7 @@ public class DirectTutorial {
         // for each app
         // for each app
         if (appIterator.hasNext()) {
-          MyApp app = (MyApp)appIterator.next();
+          MyApp app = appIterator.next();
           PastryNode node = (PastryNode)app.getNode();
           
           // send directly to my leafset

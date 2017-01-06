@@ -44,7 +44,6 @@ import java.util.Collections;
 import rice.Continuation;
 import rice.environment.Environment;
 import rice.pastry.NodeIdFactory;
-import rice.pastry.PastryNodeFactory;
 import rice.pastry.socket.SocketPastryNodeFactory;
 import rice.pastry.socket.nat.connectivityverifiier.ConnectivityVerifier;
 import rice.pastry.socket.nat.connectivityverifiier.ConnectivityVerifierImpl;
@@ -76,11 +75,13 @@ public class WhatIsMyIP {
     
     verifier.findExternalAddress(factory.getNextInetSocketAddress(), Collections.singleton(bootaddress), new Continuation<InetAddress, IOException>() {
     
-      public void receiveResult(InetAddress result) {
+      @Override
+	public void receiveResult(InetAddress result) {
         System.out.println(result);
       }
     
-      public void receiveException(IOException exception) {
+      @Override
+	public void receiveException(IOException exception) {
         // TODO Auto-generated method stub    
       }    
     });

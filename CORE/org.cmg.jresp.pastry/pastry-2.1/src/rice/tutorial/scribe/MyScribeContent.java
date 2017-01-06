@@ -72,7 +72,8 @@ public class MyScribeContent implements ScribeContent {
   /**
    * Ye ol' toString() 
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "MyScribeContent #"+seq+" from "+from;
   }  
 }

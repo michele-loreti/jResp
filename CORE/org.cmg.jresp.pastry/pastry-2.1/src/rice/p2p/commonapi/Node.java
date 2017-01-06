@@ -72,7 +72,8 @@ public interface Node {
    * @deprecated use buildEndpoint(), then call Endpoint.register(), fixes 
    * synchronization problems, related to implicit behavior        
    */
-  public Endpoint registerApplication(Application application, String instance);
+  @Deprecated
+public Endpoint registerApplication(Application application, String instance);
   
   /**
    * This returns a Endpoint specific to the given application and

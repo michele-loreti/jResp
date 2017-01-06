@@ -90,7 +90,8 @@ public class RouteSet implements NodeSetI, Serializable,
     this.col = col;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     
     String s = "RS";
     if (col >= 0) {
@@ -113,7 +114,8 @@ public class RouteSet implements NodeSetI, Serializable,
    * 
    * @return true if the put succeeded, false otherwise.
    */
-  public boolean put(NodeHandle handle) {
+  @Override
+public boolean put(NodeHandle handle) {
     if (!handle.isAlive()) return false;
     int worstIndex = -1;
     int worstProximity = Integer.MIN_VALUE;
@@ -197,11 +199,12 @@ public class RouteSet implements NodeSetI, Serializable,
    * @param o The node handle
    * @param arg the event type (PROXIMITY_CHANGE, DECLARED_LIVE, DECLARED_DEAD)
    */
-  public void update(Observable o, Object arg) {
+  @Override
+public void update(Observable o, Object arg) {
     // if the proximity is initialized for the time, insert the handle
-    if (((Integer) arg) == NodeHandle.PROXIMITY_CHANGED) {
+    if (((Integer) arg) == rice.p2p.commonapi.NodeHandle.PROXIMITY_CHANGED) {
       put((NodeHandle) o);
-    } else if (((Integer) arg) == NodeHandle.DECLARED_DEAD) {
+    } else if (((Integer) arg) == rice.p2p.commonapi.NodeHandle.DECLARED_DEAD) {
       // changed to remove dead handles - AM
       remove((NodeHandle) o);
     }
@@ -240,7 +243,8 @@ public class RouteSet implements NodeSetI, Serializable,
    * 
    * @return the removed handle or null.
    */
-  public NodeHandle remove(NodeHandle nh) {
+  @Override
+public NodeHandle remove(NodeHandle nh) {
     for (int i = 0; i < theSize; i++) {
       if (nodes[i].equals(nh)) {
         NodeHandle handle = nodes[i];
@@ -277,7 +281,8 @@ public class RouteSet implements NodeSetI, Serializable,
    * 
    * @return true if it is a member, false otherwise.
    */
-  public boolean member(NodeHandle nh) {
+  @Override
+public boolean member(NodeHandle nh) {
     for (int i = 0; i < theSize; i++)
       if (nodes[i].equals(nh))
         return true;
@@ -305,7 +310,8 @@ public class RouteSet implements NodeSetI, Serializable,
    * 
    * @return the size.
    */
-  public int size() {
+  @Override
+public int size() {
     return theSize;
   }
   
@@ -366,7 +372,8 @@ public class RouteSet implements NodeSetI, Serializable,
    * 
    * @return the ith node.
    */
-  public NodeHandle get(int i) {
+  @Override
+public NodeHandle get(int i) {
     if (i < 0 || i >= theSize)
       throw new NoSuchElementException();
 
@@ -380,7 +387,8 @@ public class RouteSet implements NodeSetI, Serializable,
    * 
    * @return the node handle.
    */
-  public NodeHandle get(Id nid) {
+  @Override
+public NodeHandle get(Id nid) {
     for (int i = 0; i < theSize; i++)
       if (nodes[i].getNodeId().equals(nid))
         return nodes[i];
@@ -393,7 +401,8 @@ public class RouteSet implements NodeSetI, Serializable,
    * 
    * @return the node.
    */
-  public int getIndex(Id nid) {
+  @Override
+public int getIndex(Id nid) {
     for (int i = 0; i < theSize; i++)
       if (nodes[i].getNodeId().equals(nid))
         return i;
@@ -406,7 +415,8 @@ public class RouteSet implements NodeSetI, Serializable,
    * 
    * @return the node.
    */
-  public int getIndex(NodeHandle nh) {
+  @Override
+public int getIndex(NodeHandle nh) {
     for (int i = 0; i < theSize; i++)
       if (nodes[i].equals(nh))
         return i;
@@ -468,7 +478,8 @@ public class RouteSet implements NodeSetI, Serializable,
    * 
    * @return true if the put succeeded, false otherwise.
    */
-  public boolean putHandle(rice.p2p.commonapi.NodeHandle handle) {
+  @Override
+public boolean putHandle(rice.p2p.commonapi.NodeHandle handle) {
     return put((NodeHandle) handle);
   }
 
@@ -479,8 +490,9 @@ public class RouteSet implements NodeSetI, Serializable,
    * @return the handle associated with that id or null if no such handle is
    *         found.
    */
-  public rice.p2p.commonapi.NodeHandle getHandle(rice.p2p.commonapi.Id id) {
-    return getHandle((Id) id);
+  @Override
+public rice.p2p.commonapi.NodeHandle getHandle(rice.p2p.commonapi.Id id) {
+    return getHandle(id);
   }
 
   /**
@@ -490,7 +502,8 @@ public class RouteSet implements NodeSetI, Serializable,
    * @return the handle associated with that id or null if no such handle is
    *         found.
    */
-  public rice.p2p.commonapi.NodeHandle getHandle(int i) {
+  @Override
+public rice.p2p.commonapi.NodeHandle getHandle(int i) {
     return get(i);
   }
 
@@ -500,7 +513,8 @@ public class RouteSet implements NodeSetI, Serializable,
    * @param id a node id.
    * @return true if that node id is in the set, false otherwise.
    */
-  public boolean memberHandle(rice.p2p.commonapi.Id id) {
+  @Override
+public boolean memberHandle(rice.p2p.commonapi.Id id) {
     return member((Id) id);
   }
 
@@ -511,7 +525,8 @@ public class RouteSet implements NodeSetI, Serializable,
    * 
    * @return the node handle removed or null if nothing.
    */
-  public rice.p2p.commonapi.NodeHandle removeHandle(rice.p2p.commonapi.Id id) {
+  @Override
+public rice.p2p.commonapi.NodeHandle removeHandle(rice.p2p.commonapi.Id id) {
     return remove((Id) id);
   }
 
@@ -522,12 +537,14 @@ public class RouteSet implements NodeSetI, Serializable,
    * 
    * @return the index or throws a NoSuchElementException.
    */
-  public int getIndexHandle(rice.p2p.commonapi.Id id)
+  @Override
+public int getIndexHandle(rice.p2p.commonapi.Id id)
       throws NoSuchElementException {
     return getIndex((Id) id);
   }
     
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE; 
   }
   
@@ -548,7 +565,8 @@ public class RouteSet implements NodeSetI, Serializable,
   *   +                                                               +
   *   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
   */
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)nodes.length);    
     buf.writeByte((byte)theSize);    
     buf.writeByte((byte)closest);    
@@ -580,7 +598,8 @@ public class RouteSet implements NodeSetI, Serializable,
     
   }
 
-  public Iterator<NodeHandle> iterator() {
+  @Override
+public Iterator<NodeHandle> iterator() {
     return Arrays.asList(nodes).iterator();
   }
 

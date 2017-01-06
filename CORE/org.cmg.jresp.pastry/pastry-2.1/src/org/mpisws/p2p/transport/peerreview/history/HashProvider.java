@@ -38,8 +38,6 @@ package org.mpisws.p2p.transport.peerreview.history;
 
 import java.nio.ByteBuffer;
 
-import rice.p2p.commonapi.rawserialization.InputBuffer;
-
 public interface HashProvider {
   public byte[] hash(long seq, short type, byte[] nodeHash, byte[] contentHash);
   public byte[] hash(ByteBuffer ... hashMe);

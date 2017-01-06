@@ -88,7 +88,7 @@ public class ActionIDComparisonEvaluator implements ComparisonEvaluator {
 	@Override
 	public boolean isSubsetOf(Object o1, Object o2) throws Throwable {
 		if (o2 instanceof Bag) {
-			return ((Bag) o2).contains((ActionThisID) o1);
+			return ((Bag) o2).contains(o1);
 		} else {
 			throw new UnsupportedTypeException("ActionID", "Subset");
 		}
@@ -97,7 +97,7 @@ public class ActionIDComparisonEvaluator implements ComparisonEvaluator {
 	@Override
 	public boolean isAtLestOneMemberOf(Object o1, Object o2) throws Throwable {
 		if (o2 instanceof Bag) {
-			return ((Bag) o2).contains((ActionThisID) o1);
+			return ((Bag) o2).contains(o1);
 		} else {
 			throw new UnsupportedTypeException("ActionID", "AtLeastOneMember");
 		}

@@ -58,11 +58,13 @@ public class FetchLeafsetResponse extends PRawMessage {
     this.leafSet = leafSet;
   }
   
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     subject.serialize(buf);
     leafSet.serialize(buf);
   }

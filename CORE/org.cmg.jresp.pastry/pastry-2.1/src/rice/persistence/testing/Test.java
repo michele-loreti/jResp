@@ -47,9 +47,7 @@ package rice.persistence.testing;
  */
 import java.util.*;
 
-import rice.*;
 import rice.environment.Environment;
-import rice.persistence.*;
 
 /**
  * This class is a class which tests the Storage class

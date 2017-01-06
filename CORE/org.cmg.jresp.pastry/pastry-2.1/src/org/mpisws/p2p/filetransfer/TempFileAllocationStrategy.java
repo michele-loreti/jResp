@@ -65,13 +65,15 @@ public class TempFileAllocationStrategy implements FileAllocationStrategy {
     this.dir = directory;
   }
   
-  public synchronized File getFile(ByteBuffer metadata, long offset, long length) throws IOException {
+  @Override
+public synchronized File getFile(ByteBuffer metadata, long offset, long length) throws IOException {
     File temp = File.createTempFile(prefix, suffix, dir);
     //temp.deleteOnExit();
     return temp;
   }
 
-  public void fileCancelled(ByteBuffer metadata, File f, long offset,
+  @Override
+public void fileCancelled(ByteBuffer metadata, File f, long offset,
       long downloadedLength, long requestedLength, Exception reason) {
     f.delete();
   }

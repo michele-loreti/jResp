@@ -91,7 +91,8 @@ public class MultiringNodeHandleSet implements NodeHandleSet {
    *
    * @return true if the put succeeded, false otherwise.
    */
-  public boolean putHandle(NodeHandle handle) {
+  @Override
+public boolean putHandle(NodeHandle handle) {
     return set.putHandle(((MultiringNodeHandle) handle).getHandle());
   }
   
@@ -101,7 +102,8 @@ public class MultiringNodeHandleSet implements NodeHandleSet {
    * @param id a node id.
    * @return the handle associated with that id or null if no such handle is found.
    */
-  public NodeHandle getHandle(Id id) {
+  @Override
+public NodeHandle getHandle(Id id) {
     NodeHandle handle = set.getHandle(((RingId) id).getId());
     
     if (handle != null)
@@ -116,7 +118,8 @@ public class MultiringNodeHandleSet implements NodeHandleSet {
    * @param i an index.
    * @return the handle associated with that id or null if no such handle is found.
    */
-  public NodeHandle getHandle(int i) {
+  @Override
+public NodeHandle getHandle(int i) {
     NodeHandle handle = set.getHandle(i);
     
     if (handle != null)
@@ -131,7 +134,8 @@ public class MultiringNodeHandleSet implements NodeHandleSet {
    * @param id a node id.
    * @return true if that node id is in the set, false otherwise.
    */
-  public boolean memberHandle(Id id) {
+  @Override
+public boolean memberHandle(Id id) {
     return set.memberHandle(((RingId) id).getId());
   }
   
@@ -142,7 +146,8 @@ public class MultiringNodeHandleSet implements NodeHandleSet {
    *
    * @return the node handle removed or null if nothing.
    */
-  public NodeHandle removeHandle(Id id) {
+  @Override
+public NodeHandle removeHandle(Id id) {
     NodeHandle handle = set.removeHandle(((RingId) id).getId());
     
     if (handle != null)
@@ -156,7 +161,8 @@ public class MultiringNodeHandleSet implements NodeHandleSet {
    *
    * @return the size.
    */
-  public int size() {
+  @Override
+public int size() {
     return set.size();
   }
   
@@ -167,7 +173,8 @@ public class MultiringNodeHandleSet implements NodeHandleSet {
    *
    * @return the index or throws a NoSuchElementException.
    */
-  public int getIndexHandle(Id id) throws NoSuchElementException {
+  @Override
+public int getIndexHandle(Id id) throws NoSuchElementException {
     return set.getIndexHandle(((RingId) id).getId());
   }
   
@@ -177,7 +184,8 @@ public class MultiringNodeHandleSet implements NodeHandleSet {
    * @param other To compare to
    * @return Equals
    */
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     MultiringNodeHandleSet other = (MultiringNodeHandleSet) o;
     return (other.getSet().equals(set) && other.ringId.equals(ringId));
   }
@@ -187,7 +195,8 @@ public class MultiringNodeHandleSet implements NodeHandleSet {
    *
    * @return hashCode
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return (set.hashCode() + ringId.hashCode());
   }
   
@@ -196,7 +205,8 @@ public class MultiringNodeHandleSet implements NodeHandleSet {
    *
    * @return A string
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "{RingId " + ringId + " " + set.toString() + "}";
   }
 
@@ -206,14 +216,16 @@ public class MultiringNodeHandleSet implements NodeHandleSet {
     set = endpoint.readNodeHandleSet(buf, type);
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeShort(ringId.getType());
     ringId.serialize(buf);
     buf.writeShort(set.getType());
     set.serialize(buf);
   }
   
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE; 
   }
 }

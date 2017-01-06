@@ -42,7 +42,6 @@ import java.util.*;
 import rice.environment.Environment;
 import rice.p2p.commonapi.*;
 import rice.p2p.scribe.messaging.*;
-import rice.p2p.util.TimerWeakHashMap;
 
 /**
  * @(#) ScribePolicy.java This interface represents a policy for Scribe, which is asked whenever a
@@ -171,7 +170,8 @@ public interface ScribePolicy {
      * @param clients The list of clients are are currently subscribed
      * @return the topics to accept
      */
-    public List<Topic> allowSubscribe(Scribe scribe, NodeHandle source, List<Topic> topics, ScribeContent content) {
+    @Override
+	public List<Topic> allowSubscribe(Scribe scribe, NodeHandle source, List<Topic> topics, ScribeContent content) {
       Iterator<Topic> i = topics.iterator();
       while(i.hasNext()) {
         Topic topic = i.next();        
@@ -194,7 +194,8 @@ public interface ScribePolicy {
       }
       
       
-      public ScribeContent getContent() {
+      @Override
+	public ScribeContent getContent() {
         return theContent;
       }
     }
@@ -222,7 +223,8 @@ public interface ScribePolicy {
      * @param parent Our current parent for this message's topic
      * @param children Our current children for this message's topic
      */
-    public void directAnycast(AnycastMessage message, NodeHandle parent, Collection<NodeHandle> theChildren) {
+    @Override
+	public void directAnycast(AnycastMessage message, NodeHandle parent, Collection<NodeHandle> theChildren) {
       if (parent != null) {
         message.addLast(parent);
       }
@@ -246,7 +248,8 @@ public interface ScribePolicy {
      * @param topic The topic to unsubscribe from
      * @param child The child that was added
      */
-    public void childAdded(Topic topic, NodeHandle child) {
+    @Override
+	public void childAdded(Topic topic, NodeHandle child) {
     }
     
     /**
@@ -256,13 +259,17 @@ public interface ScribePolicy {
      * @param topic The topic to unsubscribe from
      * @param child The child that was removed
      */
-    public void childRemoved(Topic topic, NodeHandle child) {
+    @Override
+	public void childRemoved(Topic topic, NodeHandle child) {
     }
-    public void intermediateNode(ScribeMessage message) {
+    @Override
+	public void intermediateNode(ScribeMessage message) {
     }
-    public void recvAnycastFail(Topic topic, NodeHandle failedAtNode, ScribeContent content) {
+    @Override
+	public void recvAnycastFail(Topic topic, NodeHandle failedAtNode, ScribeContent content) {
     }
-    public ScribeContent divideContent(List<Topic> theTopics, ScribeContent content) {
+    @Override
+	public ScribeContent divideContent(List<Topic> theTopics, ScribeContent content) {
       return content;
     }
   }
@@ -298,7 +305,8 @@ public interface ScribePolicy {
      * @param clients The list of clients are are currently subscribed
      * @return True.
      */
-    public boolean allowSubscribe(SubscribeMessage message, ScribeClient[] clients, NodeHandle[] children) {
+    @Override
+	public boolean allowSubscribe(SubscribeMessage message, ScribeClient[] clients, NodeHandle[] children) {
       return (children.length < (maxChildren - 1));
     }
   }

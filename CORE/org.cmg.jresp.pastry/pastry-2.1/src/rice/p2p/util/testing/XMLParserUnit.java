@@ -38,7 +38,7 @@ package rice.p2p.util.testing;
 
 import rice.p2p.util.*;
 import java.io.*;
-import java.util.*;
+import org.xmlpull.v1.XmlPullParser;
 
 public class XMLParserUnit {
   
@@ -53,13 +53,13 @@ public class XMLParserUnit {
     parser.setInput(new StringReader("<test></test>"));
     int i = parser.next();
     
-    if ((i == XMLParser.START_TAG) && (parser.getName().equals("test"))) {
+    if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("test"))) {
       i = parser.next();
       
-      if ((i == XMLParser.END_TAG) && (parser.getName().equals("test"))) {
+      if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("test"))) {
         i = parser.next();
         
-        if (i == XMLParser.END_DOCUMENT) {
+        if (i == XmlPullParser.END_DOCUMENT) {
           System.out.println("[ PASSED ]");
         } else {
           System.out.println("[ FAILED ]");
@@ -80,13 +80,13 @@ public class XMLParserUnit {
     parser.setInput(new StringReader("<test/>"));
     i = parser.next();
     
-    if ((i == XMLParser.START_TAG) && (parser.getName().equals("test"))) {
+    if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("test"))) {
       i = parser.next();
 
-      if ((i == XMLParser.END_TAG) && (parser.getName().equals("test"))) {
+      if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("test"))) {
         i = parser.next();
         
-        if (i == XMLParser.END_DOCUMENT) {
+        if (i == XmlPullParser.END_DOCUMENT) {
           System.out.println("[ PASSED ]");
         } else {
           System.out.println("[ FAILED ]");
@@ -107,13 +107,13 @@ public class XMLParserUnit {
     parser.setInput(new StringReader("<test foo=bar/>"));
     i = parser.next();
     
-    if ((i == XMLParser.START_TAG) && (parser.getName().equals("test"))) {
+    if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("test"))) {
       i = parser.next();
       
-      if ((i == XMLParser.END_TAG) && (parser.getName().equals("test"))) {
+      if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("test"))) {
         i = parser.next();
         
-        if (i == XMLParser.END_DOCUMENT) {
+        if (i == XmlPullParser.END_DOCUMENT) {
           System.out.println("[ PASSED ]");
         } else {
           System.out.println("[ FAILED ]");
@@ -134,13 +134,13 @@ public class XMLParserUnit {
     parser.setInput(new StringReader("<test foo='bar'/>"));
     i = parser.next();
     
-    if ((i == XMLParser.START_TAG) && (parser.getName().equals("test"))) {
+    if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("test"))) {
       i = parser.next();
       
-      if ((i == XMLParser.END_TAG) && (parser.getName().equals("test"))) {
+      if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("test"))) {
         i = parser.next();
         
-        if (i == XMLParser.END_DOCUMENT) {
+        if (i == XmlPullParser.END_DOCUMENT) {
           System.out.println("[ PASSED ]");
         } else {
           System.out.println("[ FAILED ]");
@@ -161,13 +161,13 @@ public class XMLParserUnit {
     parser.setInput(new StringReader("<test foo=\"bar\"/>"));
     i = parser.next();
     
-    if ((i == XMLParser.START_TAG) && (parser.getName().equals("test"))) {
+    if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("test"))) {
       i = parser.next();
       
-      if ((i == XMLParser.END_TAG) && (parser.getName().equals("test"))) {
+      if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("test"))) {
         i = parser.next();
         
-        if (i == XMLParser.END_DOCUMENT) {
+        if (i == XmlPullParser.END_DOCUMENT) {
           System.out.println("[ PASSED ]");
         } else {
           System.out.println("[ FAILED ]");
@@ -187,13 +187,13 @@ public class XMLParserUnit {
     parser.setInput(new StringReader("<test foo=\"bar\"></test>"));
     i = parser.next();
     
-    if ((i == XMLParser.START_TAG) && (parser.getName().equals("test"))) {
+    if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("test"))) {
       i = parser.next();
       
-      if ((i == XMLParser.END_TAG) && (parser.getName().equals("test"))) {
+      if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("test"))) {
         i = parser.next();
         
-        if (i == XMLParser.END_DOCUMENT) {
+        if (i == XmlPullParser.END_DOCUMENT) {
           System.out.println("[ PASSED ]");
         } else {
           System.out.println("[ FAILED ]");
@@ -213,13 +213,13 @@ public class XMLParserUnit {
     parser.setInput(new StringReader("<test foo=\"bar\" baz=blah goo=29.33   ></test>"));
     i = parser.next();
     
-    if ((i == XMLParser.START_TAG) && (parser.getName().equals("test"))) {
+    if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("test"))) {
       i = parser.next();
       
-      if ((i == XMLParser.END_TAG) && (parser.getName().equals("test"))) {
+      if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("test"))) {
         i = parser.next();
         
-        if (i == XMLParser.END_DOCUMENT) {
+        if (i == XmlPullParser.END_DOCUMENT) {
           System.out.println("[ PASSED ]");
         } else {
           System.out.println("[ FAILED ]");
@@ -240,17 +240,17 @@ public class XMLParserUnit {
     parser.setInput(new StringReader("<test foo=\"bar\" baz=blah goo=29.33   ></test>"));
     i = parser.next();
     
-    if ((i == XMLParser.START_TAG) && (parser.getName().equals("test"))) {
+    if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("test"))) {
       
       if (parser.getAttributeValue(null, "foo").equals("bar") && 
           parser.getAttributeValue(null, "baz").equals("blah") && 
           parser.getAttributeValue(null, "goo").equals("29.33")) {
         i = parser.next();
         
-        if ((i == XMLParser.END_TAG) && (parser.getName().equals("test"))) {
+        if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("test"))) {
           i = parser.next();
           
-          if (i == XMLParser.END_DOCUMENT) {
+          if (i == XmlPullParser.END_DOCUMENT) {
             System.out.println("[ PASSED ]");
           } else {
             System.out.println("[ FAILED ]");
@@ -277,7 +277,7 @@ public class XMLParserUnit {
     parser.setInput(new StringReader("<test foo=\"bar\" baz=blah goo=29.33   ></test>"));
     i = parser.next();
     
-    if ((i == XMLParser.START_TAG) && (parser.getName().equals("test"))) {
+    if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("test"))) {
       
       if (parser.getAttributeValue(null, "foo").equals("bar") && 
           parser.getAttributeValue(null, "baz").equals("blah") && 
@@ -285,10 +285,10 @@ public class XMLParserUnit {
           parser.getAttributeValue(null, "bar") == null) {
         i = parser.next();
         
-        if ((i == XMLParser.END_TAG) && (parser.getName().equals("test"))) {
+        if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("test"))) {
           i = parser.next();
           
-          if (i == XMLParser.END_DOCUMENT) {
+          if (i == XmlPullParser.END_DOCUMENT) {
             System.out.println("[ PASSED ]");
           } else {
             System.out.println("[ FAILED ]");
@@ -315,25 +315,25 @@ public class XMLParserUnit {
     parser.setInput(new StringReader("<test foo=\"bar\" baz=blah goo=29.33   >\n\t<bar/>\t\t\t\n\t</test>"));
     i = parser.next();
     
-    if ((i == XMLParser.START_TAG) && (parser.getName().equals("test"))) {
+    if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("test"))) {
       i = parser.next();
       
-      if ((i == XMLParser.TEXT) && (parser.getText().equals("\n\t")) && (parser.isWhitespace())) {
+      if ((i == XmlPullParser.TEXT) && (parser.getText().equals("\n\t")) && (parser.isWhitespace())) {
         i = parser.next();
         
-        if ((i == XMLParser.START_TAG) && (parser.getName().equals("bar"))) {
+        if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("bar"))) {
           i = parser.next();
           
-          if ((i == XMLParser.END_TAG) && (parser.getName().equals("bar"))) {
+          if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("bar"))) {
             i = parser.next();
             
-            if ((i == XMLParser.TEXT) && (parser.getText().equals("\t\t\t\n\t")) && (parser.isWhitespace())) {
+            if ((i == XmlPullParser.TEXT) && (parser.getText().equals("\t\t\t\n\t")) && (parser.isWhitespace())) {
               i = parser.next();
               
-              if ((i == XMLParser.END_TAG) && (parser.getName().equals("test"))) {
+              if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("test"))) {
                 i = parser.next();
                 
-                if (i == XMLParser.END_DOCUMENT) {
+                if (i == XmlPullParser.END_DOCUMENT) {
                   System.out.println("[ PASSED ]");
                 } else {
                   System.out.println("[ FAILED ]");
@@ -371,25 +371,25 @@ public class XMLParserUnit {
     parser.setInput(new StringReader("<test foo=\"bar\" baz=   6 goo=  \t29.33   >\n\t<bar   lah\n=\n\n\ndofdo/>\t\t\t\n\t</test>"));
     i = parser.next();
     
-    if ((i == XMLParser.START_TAG) && (parser.getName().equals("test"))) {
+    if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("test"))) {
       i = parser.next();
       
-      if ((i == XMLParser.TEXT) && (parser.getText().equals("\n\t")) && (parser.isWhitespace())) {
+      if ((i == XmlPullParser.TEXT) && (parser.getText().equals("\n\t")) && (parser.isWhitespace())) {
         i = parser.next();
         
-        if ((i == XMLParser.START_TAG) && (parser.getName().equals("bar"))) {
+        if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("bar"))) {
           i = parser.next();
           
-          if ((i == XMLParser.END_TAG) && (parser.getName().equals("bar"))) {
+          if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("bar"))) {
             i = parser.next();
             
-            if ((i == XMLParser.TEXT) && (parser.getText().equals("\t\t\t\n\t")) && (parser.isWhitespace())) {
+            if ((i == XmlPullParser.TEXT) && (parser.getText().equals("\t\t\t\n\t")) && (parser.isWhitespace())) {
               i = parser.next();
               
-              if ((i == XMLParser.END_TAG) && (parser.getName().equals("test"))) {
+              if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("test"))) {
                 i = parser.next();
                 
-                if (i == XMLParser.END_DOCUMENT) {
+                if (i == XmlPullParser.END_DOCUMENT) {
                   System.out.println("[ PASSED ]");
                 } else {
                   System.out.println("[ FAILED ]");
@@ -429,25 +429,25 @@ public class XMLParserUnit {
 /*    if (i == XMLParser.START_DOCUMENT) {
       i = parser.next();*/
       
-      if ((i == XMLParser.START_TAG) && (parser.getName().equals("test"))) {
+      if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("test"))) {
         i = parser.next();
         
-        if ((i == XMLParser.TEXT) && (parser.getText().equals("\n\t")) && (parser.isWhitespace())) {
+        if ((i == XmlPullParser.TEXT) && (parser.getText().equals("\n\t")) && (parser.isWhitespace())) {
           i = parser.next();
           
-          if ((i == XMLParser.START_TAG) && (parser.getName().equals("bar"))) {
+          if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("bar"))) {
             i = parser.next();
             
-            if ((i == XMLParser.END_TAG) && (parser.getName().equals("bar"))) {
+            if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("bar"))) {
               i = parser.next();
               
-              if ((i == XMLParser.TEXT) && (parser.getText().equals("\t\t\t\n\t")) && (parser.isWhitespace())) {
+              if ((i == XmlPullParser.TEXT) && (parser.getText().equals("\t\t\t\n\t")) && (parser.isWhitespace())) {
                 i = parser.next();
                 
-                if ((i == XMLParser.END_TAG) && (parser.getName().equals("test"))) {
+                if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("test"))) {
                   i = parser.next();
                   
-                  if (i == XMLParser.END_DOCUMENT) {
+                  if (i == XmlPullParser.END_DOCUMENT) {
                     System.out.println("[ PASSED ]");
                   } else {
                     System.out.println("[ FAILED ]");
@@ -491,28 +491,28 @@ public class XMLParserUnit {
 /*    if (i == XMLParser.START_DOCUMENT) {
       i = parser.next(); */
       
-      if ((i == XMLParser.TEXT) && (parser.getText().equals("\n\n \t")) && (parser.isWhitespace())) {
+      if ((i == XmlPullParser.TEXT) && (parser.getText().equals("\n\n \t")) && (parser.isWhitespace())) {
         i = parser.next();
         
-        if ((i == XMLParser.START_TAG) && (parser.getName().equals("test"))) {
+        if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("test"))) {
           i = parser.next();
           
-          if ((i == XMLParser.TEXT) && (parser.getText().equals("\n\t")) && (parser.isWhitespace())) {
+          if ((i == XmlPullParser.TEXT) && (parser.getText().equals("\n\t")) && (parser.isWhitespace())) {
             i = parser.next();
             
-            if ((i == XMLParser.START_TAG) && (parser.getName().equals("bar"))) {
+            if ((i == XmlPullParser.START_TAG) && (parser.getName().equals("bar"))) {
               i = parser.next();
               
-              if ((i == XMLParser.END_TAG) && (parser.getName().equals("bar"))) {
+              if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("bar"))) {
                 i = parser.next();
                 
-                if ((i == XMLParser.TEXT) && (parser.getText().equals("\t\t\t\n\t")) && (parser.isWhitespace())) {
+                if ((i == XmlPullParser.TEXT) && (parser.getText().equals("\t\t\t\n\t")) && (parser.isWhitespace())) {
                   i = parser.next();
                   
-                  if ((i == XMLParser.END_TAG) && (parser.getName().equals("test"))) {
+                  if ((i == XmlPullParser.END_TAG) && (parser.getName().equals("test"))) {
                     i = parser.next();
                     
-                    if (i == XMLParser.END_DOCUMENT) {
+                    if (i == XmlPullParser.END_DOCUMENT) {
                       System.out.println("[ PASSED ]");
                     } else {
                       System.out.println("[ FAILED ]");

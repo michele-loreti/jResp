@@ -44,7 +44,6 @@ import rice.environment.logging.Logger;
 import rice.p2p.commonapi.Id;
 import rice.p2p.commonapi.NodeHandle;
 import rice.p2p.glacier.VersioningPast;
-import rice.p2p.past.Past;
 import rice.p2p.past.PastContent;
 import rice.p2p.past.PastContentHandle;
 import rice.p2p.past.gc.GCPast;
@@ -85,26 +84,32 @@ public class Moraine implements GCPast, VersioningPast {
   // --------------------------------------------------------------------------------
   // Past methods
 
-  public void insert(PastContent obj, Continuation command) {
+  @Override
+public void insert(PastContent obj, Continuation command) {
     newPast.insert(obj,command);
   }
 
-  public void lookup(Id id, Continuation command) {
+  @Override
+public void lookup(Id id, Continuation command) {
     // assume caching
     lookup(id, true, command);
   }
 
-  public void lookup(final Id id, final boolean cache, final Continuation command) {
+  @Override
+public void lookup(final Id id, final boolean cache, final Continuation command) {
     newPast.lookup(id, cache, new Continuation() {
-      public void receiveResult(Object result) {
+      @Override
+	public void receiveResult(Object result) {
         if (result == null) {
           oldPast.lookup(id, cache, new Continuation() {
-            public void receiveResult(Object result) {
+            @Override
+			public void receiveResult(Object result) {
               // XXX store the result in newPast
               command.receiveResult(result);
             }
 
-            public void receiveException(Exception result) {
+            @Override
+			public void receiveException(Exception result) {
               command.receiveException(result);
             }
           });
@@ -113,16 +118,19 @@ public class Moraine implements GCPast, VersioningPast {
         }
       }
 
-      public void receiveException(Exception result) {
+      @Override
+	public void receiveException(Exception result) {
         // XXX do we try the other Past?
         command.receiveException(result);
       }
     });
   }
 
-  public void lookupHandles(final Id id, final int max, final Continuation command) {
+  @Override
+public void lookupHandles(final Id id, final int max, final Continuation command) {
     newPast.lookupHandles(id, max, new Continuation() {
-      public void receiveResult(Object result) {
+      @Override
+	public void receiveResult(Object result) {
         Object[] results = (Object[])result;
         if (results.length == 1 && results[0] == null) {
           oldPast.lookupHandles(id, max, command);
@@ -131,7 +139,8 @@ public class Moraine implements GCPast, VersioningPast {
         }
       }
 
-      public void receiveException(Exception result) {
+      @Override
+	public void receiveException(Exception result) {
         if (logger.level <= Logger.WARNING) {
           logger.logException("in Moraine.lookupHandles, newPast threw up: ",result);
         }
@@ -141,13 +150,16 @@ public class Moraine implements GCPast, VersioningPast {
   }
 
   // this is unsupported by Glacier and Aggregation anyway
-  public void lookupHandle(Id id, NodeHandle handle, Continuation command) {
+  @Override
+public void lookupHandle(Id id, NodeHandle handle, Continuation command) {
     command.receiveException(new UnsupportedOperationException("LookupHandle() is not supported on Moraine"));
   }
 
-  public void fetch(final PastContentHandle handle, final Continuation command) {
+  @Override
+public void fetch(final PastContentHandle handle, final Continuation command) {
     newPast.fetch(handle, new Continuation() {
-      public void receiveResult(Object result) {
+      @Override
+	public void receiveResult(Object result) {
         if (result == null) {
           // XXX store the result of the fetch in the newPast
           oldPast.fetch(handle, command);
@@ -156,36 +168,43 @@ public class Moraine implements GCPast, VersioningPast {
         }
       }
 
-      public void receiveException(Exception result) {
+      @Override
+	public void receiveException(Exception result) {
         // XXX do we try the other Past?
         command.receiveException(result);
       }
     });
   }
 
-  public NodeHandle getLocalNodeHandle() {
+  @Override
+public NodeHandle getLocalNodeHandle() {
     return newPast.getLocalNodeHandle();
   }
 
-  public int getReplicationFactor() {
+  @Override
+public int getReplicationFactor() {
     return newPast.getReplicationFactor();
   }
 
-  public Environment getEnvironment() {
+  @Override
+public Environment getEnvironment() {
     return newPast.getEnvironment();
   }
 
-  public String getInstance() {
+  @Override
+public String getInstance() {
     return newPast.getInstance();
   }
 
-  public void setContentDeserializer(PastContentDeserializer deserializer) {
+  @Override
+public void setContentDeserializer(PastContentDeserializer deserializer) {
     newPast.setContentDeserializer(deserializer);
     oldPast.setContentDeserializer(deserializer);
     // XXX maybe force this on the members and just throw an UnsupportedOperationException
   }
 
-  public void setContentHandleDeserializer(
+  @Override
+public void setContentHandleDeserializer(
       PastContentHandleDeserializer deserializer) {
     newPast.setContentHandleDeserializer(deserializer);
     oldPast.setContentHandleDeserializer(deserializer);
@@ -195,17 +214,21 @@ public class Moraine implements GCPast, VersioningPast {
   // --------------------------------------------------------------------------------
   // GCPast methods
   
-  public void insert(PastContent obj, long expiration, Continuation command) {
+  @Override
+public void insert(PastContent obj, long expiration, Continuation command) {
     newPast.insert(obj, expiration, command);
   }
 
-  public void refresh(final Id[] ids, final long[] expirations, final Continuation command) {
+  @Override
+public void refresh(final Id[] ids, final long[] expirations, final Continuation command) {
     oldPast.refresh(ids, expirations, new Continuation() {
-      public void receiveResult(Object result) {
+      @Override
+	public void receiveResult(Object result) {
         newPast.refresh(ids, expirations, command);
       }
 
-      public void receiveException(Exception result) {
+      @Override
+	public void receiveException(Exception result) {
         if (logger.level <= Logger.WARNING) {
           logger.logException("in Moraine.refresh, oldPast threw up: ",result);
         }
@@ -214,7 +237,8 @@ public class Moraine implements GCPast, VersioningPast {
     }); 
   }
 
-  public void refresh(Id[] ids, long expiration, Continuation command) {
+  @Override
+public void refresh(Id[] ids, long expiration, Continuation command) {
     long[] expirations = new long[ids.length];
     Arrays.fill(expirations, expiration);
     refresh(ids, expirations, command);
@@ -223,17 +247,21 @@ public class Moraine implements GCPast, VersioningPast {
   // --------------------------------------------------------------------------------
   // VersioningPast methods
   
-  public void lookup(final Id id, final long version, final Continuation command) {
+  @Override
+public void lookup(final Id id, final long version, final Continuation command) {
     vNewPast.lookup(id, version, new Continuation() {
-      public void receiveResult(Object result) {
+      @Override
+	public void receiveResult(Object result) {
         if (result == null) {
           vOldPast.lookup(id, version, new Continuation() {
-            public void receiveResult(Object result) {
+            @Override
+			public void receiveResult(Object result) {
               // XXX store the result in newPast
               command.receiveResult(result);
             }
 
-            public void receiveException(Exception result) {
+            @Override
+			public void receiveException(Exception result) {
               command.receiveException(result);
             }
           });
@@ -242,16 +270,19 @@ public class Moraine implements GCPast, VersioningPast {
         }
       }
 
-      public void receiveException(Exception result) {
+      @Override
+	public void receiveException(Exception result) {
         // XXX do we try the other Past?
         command.receiveException(result);
       }
     });
   }
 
-  public void lookupHandles(final Id id, final long version, final int num, final Continuation command) {
+  @Override
+public void lookupHandles(final Id id, final long version, final int num, final Continuation command) {
     vNewPast.lookupHandles(id, version, num, new Continuation() {
-      public void receiveResult(Object result) {
+      @Override
+	public void receiveResult(Object result) {
         Object[] results = (Object[])result;
         if (results.length == 1 && results[0] == null) {
           vOldPast.lookupHandles(id, version, num, command);
@@ -260,7 +291,8 @@ public class Moraine implements GCPast, VersioningPast {
         }
       }
 
-      public void receiveException(Exception result) {
+      @Override
+	public void receiveException(Exception result) {
         if (logger.level <= Logger.WARNING) {
           logger.logException("in Moraine.lookupHandles, newPast threw up: ",result);
         }
@@ -269,13 +301,16 @@ public class Moraine implements GCPast, VersioningPast {
     });
   }
 
-  public void refresh(final Id[] ids, final long[] versions, final long[] expirations, final Continuation command) {
+  @Override
+public void refresh(final Id[] ids, final long[] versions, final long[] expirations, final Continuation command) {
     vOldPast.refresh(ids, versions, expirations, new Continuation() {
-      public void receiveResult(Object result) {
+      @Override
+	public void receiveResult(Object result) {
         vNewPast.refresh(ids, versions, expirations, command);
       }
 
-      public void receiveException(Exception result) {
+      @Override
+	public void receiveException(Exception result) {
         if (logger.level <= Logger.WARNING) {
           logger.logException("in Moraine.refresh, oldPast threw up: ",result);
         }

@@ -83,12 +83,14 @@ public class EphemeralDBImpl<Identifier, HighIdentifier> implements EphemeralDB<
    * @param high
    * @param tag
    */
-  public void mapHighToTag(HighIdentifier high, long tag) {
+  @Override
+public void mapHighToTag(HighIdentifier high, long tag) {
     if (logger.level <= Logger.FINE) logger.log("mapHighToTag("+high+","+tag+")");
     highToTag.put(high, tag);
   }
 
-  public Identifier getEphemeral(HighIdentifier high) {
+  @Override
+public Identifier getEphemeral(HighIdentifier high) {
     Long tag = highToTag.get(high);
     if (tag == null) {
       if (logger.level <= Logger.FINE) logger.log("getEphemeral("+high+"):null");
@@ -102,7 +104,8 @@ public class EphemeralDBImpl<Identifier, HighIdentifier> implements EphemeralDB<
     return ret;
   }
   
-  public Identifier getEphemeral(long tag, Identifier i) {
+  @Override
+public Identifier getEphemeral(long tag, Identifier i) {
     MutableTuple<Identifier, Long> ret = tagToEphemeral.get(tag);
     if (ret == null) {
       if (logger.level <= Logger.FINE) logger.log("getEphemeral("+tag+","+i+"):"+i);
@@ -117,7 +120,8 @@ public class EphemeralDBImpl<Identifier, HighIdentifier> implements EphemeralDB<
     return ret.a();
   }
 
-  public long getTagForEphemeral(Identifier addr) {
+  @Override
+public long getTagForEphemeral(Identifier addr) {
     long now = time.currentTimeMillis();
     Long tag = ephemeralToTag.get(addr);
     if (tag == null) {

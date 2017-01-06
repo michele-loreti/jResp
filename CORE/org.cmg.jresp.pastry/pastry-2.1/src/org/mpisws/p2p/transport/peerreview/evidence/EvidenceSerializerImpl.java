@@ -39,7 +39,6 @@ package org.mpisws.p2p.transport.peerreview.evidence;
 import java.io.IOException;
 
 import org.mpisws.p2p.transport.peerreview.PeerReviewConstants;
-import org.mpisws.p2p.transport.peerreview.commitment.AuthenticatorSerializer;
 import org.mpisws.p2p.transport.peerreview.commitment.AuthenticatorSerializerImpl;
 import org.mpisws.p2p.transport.peerreview.infostore.Evidence;
 import org.mpisws.p2p.transport.peerreview.infostore.EvidenceSerializer;
@@ -66,7 +65,8 @@ public class EvidenceSerializerImpl<Handle extends RawSerializable, Identifier e
     this.authSerializer = new AuthenticatorSerializerImpl(hashSize,signatureSize);
   }
   
-  public Evidence deserialize(InputBuffer buf, byte type, boolean response) throws IOException {
+  @Override
+public Evidence deserialize(InputBuffer buf, byte type, boolean response) throws IOException {
     switch(type) {
     case CHAL_AUDIT:
       if (response) {

@@ -40,7 +40,6 @@ import java.io.IOException;
 
 import org.mpisws.p2p.transport.peerreview.PeerReviewConstants;
 import org.mpisws.p2p.transport.peerreview.history.HashPolicy;
-import org.mpisws.p2p.transport.peerreview.history.logentry.EvtSend;
 import org.mpisws.p2p.transport.util.Serializer;
 
 import rice.p2p.util.rawserialization.SimpleInputBuffer;
@@ -69,7 +68,8 @@ public class ChallengeHashPolicy<Identifier> implements HashPolicy, PeerReviewCo
     }
   }
 
-  public boolean hashEntry(short type, byte[] content) {
+  @Override
+public boolean hashEntry(short type, byte[] content) {
     switch (type) { 
     case EVT_CHECKPOINT : /* We include at most one checkpoint, and only if FLAG_INCLUDE_CHECKPOINT is set */
       if (includeNextCheckpoint) {

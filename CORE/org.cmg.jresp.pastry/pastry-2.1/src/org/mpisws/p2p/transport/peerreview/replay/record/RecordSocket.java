@@ -44,11 +44,9 @@ import org.mpisws.p2p.transport.ClosedChannelException;
 import org.mpisws.p2p.transport.P2PSocket;
 import org.mpisws.p2p.transport.P2PSocketReceiver;
 import org.mpisws.p2p.transport.peerreview.PeerReviewConstants;
-import org.mpisws.p2p.transport.peerreview.history.SecureHistory;
 import org.mpisws.p2p.transport.util.SocketWrapperSocket;
 
 import rice.environment.logging.Logger;
-import rice.p2p.util.MathUtils;
 
 public class RecordSocket<Identifier> extends SocketWrapperSocket<Identifier, Identifier> implements PeerReviewConstants {
 
@@ -172,7 +170,8 @@ public class RecordSocket<Identifier> extends SocketWrapperSocket<Identifier, Id
     
     super.register(wantToRead, wantToWrite, new P2PSocketReceiver<Identifier>(){
 
-      public void receiveSelectResult(P2PSocket<Identifier> socket, boolean canRead, boolean canWrite) throws IOException {
+      @Override
+	public void receiveSelectResult(P2PSocket<Identifier> socket, boolean canRead, boolean canWrite) throws IOException {
         short evt;
         if (canRead && canWrite) {
           evt = EVT_SOCKET_CAN_RW;
@@ -192,7 +191,8 @@ public class RecordSocket<Identifier> extends SocketWrapperSocket<Identifier, Id
         receiver.receiveSelectResult(RecordSocket.this, canRead, canWrite);
       }
     
-      public void receiveException(P2PSocket<Identifier> socket, Exception ioe) {
+      @Override
+	public void receiveException(P2PSocket<Identifier> socket, Exception ioe) {
         try {
           socketIdBuffer.clear();
 //          logger.logException(this+".register()", ioe);

@@ -43,9 +43,6 @@ import rice.p2p.util.rawserialization.SimpleInputBuffer;
 import rice.pastry.*;
 import rice.pastry.commonapi.PastryEndpointMessage;
 import rice.pastry.messaging.*;
-import rice.pastry.transport.PMessageNotification;
-import rice.pastry.transport.PMessageReceipt;
-
 import java.io.*;
 import java.util.Map;
 
@@ -176,7 +173,7 @@ public class RouteMessage extends PRawMessage implements Serializable,
   public RouteMessage(Id target, Message msg, NodeHandle firstHop, SendOptions opts, byte serializeVersion) {
     super(RouterAddress.getCode());
     this.version = serializeVersion;
-    this.target = (Id) target;
+    this.target = target;
     internalMsg = msg;
     nextHop = firstHop;
     this.opts = opts;
@@ -221,7 +218,8 @@ public class RouteMessage extends PRawMessage implements Serializable,
    * @return the priority of this message.
    */
 
-  public int getPriority() {
+  @Override
+public int getPriority() {
     if (internalMsg != null)
       return internalMsg.getPriority();
     return internalPriority;
@@ -246,7 +244,8 @@ public class RouteMessage extends PRawMessage implements Serializable,
    * @return the wrapped message.
    * @deprecated use unwrap(MessageDeserializer)
    */
-  public Message unwrap() {
+  @Deprecated
+public Message unwrap() {
     if (internalMsg != null) {
       return internalMsg;
     }
@@ -271,7 +270,8 @@ public class RouteMessage extends PRawMessage implements Serializable,
     return opts;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     if (internalMsg == null) {
       return "R[serialized{"+auxAddress+","+internalType+"}]";
     }
@@ -282,40 +282,49 @@ public class RouteMessage extends PRawMessage implements Serializable,
 
   // Common API Support
 
-  public rice.p2p.commonapi.Id getDestinationId() {
+  @Override
+public rice.p2p.commonapi.Id getDestinationId() {
     return getTarget();
   }
 
-  public rice.p2p.commonapi.NodeHandle getNextHopHandle() {
+  @Override
+public rice.p2p.commonapi.NodeHandle getNextHopHandle() {
     return nextHop;
   }
 
   /**
    * @deprecated use getMessage(MessageDeserializer)
    */
-  @SuppressWarnings("deprecation")
+  @Deprecated
+@Override
+@SuppressWarnings("deprecation")
   public rice.p2p.commonapi.Message getMessage() {
     return ((PastryEndpointMessage) unwrap()).getMessage();
   }
 
-  public rice.p2p.commonapi.Message getMessage(MessageDeserializer md) throws IOException {
+  @Override
+public rice.p2p.commonapi.Message getMessage(MessageDeserializer md) throws IOException {
     endpointDeserializer.setSubDeserializer(md);
     return ((PastryEndpointMessage) unwrap(endpointDeserializer)).getMessage();
   }
 
-  public void setDestinationId(rice.p2p.commonapi.Id id) {
+  @Override
+public void setDestinationId(rice.p2p.commonapi.Id id) {
     target = (Id) id;
   }
 
-  public void setNextHopHandle(rice.p2p.commonapi.NodeHandle nextHop) {
+  @Override
+public void setNextHopHandle(rice.p2p.commonapi.NodeHandle nextHop) {
     this.nextHop = (NodeHandle) nextHop;
   }
 
-  public void setMessage(rice.p2p.commonapi.Message message) {
+  @Override
+public void setMessage(rice.p2p.commonapi.Message message) {
     ((PastryEndpointMessage) unwrap()).setMessage(message);
   }
 
-  public void setMessage(RawMessage message) {
+  @Override
+public void setMessage(RawMessage message) {
     ((PastryEndpointMessage) unwrap()).setMessage(message);
   }
 
@@ -416,7 +425,8 @@ public class RouteMessage extends PRawMessage implements Serializable,
 
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
 //    System.out.println(this+".serialize()");
     buf.writeByte(version); // version (deserialized in build())
     buf.writeInt(auxAddress); // (deserialized in build())
@@ -535,7 +545,8 @@ public class RouteMessage extends PRawMessage implements Serializable,
     return internalMsg;
   }
 
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
 
@@ -552,7 +563,8 @@ public class RouteMessage extends PRawMessage implements Serializable,
       sub = md;
     }
 
-    public Message deserialize(InputBuffer buf, short type, int priority, NodeHandle sender) throws IOException {
+    @Override
+	public Message deserialize(InputBuffer buf, short type, int priority, NodeHandle sender) throws IOException {
       // just in case we have to do java serialization
       pn = RouteMessage.this.pn;
 //      switch(type) {

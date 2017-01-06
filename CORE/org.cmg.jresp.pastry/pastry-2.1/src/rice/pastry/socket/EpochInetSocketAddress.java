@@ -93,7 +93,8 @@ public class EpochInetSocketAddress implements Serializable {
    *
    * @return The hashCode
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     int result = (int)epoch;
     for (int i = 0; i < address.length; i++) {
       result ^=  address[i].hashCode();
@@ -107,7 +108,8 @@ public class EpochInetSocketAddress implements Serializable {
    * @param o The source route to compare to
    * @return The equality
    */
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     if (o == null) return false;
     if (! (o instanceof EpochInetSocketAddress)) return false;
     EpochInetSocketAddress that = (EpochInetSocketAddress)o;
@@ -129,7 +131,8 @@ public class EpochInetSocketAddress implements Serializable {
    * @param path The path
    * @return THe string
    */
-  public String toString() {
+  @Override
+public String toString() {
     String s = "";
     for (int ctr = 0; ctr < address.length; ctr++) {
       s+=address[ctr];

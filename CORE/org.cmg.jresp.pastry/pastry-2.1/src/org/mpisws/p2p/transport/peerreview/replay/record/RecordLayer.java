@@ -40,7 +40,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Map;
 
-import org.mpisws.p2p.transport.ClosedChannelException;
 import org.mpisws.p2p.transport.ErrorHandler;
 import org.mpisws.p2p.transport.MessageCallback;
 import org.mpisws.p2p.transport.MessageRequestHandle;
@@ -121,7 +120,7 @@ public class RecordLayer<Identifier> implements PeerReviewConstants,
     
     this.tl = tl;
     this.tl.setCallback(this);
-    this.history = shf.create(name, 0, nhp.EMPTY_HASH);
+    this.history = shf.create(name, 0, NullHashProvider.EMPTY_HASH);
     
     this.environment = env;
     this.lastLogEntry = -1;
@@ -164,7 +163,8 @@ public class RecordLayer<Identifier> implements PeerReviewConstants,
   }
 
   
-  public SocketRequestHandle<Identifier> openSocket(final Identifier i, final SocketCallback<Identifier> deliverSocketToMe, final Map<String, Object> options) {
+  @Override
+public SocketRequestHandle<Identifier> openSocket(final Identifier i, final SocketCallback<Identifier> deliverSocketToMe, final Map<String, Object> options) {
     final int socketId = socketCtr++;
     final ByteBuffer socketIdBuffer = ByteBuffer.wrap(MathUtils.intToByteArray(socketId));
     try {        
@@ -178,7 +178,8 @@ public class RecordLayer<Identifier> implements PeerReviewConstants,
     final SocketRequestHandleImpl<Identifier> ret = new SocketRequestHandleImpl<Identifier>(i, options, logger);
     
     ret.setSubCancellable(tl.openSocket(i, new SocketCallback<Identifier>(){
-      public void receiveResult(SocketRequestHandle<Identifier> cancellable, P2PSocket<Identifier> sock) {
+      @Override
+	public void receiveResult(SocketRequestHandle<Identifier> cancellable, P2PSocket<Identifier> sock) {
         socketIdBuffer.clear();
         try {
           logEvent(EVT_SOCKET_OPENED_OUTGOING, socketIdBuffer);
@@ -188,7 +189,8 @@ public class RecordLayer<Identifier> implements PeerReviewConstants,
         socketIdBuffer.clear();
         deliverSocketToMe.receiveResult(ret, new RecordSocket<Identifier>(i, sock, logger, options, socketId, socketIdBuffer, RecordLayer.this));
       }
-      public void receiveException(SocketRequestHandle<Identifier> s, Exception ex) {
+      @Override
+	public void receiveException(SocketRequestHandle<Identifier> s, Exception ex) {
         socketIdBuffer.clear();
         try {
 //          logger.logException("socket "+socketId+" .register()", ex);
@@ -203,7 +205,8 @@ public class RecordLayer<Identifier> implements PeerReviewConstants,
     return ret;
   }
 
-  public void incomingSocket(P2PSocket<Identifier> s) throws IOException {
+  @Override
+public void incomingSocket(P2PSocket<Identifier> s) throws IOException {
     final int socketId = socketCtr++;
     final ByteBuffer socketIdBuffer = ByteBuffer.wrap(MathUtils.intToByteArray(socketId));
     try {
@@ -218,7 +221,8 @@ public class RecordLayer<Identifier> implements PeerReviewConstants,
     callback.incomingSocket(new RecordSocket<Identifier>(s.getIdentifier(), s, logger, s.getOptions(), socketId, socketIdBuffer, RecordLayer.this));
   }
   
-  public MessageRequestHandle<Identifier, ByteBuffer> sendMessage(Identifier i, ByteBuffer m, MessageCallback<Identifier, ByteBuffer> deliverAckToMe, Map<String, Object> options) {
+  @Override
+public MessageRequestHandle<Identifier, ByteBuffer> sendMessage(Identifier i, ByteBuffer m, MessageCallback<Identifier, ByteBuffer> deliverAckToMe, Map<String, Object> options) {
     if (logger.level <= Logger.FINEST) {
       logger.logException("sendMessage("+i+","+m+"):"+MathUtils.toHex(m.array()), new Exception("Stack Trace"));      
     } else if (logger.level <= Logger.FINER) {
@@ -261,7 +265,8 @@ public class RecordLayer<Identifier> implements PeerReviewConstants,
     
   }
   
-  public void messageReceived(Identifier i, ByteBuffer m, Map<String, Object> options) throws IOException {
+  @Override
+public void messageReceived(Identifier i, ByteBuffer m, Map<String, Object> options) throws IOException {
     try {
       if (identifierSerializer == null) {
         // just drop this event, it's while we're booting, 
@@ -279,27 +284,33 @@ public class RecordLayer<Identifier> implements PeerReviewConstants,
     callback.messageReceived(i, m, options);
   }
   
-  public void acceptMessages(boolean b) {
+  @Override
+public void acceptMessages(boolean b) {
     tl.acceptMessages(b);
   }
 
-  public void acceptSockets(boolean b) {
+  @Override
+public void acceptSockets(boolean b) {
     tl.acceptSockets(b);
   }
 
-  public Identifier getLocalIdentifier() {
+  @Override
+public Identifier getLocalIdentifier() {
     return tl.getLocalIdentifier();
   }
 
-  public void setCallback(TransportLayerCallback<Identifier, ByteBuffer> callback) {
+  @Override
+public void setCallback(TransportLayerCallback<Identifier, ByteBuffer> callback) {
     this.callback = callback;
   }
 
-  public void setErrorHandler(ErrorHandler<Identifier> handler) {
+  @Override
+public void setErrorHandler(ErrorHandler<Identifier> handler) {
     this.handler = handler;
   }
 
-  public void destroy() {
+  @Override
+public void destroy() {
 //    logger.log(this+".destroy()");
     try {
       if (history != null) history.close();
@@ -332,7 +343,8 @@ public class RecordLayer<Identifier> implements PeerReviewConstants,
     Environment ret = new Environment(selector,proc,rs,dts,lm,
         params, Environment.generateDefaultExceptionStrategy(lm)) {
       
-      public Environment cloneEnvironment(String prefix, boolean cloneSelector, boolean cloneProcessor) {
+      @Override
+	public Environment cloneEnvironment(String prefix, boolean cloneSelector, boolean cloneProcessor) {
         // new logManager
         DirectTimeSource dts = new DirectTimeSource(getTimeSource().currentTimeMillis());
         LogManager lman = getLogManager();

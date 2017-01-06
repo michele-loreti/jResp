@@ -1,6 +1,5 @@
 package pscel.policy;
 
-import java.io.IOException;
 import org.cmg.jresp.policy.*;
 import org.cmg.jresp.policy.automaton.*;
 import org.cmg.jresp.policy.facpl.*;

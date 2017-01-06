@@ -201,18 +201,21 @@ public class SimpleParameters implements Parameters {
     }
   }
 
-  public void remove(String name) {
+  @Override
+public void remove(String name) {
     properties.remove(name);
     fireChangeEvent(name, null);
   }
 
-  public boolean contains(String name) {
+  @Override
+public boolean contains(String name) {
     if (defaults.containsKey(name))
       return true;
     return properties.containsKey(name);
   }
 
-  public int getInt(String name) {
+  @Override
+public int getInt(String name) {
     try {
       return Integer.parseInt(getProperty(name));
     } catch (NumberFormatException nfe) {
@@ -221,7 +224,8 @@ public class SimpleParameters implements Parameters {
     }
   }
 
-  public double getDouble(String name) {
+  @Override
+public double getDouble(String name) {
     try {
       return Double.parseDouble(getProperty(name));
     } catch (NumberFormatException nfe) {
@@ -230,7 +234,8 @@ public class SimpleParameters implements Parameters {
     }
   }
 
-  public float getFloat(String name) {
+  @Override
+public float getFloat(String name) {
     try {
       return Float.parseFloat(getProperty(name));
     } catch (NumberFormatException nfe) {
@@ -239,7 +244,8 @@ public class SimpleParameters implements Parameters {
     }
   }
 
-  public long getLong(String name) {
+  @Override
+public long getLong(String name) {
     try {
       return Long.parseLong(getProperty(name));
     } catch (NumberFormatException nfe) {
@@ -248,20 +254,24 @@ public class SimpleParameters implements Parameters {
     }
   }
 
-  public boolean getBoolean(String name) {
+  @Override
+public boolean getBoolean(String name) {
     return (new Boolean(getProperty(name))).booleanValue();
   }
 
-  public InetAddress getInetAddress(String name) throws UnknownHostException {
+  @Override
+public InetAddress getInetAddress(String name) throws UnknownHostException {
     return InetAddress.getByName(getString(name));
   }
 
-  public InetSocketAddress getInetSocketAddress(String name)
+  @Override
+public InetSocketAddress getInetSocketAddress(String name)
       throws UnknownHostException {
     return parseInetSocketAddress(getString(name));
   }
 
-  public InetSocketAddress[] getInetSocketAddressArray(String name)
+  @Override
+public InetSocketAddress[] getInetSocketAddressArray(String name)
       throws UnknownHostException {
     if (getString(name).length() == 0)
       return new InetSocketAddress[0];
@@ -276,14 +286,16 @@ public class SimpleParameters implements Parameters {
         result.add(address);
     }
 
-    return (InetSocketAddress[]) result.toArray(new InetSocketAddress[0]);
+    return result.toArray(new InetSocketAddress[0]);
   }
 
-  public String getString(String name) {
+  @Override
+public String getString(String name) {
     return getProperty(name);
   }
 
-  public String[] getStringArray(String name) {
+  @Override
+public String[] getStringArray(String name) {
     String list = getProperty(name);
 
     if (list != null)
@@ -292,36 +304,44 @@ public class SimpleParameters implements Parameters {
       return null;
   }
 
-  public void setInt(String name, int value) {
+  @Override
+public void setInt(String name, int value) {
     setProperty(name, Integer.toString(value));
   }
 
-  public void setDouble(String name, double value) {
+  @Override
+public void setDouble(String name, double value) {
     setProperty(name, Double.toString(value));
   }
 
-  public void setFloat(String name, float value) {
+  @Override
+public void setFloat(String name, float value) {
     setProperty(name, Float.toString(value));
   }
 
-  public void setLong(String name, long value) {
+  @Override
+public void setLong(String name, long value) {
     setProperty(name, Long.toString(value));
   }
 
-  public void setBoolean(String name, boolean value) {
+  @Override
+public void setBoolean(String name, boolean value) {
     setProperty(name, "" + value);
   }
 
-  public void setInetAddress(String name, InetAddress value) {
+  @Override
+public void setInetAddress(String name, InetAddress value) {
     setProperty(name, value.getHostAddress());
   }
 
-  public void setInetSocketAddress(String name, InetSocketAddress value) {
+  @Override
+public void setInetSocketAddress(String name, InetSocketAddress value) {
     setProperty(name, value.getAddress().getHostAddress() + ":"
         + value.getPort());
   }
 
-  public void setInetSocketAddressArray(String name, InetSocketAddress[] value) {
+  @Override
+public void setInetSocketAddressArray(String name, InetSocketAddress[] value) {
     StringBuffer buffer = new StringBuffer();
 
     for (int i = 0; i < value.length; i++) {
@@ -334,11 +354,13 @@ public class SimpleParameters implements Parameters {
     setProperty(name, buffer.toString());
   }
 
-  public void setString(String name, String value) {
+  @Override
+public void setString(String name, String value) {
     setProperty(name, value);
   }
 
-  public void setStringArray(String name, String[] value) {
+  @Override
+public void setStringArray(String name, String[] value) {
     StringBuffer buffer = new StringBuffer();
 
     for (int i = 0; i < value.length; i++) {
@@ -350,7 +372,8 @@ public class SimpleParameters implements Parameters {
     setProperty(name, buffer.toString());
   }
 
-  public void store() throws IOException {
+  @Override
+public void store() throws IOException {
     if (configFileName == null)
       return;
     try {
@@ -370,36 +393,41 @@ public class SimpleParameters implements Parameters {
     }
   }
 
-  public void addChangeListener(ParameterChangeListener p) {
+  @Override
+public void addChangeListener(ParameterChangeListener p) {
     changeListeners.add(p);
   }
 
-  public void removeChangeListener(ParameterChangeListener p) {
+  @Override
+public void removeChangeListener(ParameterChangeListener p) {
     changeListeners.remove(p);
   }
 
   private void fireChangeEvent(String name, String val) {
     Iterator<ParameterChangeListener> i = changeListeners.iterator();
     while (i.hasNext()) {
-      ParameterChangeListener p = (ParameterChangeListener) i.next();
+      ParameterChangeListener p = i.next();
       p.parameterChange(name, val);
     }
   }
 
   protected class MyProperties extends Properties {
-    @SuppressWarnings("unchecked")
+    @Override
+	@SuppressWarnings("unchecked")
     public Enumeration keys() {
-      final String[] keys = (String[]) keySet().toArray(new String[0]);
+      final String[] keys = keySet().toArray(new String[0]);
       Arrays.sort(keys);
 
       return new Enumeration() {
         int pos = 0;
 
-        public boolean hasMoreElements() {
+        @Override
+		public boolean hasMoreElements() {
           return (pos < keys.length);
         }
 
-        public Object nextElement() {
+        @Override
+		public Object nextElement() {
           return keys[pos++];
         }
       };

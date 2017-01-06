@@ -112,7 +112,7 @@ public class DistTutorial {
     env.getTimeSource().sleep(10000);
 
       
-    MyApp foo = (MyApp)apps.get(0);
+    MyApp foo = apps.get(0);
     System.out.println(((PastryNode)foo.node).getRoutingTable().printSelf());
     
     System.exit(0);

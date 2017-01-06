@@ -47,7 +47,6 @@ import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.security.spec.RSAKeyGenParameterSpec;
-import java.util.Date;
 import java.util.Map;
 
 import org.mpisws.p2p.pki.x509.CATool;
@@ -125,13 +124,15 @@ public class SSLTest {
 
     aliceSSL.setCallback(new TransportLayerCallback<InetSocketAddress, ByteBuffer>() {
 
-      public void incomingSocket(P2PSocket<InetSocketAddress> s)
+      @Override
+	public void incomingSocket(P2PSocket<InetSocketAddress> s)
           throws IOException {
         System.out.println("************* Alice: Incoming Socket "+s);
         s.register(true, false, new P2PSocketReceiver<InetSocketAddress>() {
           ByteBuffer readMe = ByteBuffer.allocate(new String("foo").getBytes().length);
         
-          public void receiveSelectResult(P2PSocket<InetSocketAddress> socket,
+          @Override
+		public void receiveSelectResult(P2PSocket<InetSocketAddress> socket,
               boolean canRead, boolean canWrite) throws IOException {
             if (canRead) {
               socket.read(readMe);
@@ -143,7 +144,8 @@ public class SSLTest {
             }
           }
         
-          public void receiveException(P2PSocket<InetSocketAddress> socket,
+          @Override
+		public void receiveException(P2PSocket<InetSocketAddress> socket,
               Exception ioe) {
             System.out.println("alice: ex:"+ioe);
           }
@@ -151,20 +153,23 @@ public class SSLTest {
         });
       }
 
-      public void messageReceived(InetSocketAddress i, ByteBuffer m,
+      @Override
+	public void messageReceived(InetSocketAddress i, ByteBuffer m,
           Map<String, Object> options) throws IOException {
         // TODO Auto-generated method stub
         
       }});
     
     bobSSL.openSocket(aliceAddr, new SocketCallback<InetSocketAddress>() {    
-      public void receiveResult(SocketRequestHandle<InetSocketAddress> cancellable,
+      @Override
+	public void receiveResult(SocketRequestHandle<InetSocketAddress> cancellable,
           P2PSocket<InetSocketAddress> sock) {
         System.out.println("*************** Bob: Opened Socket "+sock);
         
         sock.register(false, true, new P2PSocketReceiver<InetSocketAddress>() {
           ByteBuffer writeMe = ByteBuffer.wrap(new String("foo").getBytes());
-          public void receiveSelectResult(P2PSocket<InetSocketAddress> socket,
+          @Override
+		public void receiveSelectResult(P2PSocket<InetSocketAddress> socket,
               boolean canRead, boolean canWrite) throws IOException {            
             socket.write(writeMe);
             if (writeMe.hasRemaining()) {
@@ -173,14 +178,16 @@ public class SSLTest {
             System.out.println("done writing");
           }
         
-          public void receiveException(P2PSocket<InetSocketAddress> socket,
+          @Override
+		public void receiveException(P2PSocket<InetSocketAddress> socket,
               Exception ioe) {
             System.out.println("bob: ex:"+ioe);
           }        
         });
       }
     
-      public void receiveException(SocketRequestHandle<InetSocketAddress> s,
+      @Override
+	public void receiveException(SocketRequestHandle<InetSocketAddress> s,
           Exception ex) {
         System.out.println("bob2: ex:"+ex);
       }    

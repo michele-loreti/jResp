@@ -40,9 +40,6 @@ import rice.environment.Environment;
 import rice.environment.random.RandomSource;
 import rice.pastry.*;
 
-import java.io.IOException;
-import java.util.*;
-
 /**
  * NodeIdUnit tests the NodeId class.
  * 
@@ -298,7 +295,7 @@ public class NodeIdUnit {
     System.out.println("nid=" + nid);
 
     for (int b = 2; b < 7; b++)
-      for (int row = nid.IdBitLength / b - 1; row >= 0; row--)
+      for (int row = Id.IdBitLength / b - 1; row >= 0; row--)
         for (int col = 0; col < (1 << b); col++) {
           Id domainFirst = nid.getDomainPrefix(row, col, 0, b);
           Id domainLast = nid.getDomainPrefix(row, col, -1, b);

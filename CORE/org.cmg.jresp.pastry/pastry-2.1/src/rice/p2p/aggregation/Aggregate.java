@@ -40,7 +40,6 @@ import rice.p2p.past.gc.GCPastContent;
 import rice.p2p.past.*;
 import rice.p2p.past.gc.*;
 import rice.p2p.commonapi.Id;
-import rice.p2p.glacier.VersionKey;
 import java.security.*;
 import java.io.*;
 
@@ -61,7 +60,8 @@ public class Aggregate implements GCPastContent {
     this.myId = myId;
   }
   
-  public Id getId() {
+  @Override
+public Id getId() {
     return myId;
   }
   
@@ -77,15 +77,18 @@ public class Aggregate implements GCPastContent {
     return components[index];
   }
   
-  public long getVersion() {
+  @Override
+public long getVersion() {
     return 0;
   }
   
-  public boolean isMutable() {
+  @Override
+public boolean isMutable() {
     return false;
   }
   
-  public PastContent checkInsert(rice.p2p.commonapi.Id id, PastContent existingContent) throws PastException {
+  @Override
+public PastContent checkInsert(rice.p2p.commonapi.Id id, PastContent existingContent) throws PastException {
     if (existingContent == null) {
       return this;
     } else {
@@ -123,15 +126,18 @@ public class Aggregate implements GCPastContent {
     return md.digest();
   }
 
-  public PastContentHandle getHandle(Past local) {
+  @Override
+public PastContentHandle getHandle(Past local) {
     return new AggregateHandle(local.getLocalNodeHandle(), myId, getVersion(), GCPast.INFINITY_EXPIRATION);
   }
 
-  public GCPastContentHandle getHandle(GCPast local, long expiration) {
+  @Override
+public GCPastContentHandle getHandle(GCPast local, long expiration) {
     return new AggregateHandle(local.getLocalNodeHandle(), myId, getVersion(), expiration);
   }
 
-  public GCPastMetadata getMetadata(long expiration) {
+  @Override
+public GCPastMetadata getMetadata(long expiration) {
     return new GCPastMetadata(expiration);
   }
 };

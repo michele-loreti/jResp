@@ -36,12 +36,10 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package org.mpisws.p2p.transport.sourceroute.manager;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.liveness.LivenessProvider;
-import org.mpisws.p2p.transport.multiaddress.MultiInetSocketAddress;
 import org.mpisws.p2p.transport.proximity.ProximityProvider;
 
 /**

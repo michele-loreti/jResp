@@ -36,8 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package rice.p2p.past.gc;
 
-import java.math.*;
-import java.security.*;
 import java.util.*;
 
 import rice.p2p.commonapi.*;
@@ -80,7 +78,8 @@ public class GCIdSet implements IdSet {
   /**
    * return the number of elements
    */
-  public int numElements() {
+  @Override
+public int numElements() {
     return ids.numElements();
   }
   
@@ -88,7 +87,8 @@ public class GCIdSet implements IdSet {
    * add a member
    * @param id the id to add
    */
-  public void addId(Id id) {
+  @Override
+public void addId(Id id) {
     GCId gcid = (GCId) id;
     
     ids.addId(gcid.getId());
@@ -99,7 +99,8 @@ public class GCIdSet implements IdSet {
    * remove a member
    * @param id the id to remove
    */
-  public void removeId(Id id) {
+  @Override
+public void removeId(Id id) {
     GCId gcid = (GCId) id;
     ids.removeId(gcid.getId());
     timeouts.remove(gcid.getId());
@@ -110,7 +111,8 @@ public class GCIdSet implements IdSet {
    * @param id the id to test
    * @return true of id is a member, false otherwise
    */
-  public boolean isMemberId(Id id) {
+  @Override
+public boolean isMemberId(Id id) {
     GCId gcid = (GCId) id;
     return ids.isMemberId(gcid.getId());
   }
@@ -121,7 +123,8 @@ public class GCIdSet implements IdSet {
    * @param to the upper end of the range (exclusive)
    * @return the subset
    */
-  public IdSet subSet(IdRange range) {
+  @Override
+public IdSet subSet(IdRange range) {
     return new GCIdSet(ids.subSet(((GCIdRange) range).getRange()), timeouts);
   }
   
@@ -129,13 +132,17 @@ public class GCIdSet implements IdSet {
    * return an iterator over the elements of this set
    * @return the interator
    */
-  public Iterator<Id> getIterator() {
+  @Override
+public Iterator<Id> getIterator() {
     return new Iterator<Id>() {
       Iterator<Id> i = ids.getIterator();
       
-      public boolean hasNext() { return i.hasNext(); }
-      public Id next() { return getGCId((Id) i.next()); }
-      public void remove() { throw new UnsupportedOperationException("Remove on GCIdSet()!"); }
+      @Override
+	public boolean hasNext() { return i.hasNext(); }
+      @Override
+	public Id next() { return getGCId(i.next()); }
+      @Override
+	public void remove() { throw new UnsupportedOperationException("Remove on GCIdSet()!"); }
     };
   }
   
@@ -152,7 +159,8 @@ public class GCIdSet implements IdSet {
    * return this set as an array
    * @return the array
    */
-  public Id[] asArray() {
+  @Override
+public Id[] asArray() {
     Id[] array = ids.asArray();
     
     for (int i=0; i<array.length; i++)
@@ -166,7 +174,8 @@ public class GCIdSet implements IdSet {
    *
    * @return the hash of this set
    */
-  public byte[] hash() {
+  @Override
+public byte[] hash() {
     throw new UnsupportedOperationException("hash on GCIdSet()!");
   }
   
@@ -176,7 +185,8 @@ public class GCIdSet implements IdSet {
    * @param other To compare to
    * @return Equals
    */
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     GCIdSet other = (GCIdSet) o;
     
     if (numElements() != other.numElements())
@@ -184,7 +194,7 @@ public class GCIdSet implements IdSet {
     
     Iterator<Id> i = ids.getIterator();
     while (i.hasNext())
-      if (! other.isMemberId((Id) i.next()))
+      if (! other.isMemberId(i.next()))
         return false;
     
     return true;
@@ -195,7 +205,8 @@ public class GCIdSet implements IdSet {
    *
    * @return hashCode
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return ids.hashCode();
   }
   
@@ -204,7 +215,8 @@ public class GCIdSet implements IdSet {
    *
    * @return A string
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "{GCIdSet of size " + numElements() + "}";
   }
   
@@ -213,7 +225,8 @@ public class GCIdSet implements IdSet {
    *
    * @return a clone
    */
-  public Object clone() {
+  @Override
+public Object clone() {
     return new GCIdSet(ids, timeouts);
   }
   
@@ -222,7 +235,8 @@ public class GCIdSet implements IdSet {
    *
    * @return A new IdSet
    */
-  public IdSet build() {
+  @Override
+public IdSet build() {
     return new GCIdSet(ids.build(), new RedBlackMap());
   }
 }

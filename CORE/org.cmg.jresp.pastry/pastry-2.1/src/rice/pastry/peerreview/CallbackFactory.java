@@ -43,7 +43,6 @@ import java.util.Map;
 import rice.environment.Environment;
 import rice.pastry.NodeHandle;
 import rice.pastry.NodeHandleFactory;
-import rice.pastry.NodeIdFactory;
 import rice.pastry.PastryNode;
 import rice.pastry.socket.SocketPastryNodeFactory;
 import rice.pastry.transport.NodeHandleAdapter;

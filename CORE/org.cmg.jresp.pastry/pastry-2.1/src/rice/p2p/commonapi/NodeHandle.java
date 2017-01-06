@@ -79,7 +79,8 @@ public abstract class NodeHandle extends Observable implements Serializable  {
    * @deprecated use Endpoint.isAlive(NodeHandle) 
    * @return Whether or not this node is currently alive
    */
-  public abstract boolean isAlive();
+  @Deprecated
+public abstract boolean isAlive();
 
   /**
    * Returns the current proximity value of this node
@@ -87,7 +88,8 @@ public abstract class NodeHandle extends Observable implements Serializable  {
    * @deprecated use Endpoint.proximity(NodeHandle)
    * @return The current proximity value of this node
    */
-  public abstract int proximity();
+  @Deprecated
+public abstract int proximity();
   
   /**
    * Requests that the underlying transport layer check to ensure

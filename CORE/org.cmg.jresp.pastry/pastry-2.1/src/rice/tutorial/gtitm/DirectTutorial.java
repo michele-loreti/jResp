@@ -37,8 +37,6 @@ advised of the possibility of such damage.
 package rice.tutorial.gtitm;
 
 import java.io.*;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -137,7 +135,7 @@ public class DirectTutorial {
       // for each app
       Iterator<MyApp> appIterator = apps.iterator();
       while(appIterator.hasNext()) {
-        MyApp app = (MyApp)appIterator.next();
+        MyApp app = appIterator.next();
         
         // pick a key at random
         Id randId = nidFactory.generateNodeId();
@@ -155,7 +153,7 @@ public class DirectTutorial {
     // for each app
     Iterator<MyApp> appIterator = apps.iterator();
     while(appIterator.hasNext()) {
-      MyApp app = (MyApp)appIterator.next();
+      MyApp app = appIterator.next();
       PastryNode node = (PastryNode)app.getNode();
       
       // send directly to my leafset

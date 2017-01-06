@@ -126,17 +126,20 @@ public class BroadcastLeafSet extends PRawMessage {
     return theType;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     String s = "BroadcastLeafSet("+theLeafSet+","+requestTimeStamp+")";
     return s;
   }
   
   /***************** Raw Serialization ***************************************/  
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE; 
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)0); // version
     fromNode.serialize(buf);
     theLeafSet.serialize(buf);

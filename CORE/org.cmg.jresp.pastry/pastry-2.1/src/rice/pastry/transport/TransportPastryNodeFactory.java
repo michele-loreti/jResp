@@ -37,17 +37,12 @@ advised of the possibility of such damage.
 package rice.pastry.transport;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import rice.Continuation;
 import rice.environment.Environment;
-import rice.environment.logging.Logger;
 import rice.environment.params.Parameters;
-import rice.environment.random.RandomSource;
 import rice.p2p.commonapi.Cancellable;
-import rice.p2p.commonapi.CancellableTask;
-import rice.pastry.Id;
 import rice.pastry.NodeHandle;
 import rice.pastry.NodeHandleFactory;
 import rice.pastry.PastryNode;
@@ -59,7 +54,6 @@ import rice.pastry.leafset.LeafSet;
 import rice.pastry.leafset.LeafSetProtocol;
 import rice.pastry.messaging.MessageDispatch;
 import rice.pastry.pns.PNSApplication;
-import rice.pastry.routing.RouteSet;
 import rice.pastry.routing.RouteSetProtocol;
 import rice.pastry.routing.RouterStrategy;
 import rice.pastry.routing.RoutingTable;
@@ -67,8 +61,6 @@ import rice.pastry.standard.ConsistentJoinProtocol;
 import rice.pastry.standard.PeriodicLeafSetProtocol;
 import rice.pastry.standard.ProximityNeighborSelector;
 import rice.pastry.standard.RapidRerouter;
-import rice.pastry.standard.StandardJoinProtocol;
-import rice.pastry.standard.StandardLeafSetProtocol;
 import rice.pastry.standard.StandardRouteSetProtocol;
 import rice.pastry.standard.StandardRouter;
 
@@ -200,7 +192,8 @@ public abstract class TransportPastryNodeFactory extends PastryNodeFactory {
   
     // do nothing
     return new ProximityNeighborSelector(){    
-      public Cancellable getNearHandles(Collection<NodeHandle> bootHandles, Continuation<Collection<NodeHandle>, Exception> deliverResultToMe) {
+      @Override
+	public Cancellable getNearHandles(Collection<NodeHandle> bootHandles, Continuation<Collection<NodeHandle>, Exception> deliverResultToMe) {
         deliverResultToMe.receiveResult(bootHandles);
         return null;
       }    

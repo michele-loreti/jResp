@@ -37,8 +37,6 @@ advised of the possibility of such damage.
 package org.mpisws.p2p.transport.peerreview.evidence;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-
 import org.mpisws.p2p.transport.peerreview.audit.LogSnippet;
 import org.mpisws.p2p.transport.peerreview.infostore.Evidence;
 import org.mpisws.p2p.transport.util.Serializer;
@@ -66,7 +64,8 @@ public class AuditResponse<Handle extends RawSerializable> implements Evidence {
     this.logSnippet = logSnippet;
   }
 
-  public short getEvidenceType() {
+  @Override
+public short getEvidenceType() {
     return RESP_AUDIT;
   }
 
@@ -75,7 +74,8 @@ public class AuditResponse<Handle extends RawSerializable> implements Evidence {
     logSnippet = new LogSnippet(buf, hashSize);
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     logOwner.serialize(buf);
     logSnippet.serialize(buf);
   }

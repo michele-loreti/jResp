@@ -107,7 +107,7 @@ public class XMLObjectInputStream extends ObjectInputStream {
    * The ReflectionFactory, which allows for prividged construction of
    * objects
    */
-  protected ReflectionFactory reflFactory = (ReflectionFactory) AccessController.doPrivileged(new sun.reflect.ReflectionFactory.GetReflectionFactoryAction());
+  protected ReflectionFactory reflFactory = AccessController.doPrivileged(new sun.reflect.ReflectionFactory.GetReflectionFactoryAction());
 
   /**
    * The list of validation objects waiting for the entire object graph to be read in
@@ -149,7 +149,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    *
    * @throws IOException If the stream header is corrupt
    */
-  protected void readStreamHeader() throws IOException {
+  @Override
+protected void readStreamHeader() throws IOException {
     reader.readHeader();
   }
   
@@ -159,7 +160,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    *
    * @throws IOException If an error occurs
    */
-  public void close() throws IOException {
+  @Override
+public void close() throws IOException {
     reader.close();
   } 
   
@@ -169,7 +171,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    *
    * @throws IOException If an error occurs
    */
-  public void reset() throws IOException {
+  @Override
+public void reset() throws IOException {
     references = new Hashtable(); 
     vlist.clear();
   }
@@ -180,7 +183,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    *
    * @throws IOException If an error occurs
    */
-  public int read() throws IOException {
+  @Override
+public int read() throws IOException {
     return readByte();
   }
   
@@ -190,7 +194,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    *
    * @throws IOException If an error occurs
    */
-  public int read(byte[] b, int offset, int length) throws IOException {
+  @Override
+public int read(byte[] b, int offset, int length) throws IOException {
     reader.readStartTag("base64");
     byte[] bytes = reader.readBase64();
     
@@ -206,7 +211,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    *
    * @throws IOException If an error occurs
    */
-  public void readFully(byte[] b) throws IOException {
+  @Override
+public void readFully(byte[] b) throws IOException {
     readFully(b, 0, b.length);
   }
   
@@ -216,7 +222,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    *
    * @throws IOException If an error occurs
    */
-  public void readFully(byte[] b, int offset, int length) throws IOException {
+  @Override
+public void readFully(byte[] b, int offset, int length) throws IOException {
     read(b, offset, length);
   }
   
@@ -226,7 +233,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    *
    * @throws IOException If an error occurs
    */
-  public int readUnsignedByte() throws IOException {
+  @Override
+public int readUnsignedByte() throws IOException {
     return readByte();
   }
   
@@ -236,7 +244,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    *
    * @throws IOException If an error occurs
    */
-  public int readUnsignedShort() throws IOException {
+  @Override
+public int readUnsignedShort() throws IOException {
     return readShort();
   }
   
@@ -246,7 +255,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    * @return The value from the stream
    * @throws IOException If an error occurs
    */
-  public int readInt() throws IOException {
+  @Override
+public int readInt() throws IOException {
     reader.readStartTag("primitive");
     return readIntHelper();
   }
@@ -257,7 +267,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    * @return The value from the stream
    * @throws IOException If an error occurs
    */
-  public boolean readBoolean() throws IOException {
+  @Override
+public boolean readBoolean() throws IOException {
     reader.readStartTag("primitive");
     return readBooleanHelper();
   }
@@ -268,7 +279,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    * @return The value from the stream
    * @throws IOException If an error occurs
    */  
-  public byte readByte() throws IOException {
+  @Override
+public byte readByte() throws IOException {
     reader.readStartTag("primitive");
     return readByteHelper();
   }
@@ -279,7 +291,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    * @return The value from the stream
    * @throws IOException If an error occurs
    */
-  public char readChar() throws IOException {
+  @Override
+public char readChar() throws IOException {
     reader.readStartTag("primitive");
     return readCharHelper();
   }
@@ -290,7 +303,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    * @return The value from the stream
    * @throws IOException If an error occurs
    */
-  public double readDouble() throws IOException {
+  @Override
+public double readDouble() throws IOException {
     reader.readStartTag("primitive");
     return readDoubleHelper();
   }
@@ -301,7 +315,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    * @return The value from the stream
    * @throws IOException If an error occurs
    */
-  public float readFloat() throws IOException {
+  @Override
+public float readFloat() throws IOException {
     reader.readStartTag("primitive");
     return readFloatHelper();
   }
@@ -312,7 +327,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    * @return The value from the stream
    * @throws IOException If an error occurs
    */
-  public long readLong() throws IOException {
+  @Override
+public long readLong() throws IOException {
     reader.readStartTag("primitive");
     return readLongHelper();
   }
@@ -323,7 +339,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    * @return The value from the stream
    * @throws IOException If an error occurs
    */
-  public short readShort() throws IOException {
+  @Override
+public short readShort() throws IOException {
     reader.readStartTag("primitive");
     return readShortHelper();
   }
@@ -336,7 +353,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    * @return The value from the stream
    * @throws IOException If an error occurs
    */
-  public String readUTF() throws IOException {
+  @Override
+public String readUTF() throws IOException {
     try {
       return (String) readObject();
     } catch (ClassNotFoundException e) {
@@ -354,7 +372,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    * @throws IOException If an error occurs
    * @throws ClassNotFoundException If a class in the stream cannot be found
    */
-  protected Object readObjectOverride() throws IOException, ClassNotFoundException {
+  @Override
+protected Object readObjectOverride() throws IOException, ClassNotFoundException {
     reader.readStartTag();
     
     Object result = readObjectHelper();
@@ -375,7 +394,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    * @throws IOException If an error occurs
    * @throws ClassNotFoundException If a class in the stream cannot be found
    */
-  public Object readUnshared() throws IOException, ClassNotFoundException {
+  @Override
+public Object readUnshared() throws IOException, ClassNotFoundException {
     reader.readStartTag();
     
     Object result = readUnsharedHelper(false);
@@ -398,7 +418,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    * @throws ClassNotFoundException If a class in the stream cannot be found
    * @throws NotActiveException If a object is not currently being read
    */
-  public void defaultReadObject() throws IOException, ClassNotFoundException {
+  @Override
+public void defaultReadObject() throws IOException, ClassNotFoundException {
     if (currentObjects.peek() != null)
       readFields(currentObjects.peek(), (Class) currentClasses.peek());
     else
@@ -420,7 +441,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    * @throws ClassNotFoundException If a class in the stream cannot be found
    * @throws NotActiveException If a object is not currently being read
    */
-  public ObjectInputStream.GetField readFields() throws IOException, ClassNotFoundException {
+  @Override
+public ObjectInputStream.GetField readFields() throws IOException, ClassNotFoundException {
     if (currentObjects.peek() != null)
       return readGetFields();
     else
@@ -440,7 +462,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
    *     so it is invalid to register a callback.
    * @throws  InvalidObjectException The validation object is null.
    */
-  public void registerValidation(ObjectInputValidation obj, int prio) throws NotActiveException, InvalidObjectException {
+  @Override
+public void registerValidation(ObjectInputValidation obj, int prio) throws NotActiveException, InvalidObjectException {
     if (currentObjects.peek() == null) 
       throw new NotActiveException("registerValidation called with empty stack!");
     
@@ -1266,67 +1289,77 @@ public class XMLObjectInputStream extends ObjectInputStream {
     
     protected HashMap objects = new HashMap();
     
-    public boolean defaulted(String name) {
+    @Override
+	public boolean defaulted(String name) {
       return (! (primitives.containsKey(name) || objects.containsKey(name)));
     }
     
-    public boolean get(String name, boolean value) {
+    @Override
+	public boolean get(String name, boolean value) {
       if (primitives.get(name) == null)
         return value;
           
       return ((Boolean) primitives.get(name)).booleanValue();
     }
     
-    public byte get(String name, byte value) {
+    @Override
+	public byte get(String name, byte value) {
       if (primitives.get(name) == null)
         return value;
       
       return ((Byte) primitives.get(name)).byteValue();
     }
     
-    public char get(String name, char value) {
+    @Override
+	public char get(String name, char value) {
       if (primitives.get(name) == null)
         return value;
       
       return ((Character) primitives.get(name)).charValue();
     }
     
-    public double get(String name, double value) {
+    @Override
+	public double get(String name, double value) {
       if (primitives.get(name) == null)
         return value;
       
       return ((Double) primitives.get(name)).doubleValue();
     }
     
-    public float get(String name, float value) {
+    @Override
+	public float get(String name, float value) {
       if (primitives.get(name) == null)
         return value;
       
       return ((Float) primitives.get(name)).floatValue();
     }
     
-    public int get(String name, int value) {
+    @Override
+	public int get(String name, int value) {
       if (primitives.get(name) == null)
         return value;
       
       return ((Integer) primitives.get(name)).intValue();
     }
     
-    public long get(String name, long value) {
+    @Override
+	public long get(String name, long value) {
       if (primitives.get(name) == null)
         return value;
       
       return ((Long) primitives.get(name)).longValue();
     }
     
-    public short get(String name, short value) {
+    @Override
+	public short get(String name, short value) {
       if (primitives.get(name) == null)
         return value;
       
       return ((Short) primitives.get(name)).shortValue();
     }
     
-    public Object get(String name, Object value) {
+    @Override
+	public Object get(String name, Object value) {
       if (objects.get(name) == null)
         return value;
       
@@ -1369,7 +1402,8 @@ public class XMLObjectInputStream extends ObjectInputStream {
       objects.put(name, value);
     }
     
-    public ObjectStreamClass getObjectStreamClass() {
+    @Override
+	public ObjectStreamClass getObjectStreamClass() {
       throw new UnsupportedOperationException("CANNOT GET THE OBJECT STREAM CLASS!");
     }
   }

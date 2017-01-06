@@ -36,7 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package rice.pastry.socket.nat.rendezvous;
 
-import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.Map;
 
@@ -52,15 +51,18 @@ import org.mpisws.p2p.transport.rendezvous.ResponseStrategy;
 public class NeverResponseStrategy<Identifier> implements
     ResponseStrategy<Identifier> {
 
-  public void messageReceived(Identifier i, ByteBuffer msg,
+  @Override
+public void messageReceived(Identifier i, ByteBuffer msg,
       Map<String, Object> options) {
   }
 
-  public void messageSent(Identifier i, ByteBuffer msg,
+  @Override
+public void messageSent(Identifier i, ByteBuffer msg,
       Map<String, Object> options) {
   }
 
-  public boolean sendDirect(Identifier i, ByteBuffer msg,
+  @Override
+public boolean sendDirect(Identifier i, ByteBuffer msg,
       Map<String, Object> options) {
     return false;
   }

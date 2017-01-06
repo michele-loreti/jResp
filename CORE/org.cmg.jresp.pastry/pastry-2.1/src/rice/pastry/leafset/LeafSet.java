@@ -496,7 +496,8 @@ public class LeafSet extends Observable implements Serializable, Iterable<NodeHa
    * 
    * @return
    */
-  public Iterator<NodeHandle> iterator() {
+  @Override
+public Iterator<NodeHandle> iterator() {
     return getUniqueSet().iterator();         
   }
 
@@ -823,7 +824,9 @@ public class LeafSet extends Observable implements Serializable, Iterable<NodeHa
    * @deprecated use addNodeSetListener
    * @param o the observer to add.
    */
-  public void addObserver(Observer o) {
+  @Deprecated
+@Override
+public void addObserver(Observer o) {
     cwSet.addObserver(o);
     ccwSet.addObserver(o);
   }
@@ -834,7 +837,9 @@ public class LeafSet extends Observable implements Serializable, Iterable<NodeHa
    * @deprecated use deleteNodeSetListener
    * @param o the observer to delete.
    */
-  public void deleteObserver(Observer o) {
+  @Deprecated
+@Override
+public void deleteObserver(Observer o) {
     cwSet.deleteObserver(o);
     ccwSet.deleteObserver(o);
   }
@@ -863,7 +868,8 @@ public class LeafSet extends Observable implements Serializable, Iterable<NodeHa
    * Returns a string representation of the leaf set
    *
    */
-  public String toString()
+  @Override
+public String toString()
   {
     String s = "leafset: ";
     for (int i=-ccwSet.size(); i<0; i++)
@@ -1025,7 +1031,7 @@ public class LeafSet extends Observable implements Serializable, Iterable<NodeHa
     
     Iterator<NodeHandle> it = list.iterator();
     while(it.hasNext()) {
-      NodeHandle nh = (NodeHandle)it.next(); 
+      NodeHandle nh = it.next(); 
       nh.serialize(buf);
     }
     

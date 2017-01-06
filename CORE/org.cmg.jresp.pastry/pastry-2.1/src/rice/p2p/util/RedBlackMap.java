@@ -154,7 +154,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      *
      * @return the number of key-value mappings in this map.
      */
-    public int size() {
+    @Override
+	public int size() {
         return size;
     }
 
@@ -172,7 +173,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      *                  natural ordering, or its comparator does not tolerate
      *            <tt>null</tt> keys.
      */
-    public synchronized boolean containsKey(Object key) {
+    @Override
+	public synchronized boolean containsKey(Object key) {
         return getEntry(key) != null;
     }
 
@@ -189,7 +191,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      *    <tt>false</tt> otherwise.
      * @since 1.2
      */
-    public synchronized boolean containsValue(Object value) {
+    @Override
+	public synchronized boolean containsValue(Object value) {
         return (root==null ? false :
                 (value==null ? valueSearchNull(root)
                              : valueSearchNonNull(root, value)));
@@ -233,7 +236,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      * 
      * @see #containsKey(Object)
      */
-    public synchronized Object get(Object key) {
+    @Override
+	public synchronized Object get(Object key) {
         Entry p = getEntry(key);
         return (p==null ? null : p.value);
     }
@@ -245,7 +249,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      * @return the comparator associated with this sorted map, or
      *                <tt>null</tt> if it uses its keys' natural sort method.
      */
-    public Comparator comparator() {
+    @Override
+	public Comparator comparator() {
         return comparator;
     }
 
@@ -255,7 +260,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      * @return the first (lowest) key currently in this sorted map.
      * @throws    NoSuchElementException Map is empty.
      */
-    public synchronized Object firstKey() {
+    @Override
+	public synchronized Object firstKey() {
         return key(firstEntry());
     }
 
@@ -265,7 +271,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      * @return the last (highest) key currently in this sorted map.
      * @throws    NoSuchElementException Map is empty.
      */
-    public synchronized Object lastKey() {
+    @Override
+	public synchronized Object lastKey() {
         return key(lastEntry());
     }
 
@@ -282,7 +289,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      *         this map does not permit <tt>null</tt> keys and a 
      *         key in the specified map is <tt>null</tt>.
      */
-    public synchronized void putAll(Map map) {
+    @Override
+	public synchronized void putAll(Map map) {
         int mapSize = map.size();
         if (size==0 && mapSize!=0 && map instanceof SortedMap) {
             Comparator c = ((SortedMap)map).comparator();
@@ -423,7 +431,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      *         natural order, or its comparator does not tolerate
      *         <tt>null</tt> keys.
      */
-    public synchronized Object put(Object key, Object value) {
+    @Override
+	public synchronized Object put(Object key, Object value) {
         Entry t = root;
 
         if (t == null) {
@@ -473,7 +482,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      *         natural order, or its comparator does not tolerate
      *         <tt>null</tt> keys.
      */
-    public synchronized Object remove(Object key) {
+    @Override
+	public synchronized Object remove(Object key) {
         Entry p = getEntry(key);
         if (p == null)
             return null;
@@ -497,7 +507,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
     /**
      * Removes all mappings from this RedBlackMap.
      */
-    public synchronized void clear() {
+    @Override
+	public synchronized void clear() {
         modCount++;
         size = 0;
         root = null;
@@ -509,7 +520,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      *
      * @return a shallow copy of this Map.
      */
-    public synchronized Object clone() {
+    @Override
+	public synchronized Object clone() {
         RedBlackMap clone = null;
         try { 
             clone = (RedBlackMap)super.clone();
@@ -557,28 +569,34 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      *
      * @return a set view of the keys contained in this RedBlackMap.
      */
-    public Set keySet() {
+    @Override
+	public Set keySet() {
         if (keySet == null) {
             keySet = new AbstractSet() {
-                public Iterator iterator() {
+                @Override
+				public Iterator iterator() {
                     return new KeyIterator();
                 }
 
-                public int size() {
+                @Override
+				public int size() {
                     return RedBlackMap.this.size();
                 }
 
-                public boolean contains(Object o) {
+                @Override
+				public boolean contains(Object o) {
                     return containsKey(o);
                 }
 
-                public boolean remove(Object o) {
+                @Override
+				public boolean remove(Object o) {
                     int oldSize = size;
                     RedBlackMap.this.remove(o);
                     return size != oldSize;
                 }
 
-                public void clear() {
+                @Override
+				public void clear() {
                     RedBlackMap.this.clear();
                 }
             };
@@ -599,25 +617,30 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      *
      * @return a collection view of the values contained in this map.
      */
-    public Collection values() {
+    @Override
+	public Collection values() {
         if (values == null) {
             values = new AbstractCollection() {
-                public Iterator iterator() {
+                @Override
+				public Iterator iterator() {
                     return new ValueIterator();
                 }
 
-                public int size() {
+                @Override
+				public int size() {
                     return RedBlackMap.this.size();
                 }
 
-                public boolean contains(Object o) {
+                @Override
+				public boolean contains(Object o) {
                     for (Entry e = firstEntry(); e != null; e = successor(e))
                         if (valEquals(e.getValue(), o))
                             return true;
                     return false;
                 }
 
-                public boolean remove(Object o) {
+                @Override
+				public boolean remove(Object o) {
                     for (Entry e = firstEntry(); e != null; e = successor(e)) {
                         if (valEquals(e.getValue(), o)) {
                             deleteEntry(e);
@@ -627,7 +650,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
                     return false;
                 }
 
-                public void clear() {
+                @Override
+				public void clear() {
                     RedBlackMap.this.clear();
                 }
             };
@@ -649,14 +673,17 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      * @return a set view of the mappings contained in this map.
      * @see Map.Entry
      */
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
         if (entrySet == null) {
             entrySet = new AbstractSet() {
-                public Iterator iterator() {
+                @Override
+				public Iterator iterator() {
                     return new EntryIterator();
                 }
 
-                public boolean contains(Object o) {
+                @Override
+				public boolean contains(Object o) {
                   if (!(o instanceof Map.Entry))
                     return false;
   
@@ -666,7 +693,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
                     return p != null && valEquals(p.getValue(), value);
                 }
 
-                public boolean remove(Object o) {
+                @Override
+				public boolean remove(Object o) {
                   if (!(o instanceof Map.Entry))
                     return false;
 
@@ -680,11 +708,13 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
                     return false;
                 }
 
-                public int size() {
+                @Override
+				public int size() {
                     return RedBlackMap.this.size();
                 }
 
-                public void clear() {
+                @Override
+				public void clear() {
                     RedBlackMap.this.clear();
                 }
             };
@@ -736,7 +766,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      *               <tt>null</tt> and this map uses natural order, or its
      *               comparator does not tolerate <tt>null</tt> keys.
      */
-    public SortedMap subMap(Object fromKey, Object toKey) {
+    @Override
+	public SortedMap subMap(Object fromKey, Object toKey) {
       if (compare(fromKey, toKey) <= 0)
         return new SubMap(fromKey, toKey);
       else
@@ -780,7 +811,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      *               this map uses natural order, or its comparator does not
      *               tolerate <tt>null</tt> keys.
      */
-    public SortedMap headMap(Object toKey) {
+    @Override
+	public SortedMap headMap(Object toKey) {
         return new SubMap(toKey, true);
     }
 
@@ -819,7 +851,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
      *               this map uses natural order, or its comparator does not
      *               tolerate <tt>null</tt> keys.
      */
-    public SortedMap tailMap(Object fromKey) {
+    @Override
+	public SortedMap tailMap(Object fromKey) {
         return new SubMap(fromKey, false);
     }
 
@@ -860,38 +893,45 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
             this.toKey = toKey;
         }
 
-        public boolean isEmpty() {
+        @Override
+		public boolean isEmpty() {
             return entrySet.isEmpty();
         }
 
-        public boolean containsKey(Object key) {
+        @Override
+		public boolean containsKey(Object key) {
             return inRange(key) && RedBlackMap.this.containsKey(key);
         }
 
-        public Object get(Object key) {
+        @Override
+		public Object get(Object key) {
             if (!inRange(key))
                 return null;
             return RedBlackMap.this.get(key);
         }
 
-        public Object put(Object key, Object value) {
+        @Override
+		public Object put(Object key, Object value) {
             if (!inRange(key))
                 throw new IllegalArgumentException("key out of range");
             return RedBlackMap.this.put(key, value);
         }
 
-        public Comparator comparator() {
+        @Override
+		public Comparator comparator() {
             return comparator;
         }
 
-        public Object firstKey() {
+        @Override
+		public Object firstKey() {
             Object first = key(fromStart ? firstEntry():getCeilEntry(fromKey));
             if (!toEnd && compare(first, toKey) >= 0)
                 throw(new NoSuchElementException());
             return first;
         }
 
-        public Object lastKey() {
+        @Override
+		public Object lastKey() {
             Object last = key(toEnd ? lastEntry() : getPrecedingEntry(toKey));
             if (!fromStart && compare(last, fromKey) < 0)
                 throw(new NoSuchElementException());
@@ -900,14 +940,16 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
 
         private transient Set entrySet = new EntrySetView();
 
-        public Set entrySet() {
+        @Override
+		public Set entrySet() {
             return entrySet;
         }
 
         private class EntrySetView extends AbstractSet {
             private transient int size = -1, sizeModCount;
 
-            public int size() {
+            @Override
+			public int size() {
                 if (size == -1 || sizeModCount != RedBlackMap.this.modCount) {
                     size = 0;  sizeModCount = RedBlackMap.this.modCount;
                     Iterator i = iterator();
@@ -919,11 +961,13 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
                 return size;
             }
 
-            public boolean isEmpty() {
+            @Override
+			public boolean isEmpty() {
                 return !iterator().hasNext();
             }
 
-            public boolean contains(Object o) {
+            @Override
+			public boolean contains(Object o) {
                 if (!(o instanceof Map.Entry))
                     return false;
                 Map.Entry entry = (Map.Entry)o;
@@ -935,7 +979,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
                        valEquals(node.getValue(), entry.getValue());
             }
 
-            public boolean remove(Object o) {
+            @Override
+			public boolean remove(Object o) {
                 if (!(o instanceof Map.Entry))
                     return false;
                 Map.Entry entry = (Map.Entry)o;
@@ -950,7 +995,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
                 return false;
             }
 
-            public Iterator iterator() {
+            @Override
+			public Iterator iterator() {
                 return new SubMapEntryIterator(
                     (fromStart ? firstEntry() : getCeilEntry(fromKey)),
                     (toEnd     ? null         : getCeilEntry(toKey)));
@@ -966,18 +1012,21 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
             return key;
         }
 
-        public SortedMap subMap(Object fromKey, Object toKey) {
+        @Override
+		public SortedMap subMap(Object fromKey, Object toKey) {
           if (compare(fromKey, toKey) > 0) 
             return new RedBlackMap(this).subMap(fromKey, toKey);
           else 
             return new SubMap(putInRange(fromKey), putInRange(toKey));
         }
 
-        public SortedMap headMap(Object toKey) {
+        @Override
+		public SortedMap headMap(Object toKey) {
           return new SubMap(fromStart, fromKey, false, putInRange(toKey));
         }
 
-        public SortedMap tailMap(Object fromKey) {
+        @Override
+		public SortedMap tailMap(Object fromKey) {
           return new SubMap(false, putInRange(fromKey), toEnd, toKey);
         }
 
@@ -1009,31 +1058,37 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
           this.toKey = toKey;
         }
         
-        public boolean isEmpty() {
+        @Override
+		public boolean isEmpty() {
           return entrySet.isEmpty();
         }
         
-        public boolean containsKey(Object key) {
+        @Override
+		public boolean containsKey(Object key) {
           return inRange(key) && RedBlackMap.this.containsKey(key);
         }
         
-        public Object get(Object key) {
+        @Override
+		public Object get(Object key) {
           if (!inRange(key))
             return null;
           return RedBlackMap.this.get(key);
         }
         
-        public Object put(Object key, Object value) {
+        @Override
+		public Object put(Object key, Object value) {
           if (!inRange(key))
             throw new IllegalArgumentException("key out of range");
           return RedBlackMap.this.put(key, value);
         }
         
-        public Comparator comparator() {
+        @Override
+		public Comparator comparator() {
           return comparator;
         }
         
-        public Object firstKey() {
+        @Override
+		public Object firstKey() {
           if (compare(key(firstEntry()), toKey) < 0)
             return key(firstEntry());
           
@@ -1043,7 +1098,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
           return key(getCeilEntry(fromKey));
         }
         
-        public Object lastKey() {
+        @Override
+		public Object lastKey() {
           if (compare(key(lastEntry()), fromKey) > 0)
             return key(lastEntry());
           
@@ -1055,14 +1111,16 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
         
         private transient Set entrySet = new EntrySetView();
         
-        public Set entrySet() {
+        @Override
+		public Set entrySet() {
           return entrySet;
         }
         
         private class EntrySetView extends AbstractSet {
           private transient int size = -1, sizeModCount;
           
-          public int size() {
+          @Override
+		public int size() {
             if (size == -1 || sizeModCount != RedBlackMap.this.modCount) {
               size = 0;  sizeModCount = RedBlackMap.this.modCount;
               Iterator i = iterator();
@@ -1074,11 +1132,13 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
             return size;
           }
           
-          public boolean isEmpty() {
+          @Override
+		public boolean isEmpty() {
             return !iterator().hasNext();
           }
           
-          public boolean contains(Object o) {
+          @Override
+		public boolean contains(Object o) {
             if (!(o instanceof Map.Entry))
               return false;
             Map.Entry entry = (Map.Entry)o;
@@ -1090,7 +1150,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
               valEquals(node.getValue(), entry.getValue());
           }
           
-          public boolean remove(Object o) {
+          @Override
+		public boolean remove(Object o) {
             if (!(o instanceof Map.Entry))
               return false;
             Map.Entry entry = (Map.Entry)o;
@@ -1105,7 +1166,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
             return false;
           }
           
-          public Iterator iterator() {
+          @Override
+		public Iterator iterator() {
             RedBlackMap.Entry from = getCeilEntry(fromKey);
             RedBlackMap.Entry to = getPrecedingEntry(toKey);
                       
@@ -1119,7 +1181,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
           }
         }
         
-        public SortedMap subMap(Object fromKey, Object toKey) {
+        @Override
+		public SortedMap subMap(Object fromKey, Object toKey) {
           if (compare(fromKey, toKey) > 0) {
             if ((compare(fromKey, this.toKey) < 0) && (compare(toKey, this.fromKey) > 0)) {            
               fromKey = ((compare(fromKey, this.fromKey) < 0) ? this.fromKey : fromKey);
@@ -1144,7 +1207,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
           }
         }
         
-        public SortedMap headMap(Object toKey) {
+        @Override
+		public SortedMap headMap(Object toKey) {
           if (compare(toKey, this.fromKey) > 0) 
             return new RedBlackMap(this).headMap(toKey);
           else
@@ -1154,7 +1218,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
               return RedBlackMap.this.headMap(toKey);
         }
         
-        public SortedMap tailMap(Object fromKey) {
+        @Override
+		public SortedMap tailMap(Object fromKey) {
           if (compare(fromKey, this.toKey) < 0) 
             return new RedBlackMap(this).tailMap(fromKey);
           else
@@ -1191,7 +1256,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
           next = first;
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
           return next != null;
         }
 
@@ -1201,11 +1267,13 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
           return lastReturned;
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             return nextEntry();
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
           throw new UnsupportedOperationException("Remove not supported!");
           
          /*   if (lastReturned == null)
@@ -1218,13 +1286,15 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
     }
 
     private class KeyIterator extends EntryIterator {
-        public Object next() {
+        @Override
+		public Object next() {
             return nextEntry().key;
         }
     }
 
     private class ValueIterator extends EntryIterator {
-        public Object next() {
+        @Override
+		public Object next() {
             return nextEntry().value;
         }
     }
@@ -1238,11 +1308,13 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
                                 firstExcluded : firstExcluded.key);
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
           return next != null && ((firstExcludedKey == null) || compare(next.key, firstExcludedKey) < 0);
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             if (next == null || ((firstExcludedKey != null) && compare(next.key, firstExcludedKey) >= 0))
                 throw new NoSuchElementException();
             return nextEntry();
@@ -1257,15 +1329,18 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
         iterator2 = new SubMapEntryIterator(first, null);
       }
       
-      public boolean hasNext() {
+      @Override
+	public boolean hasNext() {
         return (iterator1.hasNext() || iterator2.hasNext());
       }
       
-      public Object next() {
+      @Override
+	public Object next() {
         return (iterator1.hasNext() ? iterator1.next() : iterator2.next());
       }
       
-      public void remove() {
+      @Override
+	public void remove() {
         throw new UnsupportedOperationException("remove not supported!");
       }
     }
@@ -1318,7 +1393,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
          *
          * @return the key.
          */
-        public Object getKey() { 
+        @Override
+		public Object getKey() { 
             return key; 
         }
 
@@ -1327,7 +1403,8 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
          *
          * @return the value associated with the key.
          */
-        public Object getValue() {
+        @Override
+		public Object getValue() {
             return value;
         }
 
@@ -1338,13 +1415,15 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
          * @return the value associated with the key before this method was
          *           called.
          */
-        public Object setValue(Object value) {
+        @Override
+		public Object setValue(Object value) {
             Object oldValue = this.value;
             this.value = value;
             return oldValue;
         }
 
-        public boolean equals(Object o) {
+        @Override
+		public boolean equals(Object o) {
             if (!(o instanceof Map.Entry))
                 return false;
             Map.Entry e = (Map.Entry)o;
@@ -1352,13 +1431,15 @@ public class RedBlackMap extends AbstractMap implements SortedMap, Cloneable, ja
             return valEquals(key,e.getKey()) && valEquals(value,e.getValue());
         }
 
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             int keyHash = (key==null ? 0 : key.hashCode());
             int valueHash = (value==null ? 0 : value.hashCode());
             return keyHash ^ valueHash;
         }
 
-        public String toString() {
+        @Override
+		public String toString() {
             return key + "=" + value;
         }
     }

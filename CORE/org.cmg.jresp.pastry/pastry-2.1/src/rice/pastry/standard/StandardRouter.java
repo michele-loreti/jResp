@@ -41,7 +41,6 @@ import java.net.NoRouteToHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -82,7 +81,8 @@ public class StandardRouter extends PastryAppl implements Router {
    *
    */
   static class AliveRouterStrategy implements RouterStrategy {
-    public NodeHandle pickNextHop(RouteMessage msg, Iterator<NodeHandle> i) {
+    @Override
+	public NodeHandle pickNextHop(RouteMessage msg, Iterator<NodeHandle> i) {
       NodeHandle first = i.next();
       if (first.getLiveness() < NodeHandle.LIVENESS_SUSPECTED) {
         return first;
@@ -118,7 +118,8 @@ public class StandardRouter extends PastryAppl implements Router {
   public StandardRouter(final PastryNode thePastryNode, MessageDispatch dispatch, RouterStrategy strategy) {
     super(thePastryNode, null, RouterAddress.getCode(), new MessageDeserializer() {
     
-      public rice.p2p.commonapi.Message deserialize(InputBuffer buf, short type, int priority,
+      @Override
+	public rice.p2p.commonapi.Message deserialize(InputBuffer buf, short type, int priority,
           rice.p2p.commonapi.NodeHandle sender) throws IOException {
         RouteMessage rm;
         rm = RouteMessage.build(buf, (byte)priority, thePastryNode, (NodeHandle)sender,
@@ -143,7 +144,8 @@ public class StandardRouter extends PastryAppl implements Router {
    * @param msg the message.
    */
 
-  public void receiveMessage(Message msg) {
+  @Override
+public void receiveMessage(Message msg) {
     if (logger.level <= Logger.FINER) logger.log("receiveMessage("+msg+")");
     if (msg instanceof RouteMessage) {
       // should only happen for messages coming off the wire
@@ -157,10 +159,12 @@ public class StandardRouter extends PastryAppl implements Router {
 //    route(rm, null);
 //  }
 
-  public void route(final RouteMessage rm) {
+  @Override
+public void route(final RouteMessage rm) {
     if (!thePastryNode.getEnvironment().getSelectorManager().isSelectorThread()) {
       thePastryNode.getEnvironment().getSelectorManager().invoke(new Runnable() {
-        public void run() {
+        @Override
+		public void run() {
           route(rm);
         }
       });
@@ -210,10 +214,12 @@ public class StandardRouter extends PastryAppl implements Router {
   protected void sendTheMessage(final RouteMessage rm, final NodeHandle handle) {    
     if (logger.level <= Logger.FINER) logger.log("sendTheMessage("+rm+","+handle+")");
     rm.setTLCancellable(thePastryNode.send(handle, rm, new PMessageNotification(){    
-      public void sent(PMessageReceipt msg) {
+      @Override
+	public void sent(PMessageReceipt msg) {
         rm.sendSuccess(handle);
       }    
-      public void sendFailed(PMessageReceipt msg, Exception reason) {
+      @Override
+	public void sendFailed(PMessageReceipt msg, Exception reason) {
         if (rm.sendFailed(reason)) {
           if (logger.level <= Logger.CONFIG) logger.logException("sendFailed("+rm+")=>"+handle, reason);
         } else {
@@ -377,7 +383,8 @@ public class StandardRouter extends PastryAppl implements Router {
 //    msg.setNextHop(handle);
 //  }
 
-  public Iterator<NodeHandle> getBestRoutingCandidates(final Id target) {
+  @Override
+public Iterator<NodeHandle> getBestRoutingCandidates(final Id target) {
     int cwSize = thePastryNode.getLeafSet().cwSize();
     int ccwSize = thePastryNode.getLeafSet().ccwSize();
 
@@ -415,7 +422,7 @@ public class StandardRouter extends PastryAppl implements Router {
       {
         best = thePastryNode.getRoutingTable().getBestEntry(target);
         if (best == null || best.isEmpty()) {
-          rtIterator = thePastryNode.getRoutingTable().alternateRoutesIterator((rice.pastry.Id)target);
+          rtIterator = thePastryNode.getRoutingTable().alternateRoutesIterator(target);
           lsCollection = getLSCollection(lsPos);
           iterator = rtIterator;          
           //System.out.println("Best is null or empty "+rtIterator);
@@ -424,7 +431,8 @@ public class StandardRouter extends PastryAppl implements Router {
       }
 
       
-      public boolean hasNext() {        
+      @Override
+	public boolean hasNext() {        
         if (next == null) next = getNext();
         return (next != null);
       }
@@ -436,7 +444,7 @@ public class StandardRouter extends PastryAppl implements Router {
           k++;
           if (k >= best.size()) {
             // done with best, now use the rtIterator
-            rtIterator = thePastryNode.getRoutingTable().alternateRoutesIterator((rice.pastry.Id)target);
+            rtIterator = thePastryNode.getRoutingTable().alternateRoutesIterator(target);
             lsCollection = getLSCollection(lsPos);
             iterator = rtIterator;
           }
@@ -469,7 +477,8 @@ public class StandardRouter extends PastryAppl implements Router {
         return null;      
       }
       
-      public NodeHandle next() {
+      @Override
+	public NodeHandle next() {
         if (hasNext()) {
           NodeHandle ret = next;
           next = null;
@@ -478,7 +487,8 @@ public class StandardRouter extends PastryAppl implements Router {
         throw new NoSuchElementException();
       }
 
-      public void remove() {
+      @Override
+	public void remove() {
         throw new RuntimeException("Operation not allowed.");
       }      
     };
@@ -678,11 +688,13 @@ public class StandardRouter extends PastryAppl implements Router {
   protected Map<NodeHandle, Long> lastTimeSentRouteTablePatch = new HashMap<NodeHandle, Long>();
   
   
-  public boolean deliverWhenNotReady() {
+  @Override
+public boolean deliverWhenNotReady() {
     return true;
   }
 
-  public void messageForAppl(Message msg) {
+  @Override
+public void messageForAppl(Message msg) {
     throw new RuntimeException("Should not be called.");
   }
 }

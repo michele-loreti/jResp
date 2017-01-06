@@ -38,10 +38,8 @@ package rice.p2p.glacier.v2.messaging;
 
 import java.io.IOException;
 
-import rice.*;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
-import rice.p2p.glacier.*;
 
 public abstract class GlacierMessage implements RawMessage {
   
@@ -89,7 +87,8 @@ public abstract class GlacierMessage implements RawMessage {
    *
    * @return This message's priority
    */
-  public int getPriority() {
+  @Override
+public int getPriority() {
     return LOW_PRIORITY;
   }
 
@@ -128,7 +127,8 @@ public abstract class GlacierMessage implements RawMessage {
     return tag;
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeInt(id); 
     buf.writeChar(tag);
     buf.writeBoolean(isResponse);

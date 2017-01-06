@@ -38,8 +38,6 @@ package org.mpisws.p2p.transport.peerreview.history.logentry;
 
 import java.io.IOException;
 
-import org.mpisws.p2p.transport.peerreview.PeerReviewConstants;
-
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
 
@@ -51,7 +49,8 @@ public class EvtSign extends HistoryEvent {
     this.signature = signature;
   }
   
-  public short getType() {
+  @Override
+public short getType() {
     return EVT_SIGN;
   }
   
@@ -62,7 +61,8 @@ public class EvtSign extends HistoryEvent {
     buf.read(signature);
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.write(hTopMinusOne, 0, hTopMinusOne.length);
     buf.write(signature, 0, signature.length);
   }

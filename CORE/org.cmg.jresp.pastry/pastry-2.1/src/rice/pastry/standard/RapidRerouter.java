@@ -36,7 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package rice.pastry.standard;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -50,7 +49,6 @@ import rice.environment.logging.Logger;
 import rice.p2p.commonapi.Cancellable;
 import rice.pastry.NodeHandle;
 import rice.pastry.PastryNode;
-import rice.pastry.messaging.Message;
 import rice.pastry.messaging.MessageDispatch;
 import rice.pastry.routing.RouteMessage;
 import rice.pastry.routing.RouterStrategy;
@@ -126,7 +124,8 @@ public class RapidRerouter extends StandardRouter implements LivenessListener<No
 
     // give the selector a chance to do some IO before trying to schedule again
     thePastryNode.getEnvironment().getSelectorManager().invoke(new Runnable() {
-      public void run() {
+      @Override
+	public void run() {
         // this is going to make forward() be called again, can prevent this with a check in getPrevNode().equals(localNode)
         rm.getOptions().setRerouteIfSuspected(SendOptions.defaultRerouteIfSuspected);
         route(rm);
@@ -171,7 +170,8 @@ public class RapidRerouter extends StandardRouter implements LivenessListener<No
     }    
   }
   
-  public void livenessChanged(NodeHandle i, int val, Map<String, Object> options) {
+  @Override
+public void livenessChanged(NodeHandle i, int val, Map<String, Object> options) {
     if (val >= LIVENESS_SUSPECTED) {
       Collection<RouterNotification> rerouteMe;
       synchronized(pending) {
@@ -210,7 +210,8 @@ public class RapidRerouter extends StandardRouter implements LivenessListener<No
       this.cancellable = receipt;
     }
 
-    public void sendFailed(PMessageReceipt msg, Exception reason) {
+    @Override
+	public void sendFailed(PMessageReceipt msg, Exception reason) {
       // what to do..., rapidly reroute? 
       failed = true;
       cancellable = null;
@@ -261,7 +262,8 @@ public class RapidRerouter extends StandardRouter implements LivenessListener<No
     boolean sent = false;
     boolean cancelled = false;
     
-    public void sent(PMessageReceipt msg) {
+    @Override
+	public void sent(PMessageReceipt msg) {
       if (logger.level <= Logger.FINE) logger.log("Send success "+rm+" to:"+dest+" "+msg);
       sent = true;
       cancellable = null;
@@ -270,7 +272,8 @@ public class RapidRerouter extends StandardRouter implements LivenessListener<No
       rm.sendSuccess(dest);
     }
 
-    public boolean cancel() {
+    @Override
+	public boolean cancel() {
       if (logger.level <= Logger.FINE) logger.log("cancelling "+this);
       if (cancellable == null && logger.level <= Logger.WARNING) logger.log("cancellable = null c:"+cancelled+" s:"+sent+" f:"+failed);
       cancelled = true;
@@ -278,7 +281,8 @@ public class RapidRerouter extends StandardRouter implements LivenessListener<No
       return true;
     }    
     
-    public String toString() {
+    @Override
+	public String toString() {
       return "RN{"+rm+"->"+dest+"}";
     }
   }

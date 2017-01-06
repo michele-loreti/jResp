@@ -44,7 +44,6 @@ import rice.p2p.commonapi.CancellableTask;
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 import rice.p2p.commonapi.rawserialization.RawMessage;
 import rice.pastry.*;
-import rice.pastry.messaging.*;
 import rice.pastry.standard.*;
 import rice.pastry.transport.NodeHandleAdapter;
 import rice.pastry.transport.TLDeserializer;
@@ -58,8 +57,6 @@ import java.util.*;
 
 import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.direct.DirectTransportLayer;
-import org.mpisws.p2p.transport.liveness.LivenessListener;
-import org.mpisws.p2p.transport.liveness.LivenessProvider;
 import org.mpisws.p2p.transport.proximity.ProximityListener;
 import org.mpisws.p2p.transport.proximity.ProximityProvider;
 
@@ -122,16 +119,19 @@ public class DirectPastryNodeFactory extends TransportPastryNodeFactory {
    *
    * @return a new PastryNode
    */
-  public PastryNode newNode(NodeHandle bootstrap) {
+  @Override
+public PastryNode newNode(NodeHandle bootstrap) {
     return newNode(bootstrap, nidFactory.generateNodeId());
   }
-  public PastryNode newNode() throws IOException {
+  @Override
+public PastryNode newNode() throws IOException {
     return newNode(nidFactory.generateNodeId());
   }
 
   HashMap<Id, NodeRecord> recordTable = new HashMap<Id, NodeRecord>();
 
-  public PastryNode newNode(NodeHandle bootstrap, Id nodeId) {
+  @Override
+public PastryNode newNode(NodeHandle bootstrap, Id nodeId) {
     try {
       if (bootstrap == null)
         if (logger.level <= Logger.WARNING) logger.log(
@@ -154,7 +154,8 @@ public class DirectPastryNodeFactory extends TransportPastryNodeFactory {
    *
    * @return a new PastryNode
    */
-  public PastryNode newNode(Id nodeId) throws IOException {
+  @Override
+public PastryNode newNode(Id nodeId) throws IOException {
       
       // this code builds a different environment for each PastryNode
       Environment environment = this.environment;
@@ -197,14 +198,17 @@ public class DirectPastryNodeFactory extends TransportPastryNodeFactory {
    * @author Jeff Hoye
    */
   static class NullCancellableTask implements CancellableTask {
-    public void run() {
+    @Override
+	public void run() {
     }
 
-    public boolean cancel() {
+    @Override
+	public boolean cancel() {
       return false;
     }
 
-    public long scheduledExecutionTime() {
+    @Override
+	public long scheduledExecutionTime() {
       return 0;
     }
   }
@@ -246,7 +250,7 @@ public class DirectPastryNodeFactory extends TransportPastryNodeFactory {
    * @return The proximity of the provided handle
    */
   public int getProximity(NodeHandle local, NodeHandle remote) {
-    return (int)simulator.proximity((DirectNodeHandle)local, (DirectNodeHandle)remote);
+    return (int)simulator.proximity(local, remote);
   }
 
   @Override
@@ -260,12 +264,14 @@ public class DirectPastryNodeFactory extends TransportPastryNodeFactory {
     // TODO: Make this work
     return new NodeHandleFactory<NodeHandle>(){
     
-      public NodeHandle readNodeHandle(InputBuffer buf) throws IOException {
+      @Override
+	public NodeHandle readNodeHandle(InputBuffer buf) throws IOException {
         // TODO Auto-generated method stub
         return null;
       }
     
-      public NodeHandle coalesce(NodeHandle handle) {
+      @Override
+	public NodeHandle coalesce(NodeHandle handle) {
         // TODO Auto-generated method stub
         notifyListeners(handle);
         return null;
@@ -284,7 +290,8 @@ public class DirectPastryNodeFactory extends TransportPastryNodeFactory {
         }
       }
 
-      public void addNodeHandleFactoryListener(
+      @Override
+	public void addNodeHandleFactoryListener(
           NodeHandleFactoryListener<NodeHandle> listener) {
         synchronized(listeners) {
           listeners.add(listener);
@@ -292,7 +299,8 @@ public class DirectPastryNodeFactory extends TransportPastryNodeFactory {
       }
 
 
-      public void removeNodeHandleFactoryListener(
+      @Override
+	public void removeNodeHandleFactoryListener(
           NodeHandleFactoryListener<NodeHandle> listener) {
         synchronized(listeners) {
           listeners.remove(listener);
@@ -303,7 +311,7 @@ public class DirectPastryNodeFactory extends TransportPastryNodeFactory {
 
   @Override
   protected NodeHandleAdapter getNodeHandleAdapter(final PastryNode pn, NodeHandleFactory handleFactory, TLDeserializer deserializer) throws IOException {
-    NodeRecord nr = (NodeRecord)recordTable.get(pn.getId());
+    NodeRecord nr = recordTable.get(pn.getId());
     if (nr == null) {
       nr = simulator.generateNodeRecord();
       recordTable.put(pn.getNodeId(),nr);
@@ -312,21 +320,25 @@ public class DirectPastryNodeFactory extends TransportPastryNodeFactory {
     // new DirectTransportLayer<NodeHandle, RawMessage>(pn.getLocalHandle(), simulator, nr, pn.getEnvironment());
         
     NodeHandleAdapter nha = new NodeHandleAdapter(tl,simulator.getLivenessProvider(),new ProximityProvider<NodeHandle>(){          
-      public int proximity(NodeHandle i, Map<String, Object> options) {
-        return (int)simulator.proximity((DirectNodeHandle)pn.getLocalHandle(), (DirectNodeHandle)i);
+      @Override
+	public int proximity(NodeHandle i, Map<String, Object> options) {
+        return (int)simulator.proximity(pn.getLocalHandle(), i);
       }
     
       // proximity won't change, so don't worry about it
       List<ProximityListener<NodeHandle>> proxListeners = new ArrayList<ProximityListener<NodeHandle>>();
-      public void addProximityListener(ProximityListener<NodeHandle> name) {
+      @Override
+	public void addProximityListener(ProximityListener<NodeHandle> name) {
         proxListeners.add(name);
       }
 
-      public boolean removeProximityListener(ProximityListener<NodeHandle> name) {
+      @Override
+	public boolean removeProximityListener(ProximityListener<NodeHandle> name) {
         return proxListeners.remove(name);
       }
 
-      public void clearState(NodeHandle i) {
+      @Override
+	public void clearState(NodeHandle i) {
 
       }    
     });
@@ -349,13 +361,16 @@ public class DirectPastryNodeFactory extends TransportPastryNodeFactory {
   protected Bootstrapper getBootstrapper(final PastryNode pn, NodeHandleAdapter tl, NodeHandleFactory handleFactory, final ProximityNeighborSelector pns) {
     return new Bootstrapper<NodeHandle>() {
     
-      public void boot(Collection<NodeHandle> bootaddresses) {
+      @Override
+	public void boot(Collection<NodeHandle> bootaddresses) {
         pns.getNearHandles(bootaddresses, new Continuation<Collection<NodeHandle>, Exception>() {        
-          public void receiveResult(Collection<NodeHandle> result) {
+          @Override
+		public void receiveResult(Collection<NodeHandle> result) {
             if (logger.level <= Logger.INFO) logger.log("boot() calling pn.doneNode("+result+")");
             pn.doneNode(result);
           }        
-          public void receiveException(Exception exception) {
+          @Override
+		public void receiveException(Exception exception) {
             // TODO Auto-generated method stub        
           }        
         });

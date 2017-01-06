@@ -36,11 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package rice.pastry.routing;
 
-import rice.pastry.*;
-import rice.pastry.messaging.*;
-
-import java.io.*;
-
 /**
  * The address of the route protocol at a pastry node.
  * 

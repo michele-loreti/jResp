@@ -39,7 +39,6 @@ package rice.p2p.scribe.messaging;
 
 import java.io.IOException;
 
-import rice.*;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
 import rice.p2p.scribe.*;
@@ -88,7 +87,8 @@ public class PublishRequestMessage extends ScribeMessage {
     return content;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return "PRM{"+topic+"}:["+content+"]";
   }
   
@@ -98,11 +98,13 @@ public class PublishRequestMessage extends ScribeMessage {
   }
   
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeByte((byte)0); // version
     super.serialize(buf);
     

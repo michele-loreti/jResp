@@ -40,7 +40,6 @@ package rice.p2p.util.testing;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
-import java.util.zip.*;
 import rice.p2p.util.*;
 
 @SuppressWarnings("unchecked")
@@ -386,7 +385,8 @@ public class XMLObjectStreamUnit {
       Object object = new Serializable() {
         private int hashCode = 83;
         
-        public int hashCode() {
+        @Override
+		public int hashCode() {
           return hashCode;
         }
         
@@ -676,11 +676,11 @@ public class XMLObjectStreamUnit {
     testChar(' ');
     testChar('"');
     testChar('\'');
-    testDouble((double) 0);
-    testDouble((double) -1029.2);
-    testDouble((double) 17);
-    testDouble((double) 182.29938);
-    testFloat((float) 0);
+    testDouble(0);
+    testDouble(-1029.2);
+    testDouble(17);
+    testDouble(182.29938);
+    testFloat(0);
     testFloat((float) 29.239);
     testFloat((float) 11.1029);
     testFloat((float) -1902.1);
@@ -757,12 +757,14 @@ public class XMLObjectStreamUnit {
       return num;
     }
     
-    public void writeExternal(ObjectOutput o) throws IOException {
+    @Override
+	public void writeExternal(ObjectOutput o) throws IOException {
       o.writeInt(num + 100);
       o.writeInt(2000);
     }
     
-    public void readExternal(ObjectInput i) throws IOException, ClassNotFoundException {
+    @Override
+	public void readExternal(ObjectInput i) throws IOException, ClassNotFoundException {
       num = i.readInt();
       i.readInt();
     }
@@ -776,12 +778,14 @@ public class XMLObjectStreamUnit {
     private TestSubExternalizable() {
     }
     
-    public void writeExternal(ObjectOutput o) throws IOException {
+    @Override
+	public void writeExternal(ObjectOutput o) throws IOException {
       super.writeExternal(o);
       o.writeInt(1000);
     }
     
-    public void readExternal(ObjectInput i) throws IOException, ClassNotFoundException {
+    @Override
+	public void readExternal(ObjectInput i) throws IOException, ClassNotFoundException {
       super.readExternal(i);
       num = i.readInt();
     }

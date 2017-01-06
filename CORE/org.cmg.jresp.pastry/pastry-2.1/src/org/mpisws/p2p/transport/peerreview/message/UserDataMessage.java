@@ -38,9 +38,6 @@ package org.mpisws.p2p.transport.peerreview.message;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Map;
-
-import org.mpisws.p2p.transport.peerreview.PeerReviewConstants;
 import org.mpisws.p2p.transport.peerreview.history.HashProvider;
 import org.mpisws.p2p.transport.peerreview.history.logentry.EvtRecv;
 import org.mpisws.p2p.transport.peerreview.infostore.Evidence;
@@ -50,7 +47,6 @@ import rice.p2p.commonapi.rawserialization.InputBuffer;
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
 import rice.p2p.commonapi.rawserialization.RawSerializable;
 import rice.p2p.util.MathUtils;
-import rice.p2p.util.rawserialization.SimpleInputBuffer;
 import rice.p2p.util.rawserialization.SimpleOutputBuffer;
 
 /**
@@ -96,11 +92,13 @@ public class UserDataMessage<Handle extends RawSerializable> implements PeerRevi
 //    System.out.println("Ctor:"+toString());
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return "UDM:"+topSeq+","+senderHandle+","+MathUtils.toHex(hTopMinusOne)+","+MathUtils.toHex(signature)+","+relevantLen+","+payload.length;
   }
   
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
 
@@ -109,7 +107,8 @@ public class UserDataMessage<Handle extends RawSerializable> implements PeerRevi
     return relevantCode;
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeLong(topSeq);
     senderHandle.serialize(buf);
     buf.write(hTopMinusOne, 0, hTopMinusOne.length);
@@ -235,7 +234,8 @@ public class UserDataMessage<Handle extends RawSerializable> implements PeerRevi
     return payload.length;
   }
 
-  public short getEvidenceType() {
+  @Override
+public short getEvidenceType() {
     return CHAL_SEND;
   }
 }

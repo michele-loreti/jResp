@@ -50,7 +50,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
-import java.security.SignatureException;
 import java.security.cert.X509Certificate;
 import java.security.spec.RSAKeyGenParameterSpec;
 import java.util.ArrayList;
@@ -78,33 +77,16 @@ import org.mpisws.p2p.transport.peerreview.IdentifierExtractor;
 import org.mpisws.p2p.transport.peerreview.PeerReview;
 import org.mpisws.p2p.transport.peerreview.PeerReviewCallback;
 import org.mpisws.p2p.transport.peerreview.PeerReviewImpl;
+import org.mpisws.p2p.transport.peerreview.StatusConstants;
 import org.mpisws.p2p.transport.peerreview.WitnessListener;
-import org.mpisws.p2p.transport.peerreview.commitment.Authenticator;
-import org.mpisws.p2p.transport.peerreview.commitment.AuthenticatorSerializer;
-import org.mpisws.p2p.transport.peerreview.commitment.AuthenticatorSerializerImpl;
-import org.mpisws.p2p.transport.peerreview.commitment.AuthenticatorStore;
-import org.mpisws.p2p.transport.peerreview.commitment.CommitmentProtocol;
-import org.mpisws.p2p.transport.peerreview.commitment.CommitmentProtocolImpl;
-import org.mpisws.p2p.transport.peerreview.evidence.EvidenceSerializerImpl;
 import org.mpisws.p2p.transport.peerreview.history.HashProvider;
-import org.mpisws.p2p.transport.peerreview.history.SecureHistory;
 import org.mpisws.p2p.transport.peerreview.history.SecureHistoryFactory;
 import org.mpisws.p2p.transport.peerreview.history.SecureHistoryFactoryImpl;
 import org.mpisws.p2p.transport.peerreview.history.hasher.SHA1HashProvider;
-import org.mpisws.p2p.transport.peerreview.history.stub.NullHashProvider;
-import org.mpisws.p2p.transport.peerreview.identity.IdentityTransport;
-import org.mpisws.p2p.transport.peerreview.identity.IdentityTransportCallback;
 import org.mpisws.p2p.transport.peerreview.identity.IdentityTransportLayerImpl;
-import org.mpisws.p2p.transport.peerreview.identity.UnknownCertificateException;
-import org.mpisws.p2p.transport.peerreview.infostore.Evidence;
 import org.mpisws.p2p.transport.peerreview.infostore.IdStrTranslator;
-import org.mpisws.p2p.transport.peerreview.infostore.PeerInfoStore;
-import org.mpisws.p2p.transport.peerreview.infostore.StatusChangeListener;
-import org.mpisws.p2p.transport.peerreview.message.PeerReviewMessage;
 import org.mpisws.p2p.transport.peerreview.replay.Verifier;
 import org.mpisws.p2p.transport.peerreview.replay.record.RecordLayer;
-import org.mpisws.p2p.transport.table.UnknownValueException;
-import org.mpisws.p2p.transport.util.MessageRequestHandleImpl;
 import org.mpisws.p2p.transport.util.Serializer;
 
 import rice.Continuation;
@@ -122,7 +104,8 @@ public class PRRegressionTest {
   public static final byte[] EMPTY_ARRAY = new byte[0];
   static class IdExtractor implements IdentifierExtractor<HandleImpl, IdImpl> {
 
-    public IdImpl extractIdentifier(HandleImpl h) {
+    @Override
+	public IdImpl extractIdentifier(HandleImpl h) {
       return h.id;
     }
     
@@ -130,11 +113,13 @@ public class PRRegressionTest {
   
   static class HandleSerializer implements Serializer<HandleImpl> {
 
-    public HandleImpl deserialize(InputBuffer buf) throws IOException {
+    @Override
+	public HandleImpl deserialize(InputBuffer buf) throws IOException {
       return HandleImpl.build(buf);
     }
 
-    public void serialize(HandleImpl i, OutputBuffer buf) throws IOException {
+    @Override
+	public void serialize(HandleImpl i, OutputBuffer buf) throws IOException {
       i.serialize(buf);
     }
     
@@ -142,11 +127,13 @@ public class PRRegressionTest {
   
   static class IdSerializer implements Serializer<IdImpl> {
 
-    public IdImpl deserialize(InputBuffer buf) throws IOException {
+    @Override
+	public IdImpl deserialize(InputBuffer buf) throws IOException {
       return IdImpl.build(buf);
     }
 
-    public void serialize(IdImpl i, OutputBuffer buf) throws IOException {
+    @Override
+	public void serialize(IdImpl i, OutputBuffer buf) throws IOException {
       i.serialize(buf);
     }
     
@@ -161,7 +148,8 @@ public class PRRegressionTest {
       this.id = id;
     }
     
-    public void serialize(OutputBuffer buf) throws IOException {
+    @Override
+	public void serialize(OutputBuffer buf) throws IOException {
       buf.writeUTF(name);
       id.serialize(buf);
     }
@@ -170,15 +158,18 @@ public class PRRegressionTest {
       return new HandleImpl(buf.readUTF(), IdImpl.build(buf));
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
       return "HandleImpl<"+name+">";
     }
     
-    public int hashCode() {
+    @Override
+	public int hashCode() {
       return id.hashCode()^name.hashCode();
     }
     
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
       HandleImpl that = (HandleImpl)o;
       if (!id.equals(that.id)) return false;
       return name.equals(that.name);
@@ -190,7 +181,8 @@ public class PRRegressionTest {
     public IdImpl(int id) {
       this.id = id;
     }
-    public void serialize(OutputBuffer buf) throws IOException {
+    @Override
+	public void serialize(OutputBuffer buf) throws IOException {
       buf.writeInt(id);
     }    
     
@@ -198,15 +190,18 @@ public class PRRegressionTest {
       return new IdImpl(buf.readInt());
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
       return "Id<"+id+">";
     }
     
-    public int hashCode() {
+    @Override
+	public int hashCode() {
       return id;      
     }
     
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
       IdImpl that = (IdImpl)o;
       return (this.id == that.id);
     }
@@ -225,25 +220,30 @@ public class PRRegressionTest {
       this.env = env;
     }
     
-    public void acceptMessages(boolean b) {
+    @Override
+	public void acceptMessages(boolean b) {
       throw new RuntimeException("implement");
     }
 
-    public void acceptSockets(boolean b) {
+    @Override
+	public void acceptSockets(boolean b) {
       throw new RuntimeException("implement");
     }
 
-    public HandleImpl getLocalIdentifier() {
+    @Override
+	public HandleImpl getLocalIdentifier() {
       return localIdentifier;
     }
 
-    public SocketRequestHandle<HandleImpl> openSocket(HandleImpl i,
+    @Override
+	public SocketRequestHandle<HandleImpl> openSocket(HandleImpl i,
         SocketCallback<HandleImpl> deliverSocketToMe,
         Map<String, Object> options) {
       throw new RuntimeException("implement");
     }
 
-    public MessageRequestHandle<HandleImpl, ByteBuffer> sendMessage(
+    @Override
+	public MessageRequestHandle<HandleImpl, ByteBuffer> sendMessage(
         HandleImpl i, ByteBuffer m,
         MessageCallback<HandleImpl, ByteBuffer> deliverAckToMe,
         Map<String, Object> options) {      
@@ -257,7 +257,8 @@ public class PRRegressionTest {
     private void receiveMessage(final HandleImpl i, final ByteBuffer m) {
 //      System.out.println(Thread.currentThread()+" invoking onto "+env.getSelectorManager());
       env.getSelectorManager().invoke(new Runnable() {      
-        public void run() {
+        @Override
+		public void run() {
           try {                
             callback.messageReceived(i, m, null);
           } catch (IOException ioe) {
@@ -269,16 +270,19 @@ public class PRRegressionTest {
 //      System.out.println(Thread.currentThread()+" invoked onto "+env.getSelectorManager());
     }
 
-    public void setCallback(
+    @Override
+	public void setCallback(
         TransportLayerCallback<HandleImpl, ByteBuffer> callback) {
       this.callback = callback;
     }
 
-    public void setErrorHandler(ErrorHandler<HandleImpl> handler) {
+    @Override
+	public void setErrorHandler(ErrorHandler<HandleImpl> handler) {
       throw new RuntimeException("implement");
     }
 
-    public void destroy() {
+    @Override
+	public void destroy() {
       throw new RuntimeException("implement");
     }
   }
@@ -306,7 +310,8 @@ public class PRRegressionTest {
     }
     
 
-    public void init() {
+    @Override
+	public void init() {
 //      logger.log("init()");
       rand = new Random();
       if (player.localHandle.id.id == 1) {
@@ -323,7 +328,8 @@ public class PRRegressionTest {
       nextSendTime = time;
       if (logger.level <= Logger.FINE) logger.log("scheduling message to be sent at:"+time);
       env.getSelectorManager().schedule(new TimerTask() {
-        public String toString() {
+        @Override
+		public String toString() {
           return "SendMessageTask "+scheduledExecutionTime();
         }
         
@@ -344,14 +350,16 @@ public class PRRegressionTest {
       try {
       tl.sendMessage(dest, ByteBuffer.wrap(msg), new MessageCallback<HandleImpl, ByteBuffer>() {
         
-        public void sendFailed(MessageRequestHandle<HandleImpl, ByteBuffer> msg,
+        @Override
+		public void sendFailed(MessageRequestHandle<HandleImpl, ByteBuffer> msg,
             Exception reason) {
           logger.log("sendFailed("+msg+")");
 //          System.out.println("sendFailed("+msg+")");
 //          reason.printStackTrace();
         }
       
-        public void ack(MessageRequestHandle<HandleImpl, ByteBuffer> msg) {
+        @Override
+		public void ack(MessageRequestHandle<HandleImpl, ByteBuffer> msg) {
           alice.logger.log("ack("+msg+") "+Thread.currentThread());
           if (logger.level <= Logger.FINE) alice.logger.log("ack("+msg+")");
         }
@@ -369,7 +377,8 @@ public class PRRegressionTest {
       return msg;
     }
     
-    public void storeCheckpoint(OutputBuffer buffer) throws IOException {
+    @Override
+	public void storeCheckpoint(OutputBuffer buffer) throws IOException {
       if (logger.level <= Logger.FINER) logger.log("storeCheckpoint "+nextSendTime);
       buffer.writeInt(31173);
       buffer.writeLong(nextSendTime);
@@ -383,7 +392,8 @@ public class PRRegressionTest {
       if (logger.level <= Logger.FINEST) logger.log("storeCheckpoint:"+Arrays.toString(((SimpleOutputBuffer)buffer).getBytes()));
     }
 
-    public boolean loadCheckpoint(InputBuffer buffer) throws IOException {
+    @Override
+	public boolean loadCheckpoint(InputBuffer buffer) throws IOException {
       if (buffer.readInt() != 31173) throw new RuntimeException("invalid checkpoint");
       nextSendTime = buffer.readLong();
       if (buffer.readBoolean()) {
@@ -406,11 +416,13 @@ public class PRRegressionTest {
       return true;
     }
     
-    public void destroy() {
+    @Override
+	public void destroy() {
       throw new RuntimeException("implement");
     }
 
-    public void notifyCertificateAvailable(IdImpl id) {
+    @Override
+	public void notifyCertificateAvailable(IdImpl id) {
       throw new RuntimeException("implement");
     }
 
@@ -422,21 +434,25 @@ public class PRRegressionTest {
       throw new RuntimeException("implement");
     }
 
-    public void incomingSocket(P2PSocket<HandleImpl> s) throws IOException {
+    @Override
+	public void incomingSocket(P2PSocket<HandleImpl> s) throws IOException {
       throw new RuntimeException("implement");
     }
 
-    public void messageReceived(HandleImpl i, ByteBuffer m,
+    @Override
+	public void messageReceived(HandleImpl i, ByteBuffer m,
         Map<String, Object> options) throws IOException {
       if (logger.level <= Logger.INFO) logger.log("Message received: "+MathUtils.toBase64(m.array()));
     }
 
-    public void getWitnesses(IdImpl subject,
+    @Override
+	public void getWitnesses(IdImpl subject,
         WitnessListener<HandleImpl, IdImpl> callback) {
       callback.notifyWitnessSet(subject, Collections.singletonList(carol.localHandle));
     }
 
-    public void notifyStatusChange(
+    @Override
+	public void notifyStatusChange(
         IdImpl id,
         int newStatus) {
       if (logger.level <= Logger.INFO) logger.log("notifyStatusChange("+id+","+PeerReviewImpl.getStatusString(newStatus)+")");
@@ -447,11 +463,13 @@ public class PRRegressionTest {
       addStatusNotification(this.player.localHandle,id,newStatus);
     }
 
-    public Collection<HandleImpl> getMyWitnessedNodes() {
+    @Override
+	public Collection<HandleImpl> getMyWitnessedNodes() {
       return player.witnessed;
     }
 
-    public PeerReviewCallback<HandleImpl, IdImpl> getReplayInstance(Verifier<HandleImpl> v) {
+    @Override
+	public PeerReviewCallback<HandleImpl, IdImpl> getReplayInstance(Verifier<HandleImpl> v) {
       BogusApp ret = new BogusApp(playerTable.get(v.getLocalIdentifier()),v,v.getEnvironment());
       return ret;
     }
@@ -535,7 +553,8 @@ public class PRRegressionTest {
       app = getApp();
       pr.setApp(app);
       env.getSelectorManager().invoke(new Runnable() {
-        public void run() {
+        @Override
+		public void run() {
           try {
             pr.init(Player.this.localHandle.name);
           } catch (IOException ioe) {
@@ -578,11 +597,13 @@ public class PRRegressionTest {
   public IdStrTranslator<IdImpl> getIdStrTranslator() {
     return new IdStrTranslator<IdImpl>(){
 
-      public IdImpl readIdentifierFromString(String s) {
+      @Override
+	public IdImpl readIdentifierFromString(String s) {
         return new IdImpl(Integer.parseInt(s));
       }
 
-      public String toString(IdImpl id) {
+      @Override
+	public String toString(IdImpl id) {
         return Integer.toString(id.id);
       }};
   }
@@ -603,13 +624,15 @@ public class PRRegressionTest {
       //logger.log("requestCert("+certHolder+" from "+source+")");
       return idTLTable.get(source).requestValue(source, certHolder, new Continuation<X509Certificate, Exception>() {
       
-        public void receiveResult(X509Certificate result) {
+        @Override
+		public void receiveResult(X509Certificate result) {
           //logger.log("delivering cert for ("+certHolder+") c:"+c);
           knownValues.put(certHolder, result);
           if (c != null) c.receiveResult(result);
         }
       
-        public void receiveException(Exception exception) {
+        @Override
+		public void receiveException(Exception exception) {
           //logger.logException("exception when requesting cert for ("+certHolder+") c:"+c,exception);
           if (c != null) c.receiveException(exception);
         }
@@ -681,7 +704,7 @@ public class PRRegressionTest {
   public void finish() {
     for (Entry<HandleImpl, Map<IdImpl, Integer>> foo : recordedStatus.entrySet()) {
       for (Entry<IdImpl, Integer> i : foo.getValue().entrySet()) {
-        if (i.getValue() != StatusChangeListener.STATUS_TRUSTED) {
+        if (i.getValue() != StatusConstants.STATUS_TRUSTED) {
           logger.log("Fail: "+foo.getKey()+" found "+i.getKey()+" "+i.getValue());
           System.exit(1);
         }
@@ -717,7 +740,8 @@ public class PRRegressionTest {
         
     env.getSelectorManager().invoke(new Runnable() {
       
-      public void run() {
+      @Override
+	public void run() {
         try {
           buildPlayers(env);
           

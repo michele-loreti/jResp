@@ -36,14 +36,9 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package org.mpisws.p2p.transport.peerreview.audit;
 
-import java.util.Collection;
-
 import org.mpisws.p2p.transport.peerreview.PeerReviewConstants;
-import org.mpisws.p2p.transport.peerreview.commitment.Authenticator;
 import org.mpisws.p2p.transport.peerreview.commitment.AuthenticatorStore;
 import org.mpisws.p2p.transport.peerreview.commitment.CommitmentProtocol;
-import org.mpisws.p2p.transport.peerreview.history.SecureHistory;
-
 import rice.p2p.commonapi.rawserialization.RawSerializable;
 import rice.p2p.util.tuples.Tuple;
 

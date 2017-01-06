@@ -39,8 +39,6 @@ package org.mpisws.p2p.filetransfer;
 import java.io.File;
 import java.nio.ByteBuffer;
 
-import rice.p2p.commonapi.Cancellable;
-
 public interface FileReceipt extends Receipt {
   public File getFile();
   

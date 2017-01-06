@@ -4,7 +4,6 @@ import java.io.IOException;
 import org.cmg.jresp.behaviour.*;
 import org.cmg.jresp.knowledge.*;
 import org.cmg.jresp.topology.*;
-import pscel.*;
 
 @SuppressWarnings("unused")
 public class Client extends Agent {

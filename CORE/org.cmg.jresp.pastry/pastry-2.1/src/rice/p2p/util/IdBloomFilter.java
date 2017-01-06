@@ -38,7 +38,6 @@ advised of the possibility of such damage.
 package rice.p2p.util;
 
 import java.io.*;
-import java.math.*;
 import java.util.*;
 
 import rice.p2p.commonapi.*;
@@ -99,7 +98,7 @@ public class IdBloomFilter implements Serializable {
     Iterator<Id> i = set.getIterator();  
     
     while (i.hasNext())
-      addId((Id) i.next());
+      addId(i.next());
   }
   
   /**
@@ -152,7 +151,7 @@ public class IdBloomFilter implements Serializable {
     int count = 0;
     
     while (it.hasNext() && (count < max)) {
-      Id next = (Id) it.next();
+      Id next = it.next();
       
       if (! check(next)) {
         result.addId(next);

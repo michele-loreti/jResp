@@ -37,8 +37,6 @@ advised of the possibility of such damage.
 package rice.p2p.multiring;
 
 import java.io.IOException;
-import java.util.*;
-
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
 
@@ -90,7 +88,8 @@ public class MultiringIdRange implements IdRange {
    * @param key the key
    * @return true if the key lies within this range, false otherwise
    */
-  public boolean containsId(Id key) {
+  @Override
+public boolean containsId(Id key) {
     if (key instanceof RingId) {
       RingId rkey = (RingId) key;
       if (!rkey.getRingId().equals(this.ringId)) {        
@@ -107,7 +106,8 @@ public class MultiringIdRange implements IdRange {
    *
    * @return the id at the counterclockwise edge of the range (inclusive)
    */
-  public Id getCCWId() {
+  @Override
+public Id getCCWId() {
     return RingId.build(ringId, range.getCCWId());
   }
   
@@ -116,7 +116,8 @@ public class MultiringIdRange implements IdRange {
    *
    * @return the id at the clockwise edge of the range (exclusive)
    */
-  public Id getCWId() {
+  @Override
+public Id getCWId() {
     return RingId.build(ringId, range.getCWId());
   }
   
@@ -125,7 +126,8 @@ public class MultiringIdRange implements IdRange {
    *
    * @return This range's complement
    */
-  public IdRange getComplementRange() {
+  @Override
+public IdRange getComplementRange() {
     return new MultiringIdRange(ringId, range.getComplementRange());
   }
   
@@ -134,7 +136,8 @@ public class MultiringIdRange implements IdRange {
    *
    * @return The merge
    */
-  public IdRange mergeRange(IdRange merge) {
+  @Override
+public IdRange mergeRange(IdRange merge) {
     return new MultiringIdRange(ringId, range.mergeRange(((MultiringIdRange) merge).getRange()));
   }
   
@@ -143,7 +146,8 @@ public class MultiringIdRange implements IdRange {
    *
    * @return The merge
    */
-  public IdRange diffRange(IdRange diff) {
+  @Override
+public IdRange diffRange(IdRange diff) {
     return new MultiringIdRange(ringId, range.diffRange(((MultiringIdRange) diff).getRange()));
   }
   
@@ -152,7 +156,8 @@ public class MultiringIdRange implements IdRange {
    *
    * @return The merge
    */
-  public IdRange intersectRange(IdRange intersect) {
+  @Override
+public IdRange intersectRange(IdRange intersect) {
     return new MultiringIdRange(ringId, range.intersectRange(((MultiringIdRange) intersect).getRange()));
   }
   
@@ -161,7 +166,8 @@ public class MultiringIdRange implements IdRange {
    *
    * @return Whether or not this range is empty
    */
-  public boolean isEmpty() {
+  @Override
+public boolean isEmpty() {
     return range.isEmpty();
   }
   
@@ -171,7 +177,8 @@ public class MultiringIdRange implements IdRange {
    * @param other To compare to
    * @return Equals
    */
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     MultiringIdRange other = (MultiringIdRange) o;
     return (other.getRange().equals(range) && other.ringId.equals(ringId));
   }
@@ -181,7 +188,8 @@ public class MultiringIdRange implements IdRange {
    *
    * @return hashCode
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return (range.hashCode() + ringId.hashCode());
   }
   
@@ -190,7 +198,8 @@ public class MultiringIdRange implements IdRange {
    *
    * @return A string
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "{RingId " + ringId + " " + range.toString() + "}";
   }
 
@@ -199,7 +208,8 @@ public class MultiringIdRange implements IdRange {
     range = endpoint.readIdRange(buf);
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeShort(ringId.getType());
     ringId.serialize(buf);
     range.serialize(buf);

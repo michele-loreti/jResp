@@ -37,7 +37,6 @@ advised of the possibility of such damage.
 
 package rice.p2p.splitstream;
 
-import java.io.*;
 import java.util.*;
 
 import rice.environment.logging.Logger;
@@ -199,7 +198,8 @@ public class Stripe implements ScribeClient {
    * @param content The content which was anycasted
    * @return Whether or not the anycast should continue
    */
-  public boolean anycast(Topic topic, ScribeContent content) {
+  @Override
+public boolean anycast(Topic topic, ScribeContent content) {
       return false;
   }
 
@@ -209,12 +209,13 @@ public class Stripe implements ScribeClient {
    * @param topic The topic the message was published to
    * @param content The content which was published
    */
-  public void deliver(Topic topic, ScribeContent content) {
+  @Override
+public void deliver(Topic topic, ScribeContent content) {
     if (this.topic.equals(topic)) {
       if (content instanceof SplitStreamContent) {
         byte[] data = ((SplitStreamContent) content).getData();
 
-        SplitStreamClient[] clients = (SplitStreamClient[]) this.clients.toArray(new SplitStreamClient[0]);
+        SplitStreamClient[] clients = this.clients.toArray(new SplitStreamClient[0]);
 
         for (int i=0; i<clients.length; i++) {
           clients[i].deliver(this, data);
@@ -233,7 +234,8 @@ public class Stripe implements ScribeClient {
    * @param topic The topic to unsubscribe from
    * @param child The child that was added
    */
-  public void childAdded(Topic topic, NodeHandle child) {
+  @Override
+public void childAdded(Topic topic, NodeHandle child) {
     if (logger.level <= Logger.FINE) logger.log("childAdded("+topic+","+child+")");
   }
 
@@ -243,7 +245,8 @@ public class Stripe implements ScribeClient {
    * @param topic The topic to unsubscribe from
    * @param child The child that was removed
    */
-  public void childRemoved(Topic topic, NodeHandle child) {
+  @Override
+public void childRemoved(Topic topic, NodeHandle child) {
     if (logger.level <= Logger.FINE) logger.log("childRemoved("+topic+","+child+")");
   }
 
@@ -253,8 +256,9 @@ public class Stripe implements ScribeClient {
    *
    * @param topic The topic that failed
    */
-  public void subscribeFailed(final Topic topic) {
-    Integer count = (Integer) failed.get(topic);
+  @Override
+public void subscribeFailed(final Topic topic) {
+    Integer count = failed.get(topic);
 
     if (count == null) {
       count = new Integer(0);
@@ -275,7 +279,8 @@ public class Stripe implements ScribeClient {
       
       // TODO: Need to reset count, (and in the future, the exponential backoff count)
       TimerTask resubscribeTask = new TimerTask() {
-        public void run() {
+        @Override
+		public void run() {
           if (getParent() == null) {
             scribe.subscribe(topic, Stripe.this);         
           }
@@ -291,7 +296,8 @@ public class Stripe implements ScribeClient {
    *
    * @return A String representing this stripe
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "Stripe " + stripeId;
   }
 

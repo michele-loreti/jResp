@@ -71,51 +71,66 @@ public class NodeHandleAdapter implements
     this.proxProvider = proxProvider;
   }
 
-  public void acceptMessages(boolean b) {
+  @Override
+public void acceptMessages(boolean b) {
     tl.acceptMessages(b);
   }
-  public void acceptSockets(boolean b) {
+  @Override
+public void acceptSockets(boolean b) {
     tl.acceptSockets(b);
   }
-  public NodeHandle getLocalIdentifier() {
+  @Override
+public NodeHandle getLocalIdentifier() {
     return (NodeHandle)tl.getLocalIdentifier();
   }
-  public SocketRequestHandle<NodeHandle> openSocket(NodeHandle i, SocketCallback<NodeHandle> deliverSocketToMe, Map<String, Object> options) {
+  @Override
+public SocketRequestHandle<NodeHandle> openSocket(NodeHandle i, SocketCallback<NodeHandle> deliverSocketToMe, Map<String, Object> options) {
     return tl.openSocket(i, deliverSocketToMe, options);
   }
   
-  public MessageRequestHandle<NodeHandle, RawMessage> sendMessage(NodeHandle i, RawMessage m, MessageCallback<NodeHandle, RawMessage> deliverAckToMe, Map<String, Object> options) {
+  @Override
+public MessageRequestHandle<NodeHandle, RawMessage> sendMessage(NodeHandle i, RawMessage m, MessageCallback<NodeHandle, RawMessage> deliverAckToMe, Map<String, Object> options) {
     return tl.sendMessage(i, m, deliverAckToMe, options);
   }
-  public void setCallback(TransportLayerCallback<NodeHandle, RawMessage> callback) {
+  @Override
+public void setCallback(TransportLayerCallback<NodeHandle, RawMessage> callback) {
     tl.setCallback(callback);
   }
-  public void setErrorHandler(ErrorHandler<NodeHandle> handler) {
+  @Override
+public void setErrorHandler(ErrorHandler<NodeHandle> handler) {
     tl.setErrorHandler(handler);
   }
-  public void destroy() {
+  @Override
+public void destroy() {
     tl.destroy();
   }
   
-  public void addLivenessListener(LivenessListener<NodeHandle> name) {
+  @Override
+public void addLivenessListener(LivenessListener<NodeHandle> name) {
     livenessProvider.addLivenessListener(name);
   }
-  public boolean checkLiveness(NodeHandle i, Map<String, Object> options) {
+  @Override
+public boolean checkLiveness(NodeHandle i, Map<String, Object> options) {
     return livenessProvider.checkLiveness(i, options);
   }
-  public int getLiveness(NodeHandle i, Map<String, Object> options) {
+  @Override
+public int getLiveness(NodeHandle i, Map<String, Object> options) {
     return livenessProvider.getLiveness(i, options);
   }
-  public boolean removeLivenessListener(LivenessListener<NodeHandle> name) {
+  @Override
+public boolean removeLivenessListener(LivenessListener<NodeHandle> name) {
     return livenessProvider.removeLivenessListener(name);
   }
-  public void addProximityListener(ProximityListener<NodeHandle> listener) {
+  @Override
+public void addProximityListener(ProximityListener<NodeHandle> listener) {
     proxProvider.addProximityListener(listener);
   }
-  public int proximity(NodeHandle i, Map<String, Object> options) {
+  @Override
+public int proximity(NodeHandle i, Map<String, Object> options) {
     return proxProvider.proximity(i, options);
   }
-  public boolean removeProximityListener(ProximityListener<NodeHandle> listener) {
+  @Override
+public boolean removeProximityListener(ProximityListener<NodeHandle> listener) {
     return proxProvider.removeProximityListener(listener);
   }
 
@@ -123,7 +138,8 @@ public class NodeHandleAdapter implements
     return tl;
   }
 
-  public void clearState(NodeHandle i) {
+  @Override
+public void clearState(NodeHandle i) {
     livenessProvider.clearState(i);
   }
 }

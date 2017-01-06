@@ -39,7 +39,6 @@ package rice.pastry.testing;
 import rice.environment.random.RandomSource;
 import rice.environment.random.simple.SimpleRandomSource;
 import rice.pastry.*;
-import java.util.*;
 
 /**
  * IdRangeUnit tests the IdRange class.

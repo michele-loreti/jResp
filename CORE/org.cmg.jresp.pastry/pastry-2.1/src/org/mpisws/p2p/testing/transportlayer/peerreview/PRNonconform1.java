@@ -38,18 +38,10 @@ package org.mpisws.p2p.testing.transportlayer.peerreview;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
-
-import org.mpisws.p2p.testing.transportlayer.peerreview.PRRegressionTest.BogusApp;
-import org.mpisws.p2p.testing.transportlayer.peerreview.PRRegressionTest.HandleImpl;
-import org.mpisws.p2p.testing.transportlayer.peerreview.PRRegressionTest.IdImpl;
-import org.mpisws.p2p.testing.transportlayer.peerreview.PRRegressionTest.Player;
 import org.mpisws.p2p.transport.peerreview.PeerReview;
 import org.mpisws.p2p.transport.peerreview.PeerReviewImpl;
-import org.mpisws.p2p.transport.peerreview.infostore.StatusChangeListener;
-
+import org.mpisws.p2p.transport.peerreview.StatusConstants;
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
 import rice.p2p.util.MathUtils;
@@ -72,11 +64,11 @@ public class PRNonconform1 extends PRRegressionTest {
   public void finish() {
     // see if everyone found bob exposed
     try {
-      if (recordedStatus.get(aliceHandle).get(bobHandle.id) != StatusChangeListener.STATUS_EXPOSED) {
+      if (recordedStatus.get(aliceHandle).get(bobHandle.id) != StatusConstants.STATUS_EXPOSED) {
         logger.log("Alice Didn't expose bob");
         System.exit(1);
       }
-      if (recordedStatus.get(carolHandle).get(bobHandle.id) != StatusChangeListener.STATUS_EXPOSED) {
+      if (recordedStatus.get(carolHandle).get(bobHandle.id) != StatusConstants.STATUS_EXPOSED) {
         logger.log("Carol Didn't expose bob");
         System.exit(1);
       }

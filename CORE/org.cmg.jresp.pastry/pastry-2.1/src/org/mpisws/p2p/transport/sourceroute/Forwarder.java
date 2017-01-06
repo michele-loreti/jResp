@@ -73,17 +73,20 @@ public class Forwarder<Identifier> {
       from.register(true, false, this);
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
       return "HalfPipe "+from+"=>"+to;    
     }
 
-    public void receiveException(P2PSocket socket, Exception e) {
+    @Override
+	public void receiveException(P2PSocket socket, Exception e) {
       if (logger.level <= Logger.FINE) logger.logException(this+" "+socket, e);
       from.close();
       to.close();
     }
 
-    public void receiveSelectResult(P2PSocket socket, boolean canRead, boolean canWrite) throws IOException {
+    @Override
+	public void receiveSelectResult(P2PSocket socket, boolean canRead, boolean canWrite) throws IOException {
       if (canRead) {
         if (socket != from) throw new IOException("Expected to read from "+from+" got "+socket);      
         long result = from.read(buf);

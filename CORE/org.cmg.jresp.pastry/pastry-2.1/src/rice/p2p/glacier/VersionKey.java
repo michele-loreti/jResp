@@ -98,7 +98,8 @@ public class VersionKey implements Id, Serializable {
    * @param peer DESCRIBE THE PARAMETER
    * @return DESCRIBE THE RETURN VALUE
    */
-  public boolean equals(Object peer) {
+  @Override
+public boolean equals(Object peer) {
     if (!(peer instanceof VersionKey)) {
       return false;
     }
@@ -112,7 +113,8 @@ public class VersionKey implements Id, Serializable {
    *
    * @return DESCRIBE THE RETURN VALUE
    */
-  public String toString() {
+  @Override
+public String toString() {
     return id.toString() + "v" + version;
   }
 
@@ -121,7 +123,8 @@ public class VersionKey implements Id, Serializable {
    *
    * @return DESCRIBE THE RETURN VALUE
    */
-  public String toStringFull() {
+  @Override
+public String toStringFull() {
     return id.toStringFull() + "v" + version;
   }
 
@@ -131,7 +134,8 @@ public class VersionKey implements Id, Serializable {
    * @param o DESCRIBE THE PARAMETER
    * @return DESCRIBE THE RETURN VALUE
    */
-  public int compareTo(Id o) {
+  @Override
+public int compareTo(Id o) {
     int idResult = id.compareTo(((VersionKey) o).id);
     if (idResult != 0) {
       return idResult;
@@ -151,7 +155,8 @@ public class VersionKey implements Id, Serializable {
    *
    * @return DESCRIBE THE RETURN VALUE
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return (id.hashCode() + (new Long(version).hashCode()));
   }
 
@@ -160,7 +165,8 @@ public class VersionKey implements Id, Serializable {
    *
    * @return DESCRIBE THE RETURN VALUE
    */
-  public byte[] toByteArray() {
+  @Override
+public byte[] toByteArray() {
     byte[] result = new byte[getByteArrayLength()];
     
     toByteArray(result, 0);
@@ -173,7 +179,8 @@ public class VersionKey implements Id, Serializable {
    *
    * @return A byte[] representing this Id
    */
-  public void toByteArray(byte[] result, int offset) {
+  @Override
+public void toByteArray(byte[] result, int offset) {
     id.toByteArray(result, offset);
     MathUtils.longToByteArray(version, result, offset + id.getByteArrayLength());
   }
@@ -183,27 +190,33 @@ public class VersionKey implements Id, Serializable {
    *
    * @return The length of the byte[] representing this Id
    */
-  public int getByteArrayLength() {
+  @Override
+public int getByteArrayLength() {
     return id.getByteArrayLength() + 8;
   }
 
-  public boolean isBetween(Id ccw, Id cw) {
+  @Override
+public boolean isBetween(Id ccw, Id cw) {
     throw new RuntimeException("VersionKey.isBetween() is not supported!");
   }
   
-  public Distance longDistanceFromId(Id nid) {
+  @Override
+public Distance longDistanceFromId(Id nid) {
     throw new RuntimeException("VersionKey.longDistanceFromId() is not supported!");
   }
 
-  public Distance distanceFromId(Id nid) {
+  @Override
+public Distance distanceFromId(Id nid) {
     throw new RuntimeException("VersionKey.distanceFromId() is not supported!");
   }
   
-  public Id addToId(Distance offset) {
+  @Override
+public Id addToId(Distance offset) {
     throw new RuntimeException("VersionKey.addToId() is not supported!");
   }
   
-  public boolean clockwise(Id nid) {
+  @Override
+public boolean clockwise(Id nid) {
     throw new RuntimeException("VersionKey.clockwise() is not supported!");
   }
   
@@ -217,13 +230,15 @@ public class VersionKey implements Id, Serializable {
     id = endpoint.readId(buf, buf.readShort());
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeLong(version);
     buf.writeShort(id.getType());
     id.serialize(buf);
   }
   
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
 }

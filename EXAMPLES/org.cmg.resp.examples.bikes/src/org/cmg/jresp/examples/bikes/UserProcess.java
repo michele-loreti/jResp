@@ -16,7 +16,6 @@ import org.cmg.jresp.behaviour.Agent;
 import org.cmg.jresp.knowledge.Tuple;
 import org.cmg.jresp.topology.And;
 import org.cmg.jresp.topology.Group;
-import org.cmg.jresp.topology.GroupPredicate;
 import org.cmg.jresp.topology.IsGreaterOrEqualThan;
 import org.cmg.jresp.topology.IsLessOrEqualThan;
 import org.cmg.jresp.topology.Self;

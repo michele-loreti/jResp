@@ -36,12 +36,8 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package rice.pastry.routing;
 
-import rice.environment.Environment;
 import rice.environment.logging.Logger;
-import rice.p2p.util.tuples.Tuple;
 import rice.pastry.*;
-import rice.pastry.Id.Distance;
-
 import java.util.*;
 
 /**
@@ -413,12 +409,14 @@ public class RoutingTable extends Observable implements NodeSetEventSource {
       }
 
       
-      public boolean hasNext() {
+      @Override
+	public boolean hasNext() {
         if (next == null) next = findNext();
         return (next != null);
       }
 
-      public NodeHandle next() {
+      @Override
+	public NodeHandle next() {
         if (hasNext()) { // make sure next != null
           NodeHandle temp = next;
           next = null;
@@ -427,7 +425,8 @@ public class RoutingTable extends Observable implements NodeSetEventSource {
         return null; // is this what the iterator is supposed to do?  Maybe it's supposed to throw an exception
       }
 
-      public void remove() {
+      @Override
+	public void remove() {
         throw new RuntimeException("Not implemented.");
       }
     };
@@ -633,7 +632,7 @@ public class RoutingTable extends Observable implements NodeSetEventSource {
     // pass the event to the Observers of this RoutingTable
     synchronized (listeners) {
       for (int i = 0; i < listeners.size(); i++) {
-        ((NodeSetListener)listeners.get(i)).nodeSetUpdate(this,handle,added); 
+        listeners.get(i).nodeSetUpdate(this,handle,added); 
       }
     }
     // handle deprecated interface
@@ -649,7 +648,8 @@ public class RoutingTable extends Observable implements NodeSetEventSource {
    *  
    */
 
-  public String toString() {
+  @Override
+public String toString() {
     String s = "routing table: \n";
 
     for (int i = routingTable.length - 1; i >= 0; i--) {
@@ -745,7 +745,9 @@ public class RoutingTable extends Observable implements NodeSetEventSource {
    * Generates too many objects to use this interface
    * @deprecated use addNodeSetListener
    */
-  public void addObserver(Observer o) {
+  @Deprecated
+@Override
+public void addObserver(Observer o) {
     if (logger.level <= Logger.WARNING) logger.logException("WARNING: Observer on RoutingTable is deprecated", new Exception("Stack Trace"));
     super.addObserver(o); 
   }
@@ -754,18 +756,22 @@ public class RoutingTable extends Observable implements NodeSetEventSource {
    * Generates too many objects to use this interface
    * @deprecated use deleteNodeSetListener
    */
-  public void deleteObserver(Observer o) {
+  @Deprecated
+@Override
+public void deleteObserver(Observer o) {
     if (logger.level <= Logger.WARNING) logger.log("WARNING: Observer on RoutingTable is deprecated");
     super.deleteObserver(o); 
   }
   
-  public void addNodeSetListener(NodeSetListener listener) {
+  @Override
+public void addNodeSetListener(NodeSetListener listener) {
     synchronized (listeners) {
       listeners.add(listener);
     }
   }
 
-  public void removeNodeSetListener(NodeSetListener listener) {
+  @Override
+public void removeNodeSetListener(NodeSetListener listener) {
     synchronized (listeners) {
       listeners.remove(listener);
     }

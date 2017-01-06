@@ -36,12 +36,9 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package rice.pastry.testing;
 
-import rice.Continuation;
-import rice.Continuation.*;
 import rice.environment.Environment;
 import rice.p2p.commonapi.RangeCannotBeDeterminedException;
 import rice.pastry.*;
-import rice.pastry.direct.*;
 import rice.pastry.messaging.*;
 import rice.pastry.routing.*;
 import rice.pastry.leafset.*;
@@ -364,9 +361,10 @@ public abstract class PastryRegrTest {
         this.id = id;
       }
 
-      public int compare(Id o1, Id o2) {
-        Id nid1 = (Id) o1;
-        Id nid2 = (Id) o2;
+      @Override
+	public int compare(Id o1, Id o2) {
+        Id nid1 = o1;
+        Id nid2 = o2;
         return nid1.distance(id).compareTo(nid2.distance(id));
       }
     }
@@ -551,7 +549,7 @@ public abstract class PastryRegrTest {
           }
         } else {
           // check entries
-          NodeHandle nh = (NodeHandle)rs.closestNode();          
+          NodeHandle nh = rs.closestNode();          
           
           int bestProximity = Integer.MAX_VALUE;
           if (nh != null) {

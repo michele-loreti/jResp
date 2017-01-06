@@ -57,15 +57,18 @@ public class SocketRequestHandleImpl<Identifier> implements SocketRequestHandle<
     this.logger = logger;
   }
 
-  public Identifier getIdentifier() {
+  @Override
+public Identifier getIdentifier() {
     return identifier;
   }
 
-  public Map<String, Object> getOptions() {
+  @Override
+public Map<String, Object> getOptions() {
     return options;
   }
 
-  public boolean cancel() {
+  @Override
+public boolean cancel() {
 //    if (cancelled) return true;
 //    cancelled = true;
     if (subCancellable != null) {

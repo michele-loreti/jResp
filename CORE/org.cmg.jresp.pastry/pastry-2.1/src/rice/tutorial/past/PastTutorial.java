@@ -46,7 +46,6 @@ import java.util.Vector;
 import rice.Continuation;
 import rice.environment.Environment;
 import rice.p2p.commonapi.Id;
-import rice.p2p.commonapi.NodeHandle;
 import rice.p2p.past.*;
 import rice.pastry.*;
 import rice.pastry.commonapi.PastryIdFactory;
@@ -148,13 +147,14 @@ public class PastTutorial {
       storedKey[ctr] = myContent.getId();
       
       // pick a random past appl on a random node
-      Past p = (Past)apps.get(env.getRandomSource().nextInt(numNodes));
+      Past p = apps.get(env.getRandomSource().nextInt(numNodes));
       System.out.println("Inserting " + myContent + " at node "+p.getLocalNodeHandle());
       
       // insert the data
       p.insert(myContent, new Continuation<Boolean[], Exception>() {
         // the result is an Array of Booleans for each insert
-        public void receiveResult(Boolean[] results) {          
+        @Override
+		public void receiveResult(Boolean[] results) {          
           int numSuccessfulStores = 0;
           for (int ctr = 0; ctr < results.length; ctr++) {
             if (results[ctr].booleanValue()) 
@@ -164,7 +164,8 @@ public class PastTutorial {
               numSuccessfulStores + " locations.");
         }
   
-        public void receiveException(Exception result) {
+        @Override
+		public void receiveException(Exception result) {
           System.out.println("Error storing "+myContent);
           result.printStackTrace();
         }
@@ -182,15 +183,17 @@ public class PastTutorial {
       final Id lookupKey = storedKey[ctr];
       
       // pick a random past appl on a random node
-      Past p = (Past)apps.get(env.getRandomSource().nextInt(numNodes));
+      Past p = apps.get(env.getRandomSource().nextInt(numNodes));
 
       System.out.println("Looking up " + lookupKey + " at node "+p.getLocalNodeHandle());
       p.lookup(lookupKey, new Continuation<PastContent, Exception>() {
-        public void receiveResult(PastContent result) {
+        @Override
+		public void receiveResult(PastContent result) {
           System.out.println("Successfully looked up " + result + " for key "+lookupKey+".");
         }
   
-        public void receiveException(Exception result) {
+        @Override
+		public void receiveException(Exception result) {
           System.out.println("Error looking up "+lookupKey);
           result.printStackTrace();
         }
@@ -205,16 +208,18 @@ public class PastTutorial {
     final Id bogusKey = localFactory.buildId("bogus");
     
     // pick a random past appl on a random node
-    Past p = (Past)apps.get(env.getRandomSource().nextInt(numNodes));
+    Past p = apps.get(env.getRandomSource().nextInt(numNodes));
 
     System.out.println("Looking up bogus key " + bogusKey + " at node "+p.getLocalNodeHandle());
     p.lookup(bogusKey, new Continuation<PastContent, Exception>() {
-      public void receiveResult(PastContent result) {
+      @Override
+	public void receiveResult(PastContent result) {
         System.out.println("Successfully looked up " + result + " for key "+bogusKey+".  Notice that the result is null.");
         env.destroy();
       }
 
-      public void receiveException(Exception result) {
+      @Override
+	public void receiveException(Exception result) {
         System.out.println("Error looking up "+bogusKey);
         result.printStackTrace();
         env.destroy();

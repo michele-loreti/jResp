@@ -39,9 +39,7 @@ package rice.p2p.replication;
 
 import java.util.*;
 
-import rice.*;
 import rice.p2p.commonapi.*;
-import rice.p2p.replication.messaging.*;
 
 /**
  * @(#) ReplicationPolicy.java This interface represents a policy for Replication, 
@@ -80,12 +78,13 @@ public interface ReplicationPolicy {
      * @param factory The factory to use to create IdSets
      * @return A subset of the remote ids which need to be fetched
      */
-    public IdSet difference(IdSet local, IdSet remote, IdFactory factory) {
+    @Override
+	public IdSet difference(IdSet local, IdSet remote, IdFactory factory) {
       IdSet result = factory.buildIdSet();
       Iterator<Id> i = remote.getIterator();
       
       while (i.hasNext()) {
-        Id id = (Id) i.next();
+        Id id = i.next();
         
         if (! local.isMemberId(id)) 
           result.addId(id);

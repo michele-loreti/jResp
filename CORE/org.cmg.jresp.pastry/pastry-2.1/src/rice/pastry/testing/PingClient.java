@@ -41,8 +41,6 @@ import rice.pastry.client.*;
 import rice.pastry.routing.*;
 import rice.pastry.messaging.*;
 
-import java.util.*;
-
 /**
  * A very simple ping object.
  * 
@@ -66,7 +64,8 @@ public class PingClient extends PastryAppl {
     super(pn);
   }
 
-  public int getAddress() {
+  @Override
+public int getAddress() {
     return pingAddress;
   }
 
@@ -83,12 +82,14 @@ public class PingClient extends PastryAppl {
         new SendOptions());
   }
 
-  public void messageForAppl(Message msg) {
+  @Override
+public void messageForAppl(Message msg) {
     System.out.print(msg);
     System.out.println(" received");
   }
 
-  public boolean enrouteMessage(Message msg, Id from, NodeHandle nextHop,
+  @Override
+public boolean enrouteMessage(Message msg, Id from, NodeHandle nextHop,
       SendOptions opt) {
     System.out.print(msg);
     System.out.println(" at " + getNodeId());
@@ -96,7 +97,8 @@ public class PingClient extends PastryAppl {
     return true;
   }
 
-  public void leafSetChange(NodeHandle nh, boolean wasAdded) {
+  @Override
+public void leafSetChange(NodeHandle nh, boolean wasAdded) {
     if (true) return;
     System.out.println("at... " + getNodeId() + "'s leaf set");
     System.out.print("node " + nh.getNodeId() + " was ");
@@ -106,7 +108,8 @@ public class PingClient extends PastryAppl {
       System.out.println("removed");
   }
 
-  public void routeSetChange(NodeHandle nh, boolean wasAdded) {
+  @Override
+public void routeSetChange(NodeHandle nh, boolean wasAdded) {
     if (true) return;
     System.out.println("at... " + getNodeId() + "'s route set");
     System.out.print("node " + nh.getNodeId() + " was ");
@@ -132,7 +135,8 @@ class PingMessage extends Message {
     target = tgt;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     String s = "";
     s += "ping from " + source + " to " + target;
     return s;

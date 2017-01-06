@@ -112,7 +112,8 @@ public class UDPLayerImpl extends SelectionKeyHandler implements UDPLayer {
    * @param m
    * @param deliverAckToMe ack is when the message is sent to the wire
    */
-  public MessageRequestHandle<InetSocketAddress, ByteBuffer> sendMessage(
+  @Override
+public MessageRequestHandle<InetSocketAddress, ByteBuffer> sendMessage(
       InetSocketAddress destination, 
       ByteBuffer msg,
       MessageCallback<InetSocketAddress, ByteBuffer> deliverAckToMe, 
@@ -210,7 +211,8 @@ public class UDPLayerImpl extends SelectionKeyHandler implements UDPLayer {
    *
    * @param key DESCRIBE THE PARAMETER
    */
-  public void read(SelectionKey key) {
+  @Override
+public void read(SelectionKey key) {
 //    logger.log("read");
 
     try {
@@ -265,7 +267,8 @@ public class UDPLayerImpl extends SelectionKeyHandler implements UDPLayer {
    *
    * @param key DESCRIBE THE PARAMETER
    */
-  public void write(SelectionKey key) {
+  @Override
+public void write(SelectionKey key) {
 //    logger.log("write");
     Envelope write = null;
     
@@ -328,7 +331,8 @@ public class UDPLayerImpl extends SelectionKeyHandler implements UDPLayer {
    *
    * @param key DESCRIBE THE PARAMETER
    */
-  public void modifyKey(SelectionKey key) {
+  @Override
+public void modifyKey(SelectionKey key) {
     synchronized (pendingMsgs) {
       if (! pendingMsgs.isEmpty()) 
         key.interestOps(key.interestOps() | SelectionKey.OP_WRITE);
@@ -365,7 +369,8 @@ public class UDPLayerImpl extends SelectionKeyHandler implements UDPLayer {
       this.options = options;
     }
 
-    public boolean cancel() {
+    @Override
+	public boolean cancel() {
       if (pendingMsgs.remove(this)) {
 //      continuation.receiveResult(msg); // do we want to do this?
         return true;
@@ -373,22 +378,27 @@ public class UDPLayerImpl extends SelectionKeyHandler implements UDPLayer {
       return false;
     }
 
-    public InetSocketAddress getIdentifier() {
+    @Override
+	public InetSocketAddress getIdentifier() {
       return destination;
     }
 
-    public ByteBuffer getMessage() {
+    @Override
+	public ByteBuffer getMessage() {
       return msg;
     }
 
-    public Map<String, Object> getOptions() {
+    @Override
+	public Map<String, Object> getOptions() {
       return options;
     }
   }
 
-  public void destroy() {
+  @Override
+public void destroy() {
     Runnable r = new Runnable(){    
-      public void run() { 
+      @Override
+	public void run() { 
         try {
 //          logger.logException("destroy", new Exception("stack trace"));
           if (logger.level <= Logger.INFO) logger.log("destroy(): "+channel);
@@ -412,9 +422,11 @@ public class UDPLayerImpl extends SelectionKeyHandler implements UDPLayer {
     }    
   }
 
-  public void acceptMessages(final boolean b) {
+  @Override
+public void acceptMessages(final boolean b) {
     Runnable r = new Runnable(){    
-      public void run() {
+      @Override
+	public void run() {
         if (b) {
           key.interestOps(key.interestOps() | SelectionKey.OP_READ);
         } else {

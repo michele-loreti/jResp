@@ -56,7 +56,8 @@ public class JavaPastContentDeserializer implements PastContentDeserializer {
     
   }
 
-  public PastContent deserializePastContent(InputBuffer buf, Endpoint endpoint, short contentType) throws IOException {    
+  @Override
+public PastContent deserializePastContent(InputBuffer buf, Endpoint endpoint, short contentType) throws IOException {    
     byte[] array = new byte[buf.readInt()];
     buf.read(array);
     

@@ -81,7 +81,8 @@ public class FragmentKey implements Id {
    * @param cw DESCRIBE THE PARAMETER
    * @return The Between value
    */
-  public boolean isBetween(Id ccw, Id cw) {
+  @Override
+public boolean isBetween(Id ccw, Id cw) {
     throw new RuntimeException("FragmentKey.isBetween() is not supported!");
   }
 
@@ -119,7 +120,8 @@ public class FragmentKey implements Id {
    * @param peer DESCRIBE THE PARAMETER
    * @return DESCRIBE THE RETURN VALUE
    */
-  public boolean equals(Object peer) {
+  @Override
+public boolean equals(Object peer) {
     if (!(peer instanceof FragmentKey)) {
       return false;
     }
@@ -133,7 +135,8 @@ public class FragmentKey implements Id {
    *
    * @return DESCRIBE THE RETURN VALUE
    */
-  public byte[] toByteArray() {
+  @Override
+public byte[] toByteArray() {
     byte[] result = new byte[getByteArrayLength()];
 
     toByteArray(result, 0);
@@ -146,7 +149,8 @@ public class FragmentKey implements Id {
    *
    * @return A byte[] representing this Id
    */
-  public void toByteArray(byte[] result, int offset) {
+  @Override
+public void toByteArray(byte[] result, int offset) {
     key.toByteArray(result, offset);
     MathUtils.intToByteArray(id, result, offset+key.getByteArrayLength());
   }
@@ -156,7 +160,8 @@ public class FragmentKey implements Id {
    *
    * @return The length of the byte[] representing this Id
    */
-  public int getByteArrayLength() {
+  @Override
+public int getByteArrayLength() {
     return key.getByteArrayLength() + 4;
   }
 
@@ -165,7 +170,8 @@ public class FragmentKey implements Id {
    *
    * @return DESCRIBE THE RETURN VALUE
    */
-  public String toStringFull() {
+  @Override
+public String toStringFull() {
     return key.toStringFull() + "#" + id;
   }
 
@@ -174,7 +180,8 @@ public class FragmentKey implements Id {
    *
    * @return DESCRIBE THE RETURN VALUE
    */
-  public String toString() {
+  @Override
+public String toString() {
     return key.toString() + "#" + id;
   }
 
@@ -184,7 +191,8 @@ public class FragmentKey implements Id {
    * @param nid DESCRIBE THE PARAMETER
    * @return DESCRIBE THE RETURN VALUE
    */
-  public Distance longDistanceFromId(Id nid) {
+  @Override
+public Distance longDistanceFromId(Id nid) {
     throw new RuntimeException("FragmentKey.longDistanceFromId() is not supported!");
   }
 
@@ -194,7 +202,8 @@ public class FragmentKey implements Id {
    * @param nid DESCRIBE THE PARAMETER
    * @return DESCRIBE THE RETURN VALUE
    */
-  public Distance distanceFromId(Id nid) {
+  @Override
+public Distance distanceFromId(Id nid) {
     throw new RuntimeException("FragmentKey.distanceFromId() is not supported!");
   }
 
@@ -204,7 +213,8 @@ public class FragmentKey implements Id {
    * @param offset The feature to be added to the ToId attribute
    * @return DESCRIBE THE RETURN VALUE
    */
-  public Id addToId(Distance offset) {
+  @Override
+public Id addToId(Distance offset) {
     throw new RuntimeException("FragmentKey.addToId() is not supported!");
   }
 
@@ -214,7 +224,8 @@ public class FragmentKey implements Id {
    * @param nid DESCRIBE THE PARAMETER
    * @return DESCRIBE THE RETURN VALUE
    */
-  public boolean clockwise(Id nid) {
+  @Override
+public boolean clockwise(Id nid) {
     throw new RuntimeException("FragmentKey.clockwise() is not supported!");
   }
 
@@ -224,7 +235,8 @@ public class FragmentKey implements Id {
    * @param o DESCRIBE THE PARAMETER
    * @return DESCRIBE THE RETURN VALUE
    */
-  public int compareTo(Id o) {
+  @Override
+public int compareTo(Id o) {
     int keyResult = key.compareTo(((FragmentKey) o).key);
     if (keyResult != 0) {
       return keyResult;
@@ -245,7 +257,8 @@ public class FragmentKey implements Id {
    *
    * @return DESCRIBE THE RETURN VALUE
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return (key.hashCode() + id);
   }
   
@@ -254,13 +267,15 @@ public class FragmentKey implements Id {
     key = new VersionKey(buf, endpoint);
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeInt(id);
     key.serialize(buf);
 //    throw new RuntimeException("FragmentKey.serialize() is not supported!");
   }
 
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
 }

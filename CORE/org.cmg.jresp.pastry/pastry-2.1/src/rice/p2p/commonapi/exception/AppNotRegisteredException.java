@@ -39,8 +39,6 @@ advised of the possibility of such damage.
  */
 package rice.p2p.commonapi.exception;
 
-import rice.p2p.commonapi.NodeHandle;
-
 /**
  * The application has not been registered on that node.
  * 

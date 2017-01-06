@@ -39,9 +39,6 @@ package rice.p2p.multiring;
 
 import java.util.*;
 
-import org.mpisws.p2p.transport.MessageCallback;
-import org.mpisws.p2p.transport.MessageRequestHandle;
-
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.RawMessage;
 

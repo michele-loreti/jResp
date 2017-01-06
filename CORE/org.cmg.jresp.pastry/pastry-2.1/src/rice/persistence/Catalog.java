@@ -38,8 +38,6 @@ advised of the possibility of such damage.
 package rice.persistence;
 
 import java.util.*;
-import rice.p2p.util.*;
-
 /*
  * @(#) Catalog.java
  *

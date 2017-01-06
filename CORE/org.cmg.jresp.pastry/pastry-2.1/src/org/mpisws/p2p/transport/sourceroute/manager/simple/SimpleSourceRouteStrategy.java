@@ -39,10 +39,7 @@ advised of the possibility of such damage.
  */
 package org.mpisws.p2p.transport.sourceroute.manager.simple;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -96,7 +93,8 @@ public class SimpleSourceRouteStrategy<Identifier> implements SourceRouteStrateg
    * Note, this implementation only allows 1 - hop routes, need to check the liveness, of a route
    * to determine longer routes.  In most cases a 1-hop route should be sufficient.
    */
-  public Collection<SourceRoute<Identifier>> getSourceRoutes(Identifier destination) {
+  @Override
+public Collection<SourceRoute<Identifier>> getSourceRoutes(Identifier destination) {
     Collection<Identifier> nextHops = strategy.getNextHops(destination);
     List<SourceRoute<Identifier>> ret = new ArrayList<SourceRoute<Identifier>>(nextHops.size());
     for (Identifier intermediate : nextHops) {

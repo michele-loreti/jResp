@@ -101,7 +101,8 @@ public final class IdSet implements rice.p2p.commonapi.IdSet {
   /**
    * return the number of elements
    */
-  public int numElements() {
+  @Override
+public int numElements() {
     return idSet.size();
   }
 
@@ -190,7 +191,8 @@ public final class IdSet implements rice.p2p.commonapi.IdSet {
    * return an iterator over the elements of this set
    * @return the interator
    */
-  public Iterator getIterator() {
+  @Override
+public Iterator getIterator() {
     return idSet.keySet().iterator();
   }
 
@@ -230,7 +232,8 @@ public final class IdSet implements rice.p2p.commonapi.IdSet {
   /**
    * Returns a string representation of the IdSet.
    */
-  public String toString() {
+  @Override
+public String toString() {
     Iterator it = getIterator();
     Id key;
     String s = "[ IdSet: ";
@@ -249,7 +252,8 @@ public final class IdSet implements rice.p2p.commonapi.IdSet {
    * add a member
    * @param id the id to add
    */
-  public void addId(rice.p2p.commonapi.Id id) {
+  @Override
+public void addId(rice.p2p.commonapi.Id id) {
     addMember((Id) id);
   }
 
@@ -257,7 +261,8 @@ public final class IdSet implements rice.p2p.commonapi.IdSet {
    * remove a member
    * @param id the id to remove
    */
-  public void removeId(rice.p2p.commonapi.Id id) {
+  @Override
+public void removeId(rice.p2p.commonapi.Id id) {
     removeMember((Id) id);
   }
 
@@ -266,7 +271,8 @@ public final class IdSet implements rice.p2p.commonapi.IdSet {
    * @param id the id to test
    * @return true of id is a member, false otherwise
    */
-  public boolean isMemberId(rice.p2p.commonapi.Id id) {
+  @Override
+public boolean isMemberId(rice.p2p.commonapi.Id id) {
     return isMember((Id) id);
   }
   
@@ -275,7 +281,8 @@ public final class IdSet implements rice.p2p.commonapi.IdSet {
    *
    * @return A new IdSet
    */
-  public rice.p2p.commonapi.IdSet build() {
+  @Override
+public rice.p2p.commonapi.IdSet build() {
     return new IdSet();
   }
   
@@ -285,7 +292,8 @@ public final class IdSet implements rice.p2p.commonapi.IdSet {
    * @param to the upper end of the range (exclusive)
    * @return the subset
    */
-  public rice.p2p.commonapi.IdSet subSet(rice.p2p.commonapi.IdRange range) {
+  @Override
+public rice.p2p.commonapi.IdSet subSet(rice.p2p.commonapi.IdRange range) {
     //return subSet((Id) range.getCWId(), (Id) range.getCCWId());
     return subSet((IdRange) range);
   }
@@ -295,7 +303,8 @@ public final class IdSet implements rice.p2p.commonapi.IdSet {
    *
    * @return the hash of this set
    */
-  public byte[] hash() {
+  @Override
+public byte[] hash() {
     return getHash();
   }
   
@@ -303,11 +312,13 @@ public final class IdSet implements rice.p2p.commonapi.IdSet {
    * return this set as an array
    * @return the array
    */
-  public rice.p2p.commonapi.Id[] asArray() {
+  @Override
+public rice.p2p.commonapi.Id[] asArray() {
     return (rice.p2p.commonapi.Id[]) idSet.keySet().toArray(new rice.p2p.commonapi.Id[0]);
   }
   
-  public Object clone(){
+  @Override
+public Object clone(){
     return new IdSet(idSet);
   }
 

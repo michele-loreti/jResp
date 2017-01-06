@@ -38,11 +38,7 @@ advised of the possibility of such damage.
 package rice.p2p.replication.manager;
 
 import java.util.*;
-import java.util.logging.*;
-
 import rice.*;
-import rice.Continuation.*;
-
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
 import rice.environment.params.Parameters;
@@ -189,7 +185,8 @@ public class ReplicationManagerImpl implements ReplicationManager, ReplicationCl
     final CancellableTask timer = endpoint.scheduleMessage(new TimeoutMessage(id), TIMEOUT_DELAY);
     
     client.fetch(id, hint, new Continuation() {
-      public void receiveResult(Object o) {
+      @Override
+	public void receiveResult(Object o) {
         if (! (new Boolean(true)).equals(o)) {
           if (o instanceof Throwable) {
             if (logger.level <= Logger.WARNING) logger.logException( "Fetching of id " + id + " failed with ", (Throwable)o);
@@ -204,7 +201,8 @@ public class ReplicationManagerImpl implements ReplicationManager, ReplicationCl
         helper.message(id);
       }
       
-      public void receiveException(Exception e) {
+      @Override
+	public void receiveException(Exception e) {
         receiveResult(e);
       }
     });
@@ -230,7 +228,8 @@ public class ReplicationManagerImpl implements ReplicationManager, ReplicationCl
    *
    * @param keySet set containing the keys that needs to be fetched
    */
-  public void fetch(IdSet keySet, NodeHandle hint) {
+  @Override
+public void fetch(IdSet keySet, NodeHandle hint) {
    // log.finer(endpoint.getId() + ": Adding keyset " + keySet + " to the list of pending ids");
     helper.fetch(keySet, hint);
   }
@@ -245,7 +244,8 @@ public class ReplicationManagerImpl implements ReplicationManager, ReplicationCl
    * @param range the range of keys for which the local node is currently 
    *              responsible  
    */
-  public void setRange(final IdRange range) {
+  @Override
+public void setRange(final IdRange range) {
     if (logger.level <= Logger.FINEST) logger.log( "Removing range " + range + " from the list of pending ids");
 
     helper.setRange(range);
@@ -262,7 +262,8 @@ public class ReplicationManagerImpl implements ReplicationManager, ReplicationCl
    *
    * @param range the requested range
    */
-  public IdSet scan(IdRange range) {
+  @Override
+public IdSet scan(IdRange range) {
     return client.scan(range);
   }
   
@@ -281,7 +282,8 @@ public class ReplicationManagerImpl implements ReplicationManager, ReplicationCl
    *
    * @return Whether or not to forward the message further
    */
-  public boolean forward(RouteMessage message) {
+  @Override
+public boolean forward(RouteMessage message) {
     return true;
   }
   
@@ -292,7 +294,8 @@ public class ReplicationManagerImpl implements ReplicationManager, ReplicationCl
    * @param id The destination id of the message
    * @param message The message being sent
    */
-  public void deliver(Id id, Message message) {
+  @Override
+public void deliver(Id id, Message message) {
     if (message instanceof ReminderMessage) {
       if (logger.level <= Logger.FINEST) logger.log( "Received reminder message");
       helper.wakeup();
@@ -312,7 +315,8 @@ public class ReplicationManagerImpl implements ReplicationManager, ReplicationCl
    * @param handle The handle that has joined/left
    * @param joined Whether the node has joined or left
    */
-  public void update(NodeHandle handle, boolean joined) {
+  @Override
+public void update(NodeHandle handle, boolean joined) {
   }
   
   // ----- UTILITY METHODS -----
@@ -323,7 +327,8 @@ public class ReplicationManagerImpl implements ReplicationManager, ReplicationCl
    *
    * @return The underlying replication object
    */
-  public Replication getReplication() {
+  @Override
+public Replication getReplication() {
     return replication;
   }
   
@@ -454,7 +459,7 @@ public class ReplicationManagerImpl implements ReplicationManager, ReplicationCl
         return null;
       }
       
-      current = (Id) set.getIterator().next();  
+      current = set.getIterator().next();  
       set.removeId(current);
       
       if (logger.level <= Logger.FINER) logger.log( "Returing next id to fetch " + current);
@@ -536,13 +541,14 @@ public class ReplicationManagerImpl implements ReplicationManager, ReplicationCl
      */
     protected synchronized void go() {
       if ((id == null) && (set.numElements() > 0)) {
-        id = (Id) set.getIterator().next();
+        id = set.getIterator().next();
         set.removeId(id);
         
         if (logger.level <= Logger.FINER) logger.log("Deciding whether to remove "+id);
         
         client.existsInOverlay(id, new StandardContinuation(this) {
-          public void receiveResult(Object result) {
+          @Override
+		public void receiveResult(Object result) {
             if (Boolean.TRUE.equals(result)) {
               if (logger.level <= Logger.FINER) logger.log( "Telling client to delete id " + id);
               if (logger.level <= Logger.FINER) logger.log( "RMImpl.go " + instance + ": removing id " + id);
@@ -550,7 +556,8 @@ public class ReplicationManagerImpl implements ReplicationManager, ReplicationCl
             } else {
               if (logger.level <= Logger.FINER) logger.log("Object to remove "+id+" not found.  Reinserting.");
               client.reInsert(id, new StandardContinuation(parent) {
-                public void receiveResult(Object result) {
+                @Override
+				public void receiveResult(Object result) {
                   if (Boolean.TRUE.equals(result)) {
                     if (logger.level <= Logger.FINER) logger.log( "Telling client to delete id " + id);
                     if (logger.level <= Logger.FINER) logger.log( "RMImpl.go " + instance + ": removing id " + id);
@@ -572,7 +579,8 @@ public class ReplicationManagerImpl implements ReplicationManager, ReplicationCl
      *
      * @param o The result
      */
-    public synchronized void receiveResult(Object o) {
+    @Override
+	public synchronized void receiveResult(Object o) {
       if (id == null) 
         if (logger.level <= Logger.SEVERE) logger.log( "ERROR: RMImpl.deleter Received result " + o + " unexpectedly!");
       
@@ -588,7 +596,8 @@ public class ReplicationManagerImpl implements ReplicationManager, ReplicationCl
      *
      * @param o The result
      */
-    public synchronized void receiveException(Exception e) {
+    @Override
+	public synchronized void receiveException(Exception e) {
       if (logger.level <= Logger.SEVERE) logger.logException( "RMImpl.deleter Unstore of " + id + " caused exception '" + e + "'!", e);
       
       id = null;

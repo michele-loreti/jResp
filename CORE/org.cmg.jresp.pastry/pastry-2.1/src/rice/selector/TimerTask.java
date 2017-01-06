@@ -39,8 +39,6 @@ advised of the possibility of such damage.
  */
 package rice.selector;
 
-import java.util.Queue;
-
 import rice.environment.time.TimeSource;
 import rice.p2p.commonapi.CancellableTask;
 
@@ -60,7 +58,8 @@ public abstract class TimerTask implements Comparable<TimerTask>, CancellableTas
     
   protected boolean fixedRate = false;
   
-  public abstract void run();
+  @Override
+public abstract void run();
 
   /**
    * Returns true if should re-insert.
@@ -84,7 +83,8 @@ public abstract class TimerTask implements Comparable<TimerTask>, CancellableTas
     }
   }
   
-  public boolean cancel() {
+  @Override
+public boolean cancel() {
     if (cancelled) {
       return false;
     }
@@ -95,12 +95,14 @@ public abstract class TimerTask implements Comparable<TimerTask>, CancellableTas
     return true;
   }
   
-  public long scheduledExecutionTime() {
+  @Override
+public long scheduledExecutionTime() {
     return nextExecutionTime; 
   }
 
-  public int compareTo(TimerTask arg0) {
-    TimerTask tt = (TimerTask)arg0;
+  @Override
+public int compareTo(TimerTask arg0) {
+    TimerTask tt = arg0;
     if (tt == this) return 0;
 //    return (int)(tt.nextExecutionTime-nextExecutionTime);
     int diff = (int)(nextExecutionTime-tt.nextExecutionTime);

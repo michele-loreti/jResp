@@ -82,15 +82,18 @@ public class ChannelId {
     return id;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return "[ChannelId " + id + "]";
   }
 
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return id.hashCode();
   }
 
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     if (! (o instanceof ChannelId)) {
       return false;
     }

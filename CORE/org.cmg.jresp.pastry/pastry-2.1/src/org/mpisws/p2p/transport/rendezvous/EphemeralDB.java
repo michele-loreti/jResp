@@ -36,9 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package org.mpisws.p2p.transport.rendezvous;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Keeps track of tags, ephemeral identifiers, timestamps, highIdentifiers
  * 

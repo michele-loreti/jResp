@@ -41,16 +41,12 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.mpisws.p2p.transport.peerreview.history.HashProvider;
-import org.mpisws.p2p.transport.util.Serializer;
-
 import rice.environment.logging.Logger;
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
-import rice.p2p.commonapi.rawserialization.RawSerializable;
 
 /**
   long long firstSeq
@@ -77,11 +73,13 @@ public class LogSnippet {
     this.entries = entries;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "LogSnippet["+entries.get(0).seq+"-"+entries.get(entries.size()-1).seq+"]";
   }
   
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     LogSnippet that = (LogSnippet)o;
     if (!Arrays.equals(this.baseHash, that.baseHash)) return false;
     if (this.entries.size() != that.entries.size()) return false;

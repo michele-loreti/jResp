@@ -117,11 +117,13 @@ public class MagicNumberTransportLayer<Identifier> implements
     wire.setCallback(this);
   }
 
-  public void setCallback(TransportLayerCallback<Identifier, ByteBuffer> callback) {
+  @Override
+public void setCallback(TransportLayerCallback<Identifier, ByteBuffer> callback) {
     this.callback = callback;
   }
 
-  public void setErrorHandler(ErrorHandler<Identifier> handler) {
+  @Override
+public void setErrorHandler(ErrorHandler<Identifier> handler) {
     wire.setErrorHandler(handler);
     if (handler == null) {
       this.errorHandler = new DefaultErrorHandler<Identifier>(logger);
@@ -130,19 +132,23 @@ public class MagicNumberTransportLayer<Identifier> implements
     this.errorHandler = handler;
   }
 
-  public void acceptMessages(boolean b) {
+  @Override
+public void acceptMessages(boolean b) {
     wire.acceptMessages(b);
   }
 
-  public void acceptSockets(boolean b) {
+  @Override
+public void acceptSockets(boolean b) {
     wire.acceptSockets(b);
   }
 
-  public Identifier getLocalIdentifier() {
+  @Override
+public Identifier getLocalIdentifier() {
     return wire.getLocalIdentifier();
   }
 
-  public SocketRequestHandle openSocket(final Identifier i, 
+  @Override
+public SocketRequestHandle openSocket(final Identifier i, 
       final SocketCallback<Identifier> deliverSocketToMe, 
       Map<String, Object> options) {
     if (deliverSocketToMe == null) throw new IllegalArgumentException("deliverSocketToMe must be non-null!");
@@ -150,11 +156,13 @@ public class MagicNumberTransportLayer<Identifier> implements
     final SocketRequestHandleImpl<Identifier> cancellable = new SocketRequestHandleImpl<Identifier>(i, options, logger);
 
     cancellable.setSubCancellable(wire.openSocket(i, new SocketCallback<Identifier>(){    
-      public void receiveResult(SocketRequestHandle<Identifier> c, final P2PSocket<Identifier> result) {
+      @Override
+	public void receiveResult(SocketRequestHandle<Identifier> c, final P2PSocket<Identifier> result) {
         if (cancellable.getSubCancellable() != null && c != cancellable.getSubCancellable()) throw new RuntimeException("c != cancellable.getSubCancellable() (indicates a bug in the code) c:"+c+" sub:"+cancellable.getSubCancellable());
         
         cancellable.setSubCancellable(new Cancellable() {        
-          public boolean cancel() {
+          @Override
+		public boolean cancel() {
             result.close();
             return true;
           }        
@@ -162,7 +170,8 @@ public class MagicNumberTransportLayer<Identifier> implements
         
         result.register(false, true, new P2PSocketReceiver<Identifier>(){        
           ByteBuffer buf = ByteBuffer.wrap(HEADER);
-          public void receiveSelectResult(P2PSocket<Identifier> socket, boolean canRead, boolean canWrite) throws IOException {
+          @Override
+		public void receiveSelectResult(P2PSocket<Identifier> socket, boolean canRead, boolean canWrite) throws IOException {
             if (canRead) throw new IOException("Never asked to read!");
             if (!canWrite) throw new IOException("Can't write!");
             long ret = socket.write(buf);            
@@ -177,12 +186,14 @@ public class MagicNumberTransportLayer<Identifier> implements
               deliverSocketToMe.receiveResult(cancellable, socket);
             }
           }        
-          public void receiveException(P2PSocket<Identifier> socket, Exception e) {
+          @Override
+		public void receiveException(P2PSocket<Identifier> socket, Exception e) {
             deliverSocketToMe.receiveException(cancellable, e);
           }
         });
       }    
-      public void receiveException(SocketRequestHandle<Identifier> c, Exception exception) {
+      @Override
+	public void receiveException(SocketRequestHandle<Identifier> c, Exception exception) {
         if (cancellable.getSubCancellable() != null && c != cancellable.getSubCancellable()) throw new RuntimeException("c != cancellable.getSubCancellable() (indicates a bug in the code) c:"+c+" sub:"+cancellable.getSubCancellable());
         deliverSocketToMe.receiveException(cancellable, exception);
 //        errorHandler.receivedException(i, exception);
@@ -192,7 +203,8 @@ public class MagicNumberTransportLayer<Identifier> implements
     return cancellable;
   }
 
-  public MessageRequestHandle<Identifier, ByteBuffer> sendMessage(
+  @Override
+public MessageRequestHandle<Identifier, ByteBuffer> sendMessage(
       final Identifier i, 
       final ByteBuffer m, 
       final MessageCallback<Identifier, ByteBuffer> deliverAckToMe, 
@@ -213,14 +225,16 @@ public class MagicNumberTransportLayer<Identifier> implements
         buf, 
         new MessageCallback<Identifier, ByteBuffer>() {
         
-          public void ack(MessageRequestHandle<Identifier, ByteBuffer> msg) {
+          @Override
+		public void ack(MessageRequestHandle<Identifier, ByteBuffer> msg) {
             if (cancellable.getSubCancellable() != null && msg != cancellable.getSubCancellable()) throw new RuntimeException("msg != cancellable.getSubCancellable() (indicates a bug in the code) msg:"+msg+" sub:"+cancellable.getSubCancellable());
             if (deliverAckToMe != null) deliverAckToMe.ack(cancellable);
             notifyListenersWrite(HEADER.length, i, cancellable.getOptions(), false, false);  // non-pasthrough part
             notifyListenersWrite(buf.limit()-HEADER.length, i, cancellable.getOptions(), true, false); // passthrough part
           }
         
-          public void sendFailed(MessageRequestHandle<Identifier, ByteBuffer> msg, Exception ex) {
+          @Override
+		public void sendFailed(MessageRequestHandle<Identifier, ByteBuffer> msg, Exception ex) {
             if (cancellable.getSubCancellable() != null && msg != cancellable.getSubCancellable()) throw new RuntimeException("msg != cancellable.getSubCancellable() (indicates a bug in the code) msg:"+msg+" sub:"+cancellable.getSubCancellable());
             if (deliverAckToMe == null) {
               errorHandler.receivedException(i, ex);
@@ -234,15 +248,18 @@ public class MagicNumberTransportLayer<Identifier> implements
     return cancellable;
   }
 
-  public void destroy() {
+  @Override
+public void destroy() {
     wire.destroy();
   }
 
-  public void incomingSocket(P2PSocket<Identifier> s) throws IOException {
+  @Override
+public void incomingSocket(P2PSocket<Identifier> s) throws IOException {
     s.register(true, false, new VerifyHeaderReceiver(s));
   }
 
-  public void messageReceived(Identifier i, ByteBuffer m, Map<String, Object> options) throws IOException {
+  @Override
+public void messageReceived(Identifier i, ByteBuffer m, Map<String, Object> options) throws IOException {
     if (logger.level <= Logger.FINE) logger.log("messageReceived("+i+","+m+")");
 
     if (m.remaining() < HEADER.length) {
@@ -276,12 +293,14 @@ public class MagicNumberTransportLayer<Identifier> implements
       environment.getSelectorManager().getTimer().schedule(this,SOCKET_TIMEOUT);      
     }
     
-    public void receiveException(P2PSocket<Identifier> socket, Exception ioe) {
+    @Override
+	public void receiveException(P2PSocket<Identifier> socket, Exception ioe) {
       errorHandler.receivedException(socket.getIdentifier(), ioe);
       // TODO Auto-generated method stub      
     }
 
-    public void receiveSelectResult(P2PSocket<Identifier> socket, boolean canRead, boolean canWrite) throws IOException {
+    @Override
+	public void receiveSelectResult(P2PSocket<Identifier> socket, boolean canRead, boolean canWrite) throws IOException {
       // TODO: Optimization: Check array at each step, to fail faster
       // TODO: Make timeout/cancellable
       if (canWrite) throw new IOException("Never asked to write!");
@@ -312,21 +331,24 @@ public class MagicNumberTransportLayer<Identifier> implements
       errorHandler.receivedException(socket.getIdentifier(), new StalledSocketException(socket.getIdentifier(), "Timeout on incoming socket expired."));
     }  
     
-    public String toString() {
+    @Override
+	public String toString() {
       return MagicNumberTransportLayer.this+" VHR";
     }
   }
 
   // ******************************** TransportLayerListeners *******************************
   ArrayList<TransportLayerListener<Identifier>> listeners = new ArrayList<TransportLayerListener<Identifier>>();
-  public void addTransportLayerListener(
+  @Override
+public void addTransportLayerListener(
       TransportLayerListener<Identifier> listener) {
     synchronized(listeners) {
       listeners.add(listener);
     }
   }
 
-  public void removeTransportLayerListener(
+  @Override
+public void removeTransportLayerListener(
       TransportLayerListener<Identifier> listener) {
     synchronized(listeners) {
       listeners.remove(listener);

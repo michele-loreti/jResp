@@ -1,16 +1,10 @@
 package pscel.simulation;
 	
-import java.io.IOException;
 import org.cmg.jresp.*;
-import org.cmg.jresp.behaviour.*;
 import org.cmg.jresp.knowledge.*;
-import org.cmg.jresp.knowledge.ts.*;
-import org.cmg.jresp.topology.*;
-import org.cmg.jresp.comp.*;
 import org.cmg.jresp.simulation.*;
 import pscel.behaviour.*;
 import pscel.policy.*;
-import pscel.*;
 	
 @SuppressWarnings("unused")
 public class SimulationNode_c1 extends SimulationNode {

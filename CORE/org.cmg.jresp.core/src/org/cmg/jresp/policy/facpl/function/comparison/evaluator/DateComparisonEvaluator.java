@@ -39,7 +39,7 @@ public class DateComparisonEvaluator implements ComparisonEvaluator {
 	@Override
 	public boolean areEquals(Object o1, Object o2) throws Throwable {
 		if (o2 instanceof Date) {
-			return ((Date) o1).equals((Date) o2);
+			return ((Date) o1).equals(o2);
 		} else if (o2 instanceof String) {
 			return ((Date) o1).equals(Util.parseDate((String) o2));
 		}
@@ -49,7 +49,7 @@ public class DateComparisonEvaluator implements ComparisonEvaluator {
 	@Override
 	public boolean areNotEquals(Object o1, Object o2) throws Throwable {
 		if (o2 instanceof Date) {
-			return !(((Date) o1).equals((Date) o2));
+			return !(((Date) o1).equals(o2));
 		} else if (o2 instanceof String) {
 			return !(((Date) o1).equals(Util.parseDate((String) o2)));
 		}
@@ -69,7 +69,7 @@ public class DateComparisonEvaluator implements ComparisonEvaluator {
 	@Override
 	public boolean isLessThanOrEqual(Object o1, Object o2) throws Throwable {
 		if (o2 instanceof Date) {
-			return ((Date) o1).before((Date) o2) || ((Date) o1).equals((Date) o2);
+			return ((Date) o1).before((Date) o2) || ((Date) o1).equals(o2);
 		} else if (o2 instanceof String) {
 			return ((Date) o1).before(Util.parseDate((String) o2)) || ((Date) o1).equals(Util.parseDate((String) o2));
 		}
@@ -89,7 +89,7 @@ public class DateComparisonEvaluator implements ComparisonEvaluator {
 	@Override
 	public boolean isGreateThanOrEqual(Object o1, Object o2) throws Throwable {
 		if (o2 instanceof Date) {
-			return ((Date) o1).after((Date) o2) || ((Date) o1).equals((Date) o2);
+			return ((Date) o1).after((Date) o2) || ((Date) o1).equals(o2);
 		} else if (o2 instanceof String) {
 			return ((Date) o1).after(Util.parseDate((String) o2)) || ((Date) o1).equals(Util.parseDate((String) o2));
 		}
@@ -119,7 +119,7 @@ public class DateComparisonEvaluator implements ComparisonEvaluator {
 	@Override
 	public boolean isSubsetOf(Object o1, Object o2) throws Throwable {
 		if (o2 instanceof Bag) {
-			return ((Bag) o2).contains((Date) o1);
+			return ((Bag) o2).contains(o1);
 		} else {
 			throw new UnsupportedTypeException("Date", "Subset");
 		}
@@ -128,7 +128,7 @@ public class DateComparisonEvaluator implements ComparisonEvaluator {
 	@Override
 	public boolean isAtLestOneMemberOf(Object o1, Object o2) throws Throwable {
 		if (o2 instanceof Bag) {
-			return ((Bag) o2).contains((Date) o1);
+			return ((Bag) o2).contains(o1);
 		} else {
 			throw new UnsupportedTypeException("Date", "AtLeastOneMemberOf");
 		}

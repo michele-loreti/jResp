@@ -40,8 +40,6 @@ import java.io.IOException;
 
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
-import rice.p2p.past.*;
-import rice.p2p.past.gc.*;
 import rice.p2p.past.gc.rawserialization.RawGCPastContentHandle;
 
 public class AggregateHandle implements RawGCPastContentHandle {
@@ -60,23 +58,28 @@ public class AggregateHandle implements RawGCPastContentHandle {
     this.expiration = expiration;
   }
 
-  public Id getId() {
+  @Override
+public Id getId() {
     return id;
   }
 
-  public NodeHandle getNodeHandle() {
+  @Override
+public NodeHandle getNodeHandle() {
     return handle;
   }
 
-  public long getVersion() {
+  @Override
+public long getVersion() {
     return version;
   }
 
-  public long getExpiration() {
+  @Override
+public long getExpiration() {
     return expiration;
   }
 
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
   
@@ -87,7 +90,8 @@ public class AggregateHandle implements RawGCPastContentHandle {
     handle = endpoint.readNodeHandle(buf);
   }
 
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     buf.writeLong(version);
     buf.writeLong(expiration);
     buf.writeShort(id.getType());

@@ -74,7 +74,6 @@ import rice.pastry.leafset.LeafSet;
 import rice.pastry.leafset.LeafSetProtocol;
 import rice.pastry.messaging.*;
 import rice.pastry.routing.*;
-import rice.pastry.transport.Deserializer;
 import rice.pastry.transport.PMessageNotification;
 import rice.pastry.transport.PMessageReceipt;
 import rice.pastry.transport.PMessageReceiptImpl;
@@ -196,7 +195,8 @@ public class PastryNode extends Observable implements
     defaultReadyStrategy = new ReadyStrategy() {
       private boolean ready = false; 
       
-      public void setReady(boolean r) {
+      @Override
+	public void setReady(boolean r) {
         if (r != ready) {
           synchronized(PastryNode.this) {
             ready = r;
@@ -205,15 +205,18 @@ public class PastryNode extends Observable implements
         }
       }
       
-      public boolean isReady() {
+      @Override
+	public boolean isReady() {
         return ready;  
       }
       
-      public void start() {
+      @Override
+	public void start() {
         setReady(true);
       }
 
-      public void stop() {
+      @Override
+	public void stop() {
         // don't need to do any initialization
       }
     };
@@ -259,11 +262,13 @@ public class PastryNode extends Observable implements
   }
   
 
-  public rice.p2p.commonapi.NodeHandle getLocalNodeHandle() {
+  @Override
+public rice.p2p.commonapi.NodeHandle getLocalNodeHandle() {
     return localhandle;
   }
 
-  public Environment getEnvironment() {
+  @Override
+public Environment getEnvironment() {
     return myEnvironment; 
   }
   
@@ -328,7 +333,8 @@ public class PastryNode extends Observable implements
     readyStrategy.setReady(ready); 
   }
 
-  public NodeHandle coalesce(NodeHandle newHandle) {
+  @Override
+public NodeHandle coalesce(NodeHandle newHandle) {
     if (logger.level <= Logger.FINER) logger.log("coalesce("+newHandle+")");
     return handleFactory.coalesce(newHandle);
   }
@@ -361,7 +367,7 @@ public class PastryNode extends Observable implements
         Vector<PastryAppl> tmpApps = new Vector(apps);
         Iterator<PastryAppl> it = tmpApps.iterator();
         while (it.hasNext())
-          ((PastryAppl) (it.next())).notifyReady();
+          (it.next()).notifyReady();
         neverBeenReady = false;
       }
 
@@ -413,7 +419,8 @@ public class PastryNode extends Observable implements
    * @deprecated use addLeafSetListener
    * @param o the observer.
    */
-  public void addLeafSetObserver(Observer o) {
+  @Deprecated
+public void addLeafSetObserver(Observer o) {
     leafSet.addObserver(o);
   }
 
@@ -423,7 +430,8 @@ public class PastryNode extends Observable implements
    * @deprecated use deleteLeafSetListener
    * @param o the observer.
    */
-  public void deleteLeafSetObserver(Observer o) {
+  @Deprecated
+public void deleteLeafSetObserver(Observer o) {
     leafSet.deleteObserver(o);
   }
 
@@ -439,7 +447,8 @@ public class PastryNode extends Observable implements
    * @deprecated use addRouteSetListener
    * @param o the observer.
    */
-  public void addRouteSetObserver(Observer o) {
+  @Deprecated
+public void addRouteSetObserver(Observer o) {
     routeSet.addObserver(o);
   }
 
@@ -449,7 +458,8 @@ public class PastryNode extends Observable implements
    * @deprecated use deleteRouteSetListener
    * @param o the observer.
    */
-  public void deleteRouteSetObserver(Observer o) {
+  @Deprecated
+public void deleteRouteSetObserver(Observer o) {
     routeSet.deleteObserver(o);
   }
 
@@ -505,7 +515,8 @@ public class PastryNode extends Observable implements
     apps.add(app);
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return "PastryNode"+localhandle;
 //    return "Pastry node " + myNodeId.toString();
   }
@@ -526,12 +537,15 @@ public class PastryNode extends Observable implements
    * @return The endpoint specific to this applicationk, which can be used for
    *         message sending/receiving.
    */
-  public rice.p2p.commonapi.Endpoint registerApplication(
+  @Deprecated
+@Override
+public rice.p2p.commonapi.Endpoint registerApplication(
       rice.p2p.commonapi.Application application, String instance) {
     return new rice.pastry.commonapi.PastryEndpoint(this, application, instance, true);
   }
 
-  public rice.p2p.commonapi.Endpoint buildEndpoint(
+  @Override
+public rice.p2p.commonapi.Endpoint buildEndpoint(
       rice.p2p.commonapi.Application application, String instance) {
     return new rice.pastry.commonapi.PastryEndpoint(this, application, instance, false);
   }
@@ -561,7 +575,8 @@ public class PastryNode extends Observable implements
    * 
    * @return This node's Id
    */
-  public rice.p2p.commonapi.Id getId() {
+  @Override
+public rice.p2p.commonapi.Id getId() {
     return getNodeId();
   }
 
@@ -570,7 +585,8 @@ public class PastryNode extends Observable implements
    * 
    * @return A factory for creating Ids.
    */
-  public rice.p2p.commonapi.IdFactory getIdFactory() {
+  @Override
+public rice.p2p.commonapi.IdFactory getIdFactory() {
     return new rice.pastry.commonapi.PastryIdFactory(getEnvironment());
   }
 
@@ -607,7 +623,8 @@ public class PastryNode extends Observable implements
    * 
    * Make sure to call super.destroy() !!!
    */
-  public void destroy() {
+  @Override
+public void destroy() {
     if (isDestroyed) return;
     if (logger.level <= Logger.INFO) logger.log("Destroying "+this);
     isDestroyed = true;
@@ -622,7 +639,8 @@ public class PastryNode extends Observable implements
       if (tl != null) tl.destroy();
     } else {
       getEnvironment().getSelectorManager().invoke(new Runnable() {
-        public void run() {
+        @Override
+		public void run() {
           if (tl != null) tl.destroy();
         }
       });
@@ -646,7 +664,8 @@ public class PastryNode extends Observable implements
     final SocketRequestHandleImpl<NodeHandle> handle = new SocketRequestHandleImpl<NodeHandle>(i, null, logger);
 
     Runnable r = new Runnable() {
-      public void run() {
+      @Override
+	public void run() {
         
         // use the proper application address
         final ByteBuffer b = ByteBuffer.allocate(4);
@@ -656,14 +675,16 @@ public class PastryNode extends Observable implements
         
         handle.setSubCancellable(tl.openSocket(i, 
           new SocketCallback<NodeHandle>(){    
-            public void receiveResult(SocketRequestHandle<NodeHandle> c, 
+            @Override
+			public void receiveResult(SocketRequestHandle<NodeHandle> c, 
                 P2PSocket<NodeHandle> result) {
               
               if (c != handle.getSubCancellable()) throw new RuntimeException("c != handle.getSubCancellable() (indicates a bug in the code) c:"+c+" sub:"+handle.getSubCancellable());
               
               if (logger.level <= Logger.FINER) logger.log("openSocket("+i+"):receiveResult("+result+")");
               result.register(false, true, new P2PSocketReceiver<NodeHandle>() {        
-                public void receiveSelectResult(P2PSocket<NodeHandle> socket,
+                @Override
+				public void receiveSelectResult(P2PSocket<NodeHandle> socket,
                     boolean canRead, boolean canWrite) throws IOException {
                   if (canRead || !canWrite) throw new IOException("Expected to write! "+canRead+","+canWrite);
                   
@@ -682,7 +703,8 @@ public class PastryNode extends Observable implements
                     final ByteBuffer answer = ByteBuffer.allocate(1);
                     socket.register(true, false, new P2PSocketReceiver<NodeHandle>(){
                     
-                      public void receiveSelectResult(P2PSocket<NodeHandle> socket, boolean canRead, boolean canWrite) throws IOException {
+                      @Override
+					public void receiveSelectResult(P2PSocket<NodeHandle> socket, boolean canRead, boolean canWrite) throws IOException {
                         
                         if (socket.read(answer) == -1) {
                           deliverSocketToMe.receiveException(new SocketAdapter(socket, getEnvironment()), new ClosedChannelException("Remote node closed socket while opening.  Try again."));
@@ -714,21 +736,24 @@ public class PastryNode extends Observable implements
                         }                    
                       }
                     
-                      public void receiveException(P2PSocket<NodeHandle> socket, Exception ioe) {
+                      @Override
+					public void receiveException(P2PSocket<NodeHandle> socket, Exception ioe) {
                         deliverSocketToMe.receiveException(new SocketAdapter(socket, getEnvironment()), ioe);
                       }                
                     });
                   }
                 }
               
-                public void receiveException(P2PSocket<NodeHandle> socket,
+                @Override
+				public void receiveException(P2PSocket<NodeHandle> socket,
                     Exception e) {
                   deliverSocketToMe.receiveException(new SocketAdapter(socket, getEnvironment()), e);
                 }        
               }); 
             }    
         
-            public void receiveException(SocketRequestHandle<NodeHandle> s, Exception ex) {
+            @Override
+			public void receiveException(SocketRequestHandle<NodeHandle> s, Exception ex) {
               // TODO: return something with a proper toString()
               deliverSocketToMe.receiveException(null, ex);
             }    
@@ -776,7 +801,8 @@ public class PastryNode extends Observable implements
     return router;
   }
   
-  public String printRouteState() {
+  @Override
+public String printRouteState() {
     String ret = leafSet.toString()+"\n";
     ret+=routeSet.toString();
     return ret;
@@ -818,14 +844,16 @@ public class PastryNode extends Observable implements
     return vars;
   }
   
-  public void incomingSocket(P2PSocket<NodeHandle> s) throws IOException {
+  @Override
+public void incomingSocket(P2PSocket<NodeHandle> s) throws IOException {
     
     // read the appId
     final ByteBuffer appIdBuffer = ByteBuffer.allocate(4);
     
     s.register(true, false, new P2PSocketReceiver<NodeHandle>() {
     
-      public void receiveSelectResult(
+      @Override
+	public void receiveSelectResult(
           P2PSocket<NodeHandle> socket,
           boolean canRead, boolean canWrite) throws IOException {
         // read the appId
@@ -846,7 +874,8 @@ public class PastryNode extends Observable implements
           // the alternative approach is to return a dummy socket (or a wrapper) and cache any registration request until we write the response
           socket.register(false, true, new P2PSocketReceiver<NodeHandle>(){
           
-            public void receiveSelectResult(P2PSocket<NodeHandle> socket, 
+            @Override
+			public void receiveSelectResult(P2PSocket<NodeHandle> socket, 
                 boolean canRead, boolean canWrite) throws IOException {
 
               PastryAppl acceptorAppl = getMessageDispatch().getDestinationByAddress(appId);
@@ -891,7 +920,8 @@ public class PastryNode extends Observable implements
               } // if (acceptorAppl!=null)              
             } // rSR()
           
-            public void receiveException(P2PSocket<NodeHandle> socket, Exception ioe) {
+            @Override
+			public void receiveException(P2PSocket<NodeHandle> socket, Exception ioe) {
               if (logger.level <= Logger.WARNING) logger.logException("incomingSocket("+socket+")", ioe);
               return;
             }          
@@ -899,7 +929,8 @@ public class PastryNode extends Observable implements
         }
       }
     
-      public void receiveException(
+      @Override
+	public void receiveException(
           P2PSocket<NodeHandle> socket,
           Exception ioe) {
         if (logger.level <= Logger.WARNING) logger.logException("incomingSocket("+socket+")",ioe);
@@ -927,7 +958,8 @@ public class PastryNode extends Observable implements
     return proximity(nh, null);
   }
   
-  public int proximity(NodeHandle nh, Map<String, Object> options) {
+  @Override
+public int proximity(NodeHandle nh, Map<String, Object> options) {
     return proxProvider.proximity(nh, options);
   }
   
@@ -1013,22 +1045,27 @@ public class PastryNode extends Observable implements
       receiveMessage(msg);
       PMessageReceipt ret = new PMessageReceipt() {
 
-        public boolean cancel() {
+        @Override
+		public boolean cancel() {
           return false;
         }
 
-        public NodeHandle getIdentifier() {
+        @Override
+		public NodeHandle getIdentifier() {
           return localhandle;
         }
 
-        public Map<String, Object> getOptions() {
+        @Override
+		public Map<String, Object> getOptions() {
           return options;
         }
 
-        public Message getMessage() {
+        @Override
+		public Message getMessage() {
           return msg;
         }
-        public String toString() {
+        @Override
+		public String toString() {
           return "TLPN$PMsgRecpt{"+msg+","+localhandle+"}";
         }
       }; 
@@ -1049,11 +1086,13 @@ public class PastryNode extends Observable implements
       callback = null;
     } else {
       callback = new MessageCallback<NodeHandle, RawMessage>(){        
-        public void ack(MessageRequestHandle<NodeHandle, RawMessage> msg) {
+        @Override
+		public void ack(MessageRequestHandle<NodeHandle, RawMessage> msg) {
           if (ret.getInternal() == null) ret.setInternal(msg);
           deliverAckToMe.sent(ret);
         }      
-        public void sendFailed(MessageRequestHandle<NodeHandle, RawMessage> msg, Exception reason) {        
+        @Override
+		public void sendFailed(MessageRequestHandle<NodeHandle, RawMessage> msg, Exception reason) {        
           if (ret.getInternal() == null) ret.setInternal(msg);
           deliverAckToMe.sendFailed(ret, reason);
         }     
@@ -1063,7 +1102,8 @@ public class PastryNode extends Observable implements
       ret.setInternal(tl.sendMessage(handle, rm, callback, options));
     } else {
       getEnvironment().getSelectorManager().invoke(new Runnable() {      
-        public void run() {
+        @Override
+		public void run() {
           ret.setInternal(tl.sendMessage(handle, rm, callback, options));
         }      
       });
@@ -1071,7 +1111,8 @@ public class PastryNode extends Observable implements
     return ret;
   }
   
-  public void messageReceived(NodeHandle i, RawMessage m, Map<String, Object> options) throws IOException {
+  @Override
+public void messageReceived(NodeHandle i, RawMessage m, Map<String, Object> options) throws IOException {
     if (m.getType() == 0 && (m instanceof PJavaSerializedMessage)) {
       receiveMessage(((PJavaSerializedMessage)m).getMessage());
     } else {
@@ -1080,7 +1121,8 @@ public class PastryNode extends Observable implements
   }
 
 
-  public NodeHandle readNodeHandle(InputBuffer buf) throws IOException {
+  @Override
+public NodeHandle readNodeHandle(InputBuffer buf) throws IOException {
     return handleFactory.readNodeHandle(buf);
   }
   
@@ -1128,26 +1170,29 @@ public class PastryNode extends Observable implements
 //    initiateJoin(bootstrap);
   }
     
-  public void livenessChanged(NodeHandle i, int val, Map<String, Object> options) {
+  @Override
+public void livenessChanged(NodeHandle i, int val, Map<String, Object> options) {
     if (val == LIVENESS_ALIVE) {
-      i.update(NodeHandle.DECLARED_LIVE);
+      i.update(rice.p2p.commonapi.NodeHandle.DECLARED_LIVE);
     } else {
       if (val >= LIVENESS_DEAD) {
-        i.update(NodeHandle.DECLARED_DEAD);
+        i.update(rice.p2p.commonapi.NodeHandle.DECLARED_DEAD);
       }
     }
     
-    notifyLivenessListeners((NodeHandle)i, val, options);
+    notifyLivenessListeners(i, val, options);
   }
   
   Collection<LivenessListener<NodeHandle>> livenessListeners = new ArrayList<LivenessListener<NodeHandle>>();
-  public void addLivenessListener(LivenessListener<NodeHandle> name) {
+  @Override
+public void addLivenessListener(LivenessListener<NodeHandle> name) {
     synchronized(livenessListeners) {
       livenessListeners.add(name);
     }    
   }
   
-  public boolean removeLivenessListener(LivenessListener<NodeHandle> name) {
+  @Override
+public boolean removeLivenessListener(LivenessListener<NodeHandle> name) {
     synchronized(livenessListeners) {
       return livenessListeners.remove(name);
     }    
@@ -1164,11 +1209,13 @@ public class PastryNode extends Observable implements
     }
   }
 
-  public boolean checkLiveness(NodeHandle i, Map<String, Object> options) {    
+  @Override
+public boolean checkLiveness(NodeHandle i, Map<String, Object> options) {    
     return livenessProvider.checkLiveness(i, options);
   }
 
-  public int getLiveness(NodeHandle i, Map<String, Object> options) {
+  @Override
+public int getLiveness(NodeHandle i, Map<String, Object> options) {
     return livenessProvider.getLiveness(i, options);
   }
 
@@ -1181,9 +1228,10 @@ public class PastryNode extends Observable implements
   }
 
 
-  public void proximityChanged(NodeHandle handle, int val, Map<String, Object> options) {
+  @Override
+public void proximityChanged(NodeHandle handle, int val, Map<String, Object> options) {
 //    SocketNodeHandle handle = ((SocketNodeHandle)i);
-    handle.update(NodeHandle.PROXIMITY_CHANGED);     
+    handle.update(rice.p2p.commonapi.NodeHandle.PROXIMITY_CHANGED);     
   }
 
   public LivenessProvider<NodeHandle> getLivenessProvider() {
@@ -1198,15 +1246,18 @@ public class PastryNode extends Observable implements
     return tl;
   }
 
-  public void clearState(NodeHandle i) {
+  @Override
+public void clearState(NodeHandle i) {
     livenessProvider.clearState(i);
   }
 
-  public void addProximityListener(ProximityListener<NodeHandle> listener) {
+  @Override
+public void addProximityListener(ProximityListener<NodeHandle> listener) {
     proxProvider.addProximityListener(listener);
   }
 
-  public boolean removeProximityListener(ProximityListener<NodeHandle> listener) {
+  @Override
+public boolean removeProximityListener(ProximityListener<NodeHandle> listener) {
     return proxProvider.removeProximityListener(listener);
   }
 
@@ -1219,7 +1270,8 @@ public class PastryNode extends Observable implements
    * @deprecated use nodeIsReady(boolean)
    * 
    */
-  public void nodeIsReady() {
+  @Deprecated
+public void nodeIsReady() {
     
     // nothing, used to cancel the joinEvent
   }
@@ -1273,11 +1325,13 @@ public class PastryNode extends Observable implements
       listener.dataReceived(address, msgType, from, size, wireType);
   }
 
-  public void addNodeHandleFactoryListener(NodeHandleFactoryListener listener) {
+  @Override
+public void addNodeHandleFactoryListener(NodeHandleFactoryListener listener) {
     handleFactory.addNodeHandleFactoryListener(listener);
   }
 
-  public void removeNodeHandleFactoryListener(NodeHandleFactoryListener listener) {
+  @Override
+public void removeNodeHandleFactoryListener(NodeHandleFactoryListener listener) {
     handleFactory.removeNodeHandleFactoryListener(listener);
   }
 

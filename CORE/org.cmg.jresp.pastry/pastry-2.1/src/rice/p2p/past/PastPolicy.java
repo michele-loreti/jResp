@@ -40,7 +40,6 @@ package rice.p2p.past;
 import rice.*;
 import rice.Continuation.*;
 import rice.p2p.commonapi.*;
-import rice.p2p.past.messaging.*;
 import rice.persistence.*;
 
 /**
@@ -96,17 +95,20 @@ public interface PastPolicy {
      * @param past The local past instance 
      * @param command The command to call with the replica to store
      */
-    public void fetch(final Id id, final NodeHandle hint, final Cache backup, final Past past, Continuation command) {
+    @Override
+	public void fetch(final Id id, final NodeHandle hint, final Cache backup, final Past past, Continuation command) {
       if ((backup != null) && backup.exists(id)) {
         backup.getObject(id, command);
       } else {
         past.lookup(id, false, new StandardContinuation(command) {
-          public void receiveResult(Object o) {
+          @Override
+		public void receiveResult(Object o) {
             if (o != null) 
               parent.receiveResult(o);
             else 
               past.lookupHandle(id, hint, new StandardContinuation(parent) {
-                public void receiveResult(Object o) {
+                @Override
+				public void receiveResult(Object o) {
                   if (o != null) 
                     past.fetch((PastContentHandle) o, parent);
                   else
@@ -124,7 +126,8 @@ public interface PastPolicy {
      * @param content The content about to be stored
      * @return Whether the insert should be allowed
      */
-    public boolean allowInsert(PastContent content) {
+    @Override
+	public boolean allowInsert(PastContent content) {
       return true;
     }
   }

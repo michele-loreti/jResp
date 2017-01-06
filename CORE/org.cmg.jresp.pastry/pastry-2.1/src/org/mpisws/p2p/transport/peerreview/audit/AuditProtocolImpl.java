@@ -38,17 +38,14 @@ package org.mpisws.p2p.transport.peerreview.audit;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.mpisws.p2p.transport.peerreview.PeerReview;
 import org.mpisws.p2p.transport.peerreview.PeerReviewCallback;
-import org.mpisws.p2p.transport.peerreview.PeerReviewImpl;
 import org.mpisws.p2p.transport.peerreview.commitment.Authenticator;
 import org.mpisws.p2p.transport.peerreview.commitment.AuthenticatorStore;
 import org.mpisws.p2p.transport.peerreview.evidence.AuditResponse;
@@ -383,7 +380,8 @@ public class AuditProtocolImpl<Handle extends RawSerializable, Identifier extend
    * an AUDIT challenge. At this point, we already know that we have all the
    * necessary certificates (because of the statement protocol).
    */
-  public void processAuditResponse(Identifier subject, long timestamp, AuditResponse<Handle> response) throws IOException {
+  @Override
+public void processAuditResponse(Identifier subject, long timestamp, AuditResponse<Handle> response) throws IOException {
 //    try {
     LogSnippet snippet = response.getLogSnippet();
     ActiveAuditInfo<Handle, Identifier> aai = findOngoingAudit(subject, timestamp);
@@ -676,7 +674,8 @@ public class AuditProtocolImpl<Handle extends RawSerializable, Identifier extend
     return null;
   }
 
-  public Evidence statOngoingAudit(Identifier subject, long evidenceSeq) {    
+  @Override
+public Evidence statOngoingAudit(Identifier subject, long evidenceSeq) {    
     ActiveAuditInfo<Handle, Identifier> aii = findOngoingAudit(subject, evidenceSeq);
     if (aii == null) return null;
     return aii.request.challenge;
@@ -684,7 +683,8 @@ public class AuditProtocolImpl<Handle extends RawSerializable, Identifier extend
   
   /* Handle an incoming datagram, which could be either a request for autheticators, or a response to such a request */
 
-  public void handleIncomingDatagram(Handle handle, PeerReviewMessage message) {
+  @Override
+public void handleIncomingDatagram(Handle handle, PeerReviewMessage message) {
     
     switch (message.getType()) {
       case MSG_AUTHREQ: { /* Request for authenticators */

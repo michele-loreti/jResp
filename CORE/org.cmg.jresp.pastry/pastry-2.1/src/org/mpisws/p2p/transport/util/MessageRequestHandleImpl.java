@@ -54,19 +54,23 @@ public class MessageRequestHandleImpl<Identifier, MessageType> implements Messag
     this.options = options;
   }
 
-  public Identifier getIdentifier() {
+  @Override
+public Identifier getIdentifier() {
     return identifier;
   }
 
-  public MessageType getMessage() {
+  @Override
+public MessageType getMessage() {
     return msg;
   }
 
-  public Map<String, Object> getOptions() {
+  @Override
+public Map<String, Object> getOptions() {
     return options;
   }
 
-  public boolean cancel() {
+  @Override
+public boolean cancel() {
     if (subCancellable == null) return false;
     return subCancellable.cancel();
   }
@@ -79,7 +83,8 @@ public class MessageRequestHandleImpl<Identifier, MessageType> implements Messag
     return subCancellable;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "MRHi("+identifier+","+msg+","+options+")";
   }
 }

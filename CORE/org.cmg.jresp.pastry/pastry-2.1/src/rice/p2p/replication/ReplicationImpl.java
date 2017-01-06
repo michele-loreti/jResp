@@ -39,8 +39,6 @@ package rice.p2p.replication;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.*;
-
 import rice.*;
 import rice.Continuation.*;
 import rice.environment.Environment;
@@ -152,7 +150,8 @@ public class ReplicationImpl implements Replication, Application, Destructable {
     
     endpoint.setDeserializer(new MessageDeserializer() {
     
-      public Message deserialize(InputBuffer buf, short type, int priority,
+      @Override
+	public Message deserialize(InputBuffer buf, short type, int priority,
           NodeHandle sender) throws IOException {
         switch(type) {
           case RequestMessage.TYPE:
@@ -239,14 +238,16 @@ public class ReplicationImpl implements Replication, Application, Destructable {
    * This internal method sends out the request messages to all of the nodes
    * which hold keys this node may be interested in
    */
-  public void replicate() {
+  @Override
+public void replicate() {
     final NodeHandleSet handles = endpoint.neighborSet(Integer.MAX_VALUE);
     final IdRange ourRange = endpoint.range(handle, 0, handle.getId());  
     
     endpoint.process(new BloomFilterExecutable(ourRange), new ListenerContinuation("Creation of our bloom filter", environment) {
       int total = 0;
 
-      public void receiveResult(Object o) {
+      @Override
+	public void receiveResult(Object o) {
         if (destroyed) return;
         final IdBloomFilter ourFilter = (IdBloomFilter) o;
 
@@ -258,7 +259,8 @@ public class ReplicationImpl implements Replication, Application, Destructable {
   
             if ((range != null) && (! range.intersectRange(getTotalRange()).isEmpty())) {
               endpoint.process(new BloomFilterExecutable(range), new StandardContinuation(this) {
-                public void receiveResult(Object o) {
+                @Override
+				public void receiveResult(Object o) {
                   IdBloomFilter filter = (IdBloomFilter) o;
   
                   if (ReplicationImpl.this.logger.level <= Logger.FINE) ReplicationImpl.this.logger.log( "COUNT: Sending request to " + handle + " for range " + range + ", " + ourRange + " in instance " + instance);
@@ -293,7 +295,8 @@ public class ReplicationImpl implements Replication, Application, Destructable {
    *
    * @return Whether or not to forward the message further
    */
-  public boolean forward(RouteMessage message) {
+  @Override
+public boolean forward(RouteMessage message) {
     return true;
   }
   
@@ -304,14 +307,16 @@ public class ReplicationImpl implements Replication, Application, Destructable {
    * @param id The destination id of the message
    * @param message The message being sent
    */
-  public void deliver(Id id, Message message) {
+  @Override
+public void deliver(Id id, Message message) {
     if (logger.level <= Logger.FINE) logger.log( "COUNT: Replication " + instance + " received message " + message);
     
     if (message instanceof RequestMessage) {
       final RequestMessage rm = (RequestMessage) message;
       
       MultiContinuation continuation = new MultiContinuation(new ListenerContinuation("Processing of RequestMessage", environment) {
-        public void receiveResult(Object o) {
+        @Override
+		public void receiveResult(Object o) {
           Object[] array = (Object[]) o;
           IdSet[] result = new IdSet[array.length];
           if ((array.length > 0) && (array[0] instanceof Throwable)) {
@@ -334,8 +339,10 @@ public class ReplicationImpl implements Replication, Application, Destructable {
       for (int i=0; i<rm.getRanges().length; i++) {
         final int j = i;
         endpoint.process(new Executable() {
-          public String toString() { return "process " + j + " of " + rm.getRanges().length + " namespace " + instance; }
-          public Object execute() {
+          @Override
+		public String toString() { return "process " + j + " of " + rm.getRanges().length + " namespace " + instance; }
+          @Override
+		public Object execute() {
             IdSet set = factory.buildIdSet();
             rm.getFilters()[j].check(client.scan(rm.getRanges()[j]), set, MAX_KEYS_IN_MESSAGE);
 
@@ -376,12 +383,14 @@ public class ReplicationImpl implements Replication, Application, Destructable {
    * @param handle The handle that has joined/left
    * @param joined Whether the node has joined or left
    */
-  public void update(NodeHandle handle, boolean joined) {
+  @Override
+public void update(NodeHandle handle, boolean joined) {
     updateClient();
   }
   
   protected boolean destroyed = false;
-  public void destroy() {
+  @Override
+public void destroy() {
     destroyed = true;
   } 
 
@@ -395,11 +404,13 @@ public class ReplicationImpl implements Replication, Application, Destructable {
       this.range = range;
     }
     
-    public String toString() { 
+    @Override
+	public String toString() { 
       return "bloomfilter range " + range + " namespace " + instance; 
     }
     
-    public Object execute() {
+    @Override
+	public Object execute() {
       return new IdBloomFilter(client.scan(range));
     }
   }  

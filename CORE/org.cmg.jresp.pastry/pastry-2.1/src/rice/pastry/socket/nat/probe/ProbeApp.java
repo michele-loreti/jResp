@@ -71,7 +71,8 @@ public class ProbeApp extends PastryAppl implements ProbeStrategy {
     this.addressStrategy = addressStrategy;
     
     setDeserializer(new MessageDeserializer() {
-      public rice.p2p.commonapi.Message deserialize(InputBuffer buf, short type,
+      @Override
+	public rice.p2p.commonapi.Message deserialize(InputBuffer buf, short type,
           int priority, rice.p2p.commonapi.NodeHandle sender) throws IOException {
         switch(type) {
         case ProbeRequestMessage.TYPE:
@@ -104,7 +105,8 @@ public class ProbeApp extends PastryAppl implements ProbeStrategy {
    * If no such candidate can be found, use someone who does.
    * If there are no candidates at all, send the message to self (or call handleProbeRequest()
    */
-  public Cancellable requestProbe(MultiInetSocketAddress addr, long uid, final Continuation<Boolean, Exception> deliverResultToMe) {
+  @Override
+public Cancellable requestProbe(MultiInetSocketAddress addr, long uid, final Continuation<Boolean, Exception> deliverResultToMe) {
     if (logger.level <= Logger.FINE) logger.log("requestProbe("+addr+","+uid+","+deliverResultToMe+")");
     // Step 1: find valid helpers
     
@@ -137,16 +139,19 @@ public class ProbeApp extends PastryAppl implements ProbeStrategy {
     // Step 3: send the probeRequest
     ProbeRequestMessage prm = new ProbeRequestMessage(addr, uid, getAddress());
     return thePastryNode.send(handle, prm, new PMessageNotification() {    
-      public void sent(PMessageReceipt msg) {
+      @Override
+	public void sent(PMessageReceipt msg) {
         deliverResultToMe.receiveResult(true);
       }    
-      public void sendFailed(PMessageReceipt msg, Exception reason) {
+      @Override
+	public void sendFailed(PMessageReceipt msg, Exception reason) {
         deliverResultToMe.receiveResult(false);
       }    
     }, null);
   }
 
-  public Collection<InetSocketAddress> getExternalAddresses() {
+  @Override
+public Collection<InetSocketAddress> getExternalAddresses() {
     ArrayList<InetSocketAddress> ret = new ArrayList<InetSocketAddress>();
     Iterator<NodeHandle> i = thePastryNode.getLeafSet().iterator();
     while(i.hasNext()) {

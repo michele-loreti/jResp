@@ -49,19 +49,14 @@ import java.util.Map;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.identity.BindStrategy;
-import org.mpisws.p2p.transport.identity.IdentityImpl;
-import org.mpisws.p2p.transport.identity.LowerIdentity;
 import org.mpisws.p2p.transport.multiaddress.MultiInetSocketAddress;
 import org.mpisws.p2p.transport.sourceroute.SourceRoute;
-import org.mpisws.p2p.transport.sourceroute.SourceRouteTransportLayer;
-import org.mpisws.p2p.transport.sourceroute.SourceRouteTransportLayerImpl;
 import org.mpisws.p2p.transport.sourceroute.factory.MultiAddressSourceRouteFactory;
 import org.mpisws.p2p.transport.ssl.SSLTransportLayer;
 import org.mpisws.p2p.transport.ssl.SSLTransportLayerImpl;
 
 import rice.environment.Environment;
 import rice.p2p.commonapi.Id;
-import rice.p2p.commonapi.NodeHandleSet;
 import rice.pastry.NodeHandle;
 import rice.pastry.NodeIdFactory;
 import rice.pastry.PastryNode;
@@ -124,7 +119,8 @@ public class DistTutorial {
       @Override
       protected BindStrategy<TransportLayerNodeHandle<MultiInetSocketAddress>, SourceRoute<MultiInetSocketAddress>> getBindStrategy() {
         return new BindStrategy<TransportLayerNodeHandle<MultiInetSocketAddress>, SourceRoute<MultiInetSocketAddress>>() {        
-          public boolean accept(TransportLayerNodeHandle<MultiInetSocketAddress> u,
+          @Override
+		public boolean accept(TransportLayerNodeHandle<MultiInetSocketAddress> u,
               SourceRoute<MultiInetSocketAddress> l, Map<String, Object> options) {
             
             // get the id from the certificate

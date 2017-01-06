@@ -103,7 +103,8 @@ public interface NodeSetI extends rice.p2p.commonapi.NodeHandleSet
      * @return the size.
      */
 
-    public int size();
+    @Override
+	public int size();
 
     /**
      * Gets the index of the element with the given node id.

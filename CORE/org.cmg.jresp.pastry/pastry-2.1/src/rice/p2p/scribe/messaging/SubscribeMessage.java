@@ -44,7 +44,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import rice.*;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
 import rice.p2p.scribe.*;
@@ -126,16 +125,19 @@ public class SubscribeMessage extends AnycastMessage {
    *
    * @return A String of this message
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "[SubscribeMessage{"+System.identityHashCode(this)+"} " + topic + " subscriber " + subscriber + " ID " + id + "]";
   }
 
   /***************** Raw Serialization ***************************************/
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE; 
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
 //    System.out.println("SubscribeMessage.serialize()");
     buf.writeByte((byte)1); // version
     super.serializeHelper(buf);

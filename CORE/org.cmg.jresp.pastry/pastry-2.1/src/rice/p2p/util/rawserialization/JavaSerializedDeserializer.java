@@ -41,10 +41,8 @@ package rice.p2p.util.rawserialization;
 
 import java.io.*;
 
-import rice.environment.logging.Logger;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
-import rice.pastry.PastryNode;
 
 /**
  * Handles "old" java serialized messages for programming convienience
@@ -65,7 +63,8 @@ public class JavaSerializedDeserializer implements MessageDeserializer {
     deserializeOnlyTypeZero = !val; 
   }
   
-  public Message deserialize(InputBuffer buf, short type, int priority, NodeHandle sender) throws IOException {
+  @Override
+public Message deserialize(InputBuffer buf, short type, int priority, NodeHandle sender) throws IOException {
     if (deserializeOnlyTypeZero && (type != 0)) throw new IllegalArgumentException("Type must be zero, was "+type+".  See http://freepastry.org/FreePastry/extendingRawMessages.html for more information."); 
     
 

@@ -43,7 +43,6 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import rice.environment.Environment;
-import rice.environment.params.simple.SimpleParameters;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.RawMessage;
 import rice.pastry.NodeHandle;
@@ -146,7 +145,7 @@ public class Tutorial {
     // for each app
     Iterator<MyApp> appIterator = apps.iterator();
     while(appIterator.hasNext()) {
-      MyApp app = (MyApp)appIterator.next();
+      MyApp app = appIterator.next();
       PastryNode node = (PastryNode)app.getNode();
       
       // send directly to my leafset (including myself)

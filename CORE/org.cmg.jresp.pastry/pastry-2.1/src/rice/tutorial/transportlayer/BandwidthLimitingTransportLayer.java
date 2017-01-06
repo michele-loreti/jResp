@@ -52,7 +52,6 @@ import org.mpisws.p2p.transport.SocketCallback;
 import org.mpisws.p2p.transport.SocketRequestHandle;
 import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.TransportLayerCallback;
-import org.mpisws.p2p.transport.TransportLayerListener;
 import org.mpisws.p2p.transport.liveness.LivenessProvider;
 import org.mpisws.p2p.transport.liveness.Pinger;
 import org.mpisws.p2p.transport.multiaddress.MultiInetSocketAddress;
@@ -138,7 +137,8 @@ public class BandwidthLimitingTransportLayer<Identifier> implements
     }, 0, BUCKET_TIME_LIMIT);
   }  
   
-  public MessageRequestHandle<Identifier, ByteBuffer> sendMessage(Identifier i, ByteBuffer m, 
+  @Override
+public MessageRequestHandle<Identifier, ByteBuffer> sendMessage(Identifier i, ByteBuffer m, 
       final MessageCallback<Identifier, ByteBuffer> deliverAckToMe, Map<String, Object> options) {
     
     final MessageRequestHandleImpl<Identifier, ByteBuffer> returnMe = 
@@ -159,25 +159,30 @@ public class BandwidthLimitingTransportLayer<Identifier> implements
     }
     
     returnMe.setSubCancellable(tl.sendMessage(i,m,new MessageCallback<Identifier, ByteBuffer>() {
-      public void ack(MessageRequestHandle<Identifier, ByteBuffer> msg) {
+      @Override
+	public void ack(MessageRequestHandle<Identifier, ByteBuffer> msg) {
         if (deliverAckToMe != null) deliverAckToMe.ack(returnMe);
       }
 
-      public void sendFailed(MessageRequestHandle<Identifier, ByteBuffer> msg, Exception reason) {
+      @Override
+	public void sendFailed(MessageRequestHandle<Identifier, ByteBuffer> msg, Exception reason) {
         if (deliverAckToMe != null) deliverAckToMe.sendFailed(returnMe, reason);
       }    
     },options));
     return returnMe;
   }  
   
-  public SocketRequestHandle<Identifier> openSocket(Identifier i, final SocketCallback<Identifier> deliverSocketToMe, Map<String, Object> options) {
+  @Override
+public SocketRequestHandle<Identifier> openSocket(Identifier i, final SocketCallback<Identifier> deliverSocketToMe, Map<String, Object> options) {
     final SocketRequestHandleImpl<Identifier> returnMe = new SocketRequestHandleImpl<Identifier>(i,options, logger);
     returnMe.setSubCancellable(tl.openSocket(i, new SocketCallback<Identifier>(){
-      public void receiveResult(SocketRequestHandle<Identifier> cancellable, P2PSocket<Identifier> sock) {
+      @Override
+	public void receiveResult(SocketRequestHandle<Identifier> cancellable, P2PSocket<Identifier> sock) {
         deliverSocketToMe.receiveResult(returnMe, new BandwidthLimitingSocket(sock));
       }
     
-      public void receiveException(SocketRequestHandle<Identifier> s, Exception ex) {
+      @Override
+	public void receiveException(SocketRequestHandle<Identifier> s, Exception ex) {
         deliverSocketToMe.receiveException(returnMe, ex);
       }
     }, options));
@@ -185,11 +190,13 @@ public class BandwidthLimitingTransportLayer<Identifier> implements
   }
 
   TransportLayerCallback<Identifier, ByteBuffer> callback;
-  public void setCallback(TransportLayerCallback<Identifier, ByteBuffer> callback) {
+  @Override
+public void setCallback(TransportLayerCallback<Identifier, ByteBuffer> callback) {
     this.callback = callback;
   }
 
-  public void incomingSocket(P2PSocket<Identifier> s) throws IOException {
+  @Override
+public void incomingSocket(P2PSocket<Identifier> s) throws IOException {
     callback.incomingSocket(new BandwidthLimitingSocket(s));
   }
   
@@ -284,14 +291,16 @@ public class BandwidthLimitingTransportLayer<Identifier> implements
       }
     }
     
-    public void close() {
+    @Override
+	public void close() {
       super.close();
       synchronized(BandwidthLimitingTransportLayer.this) {
         sockets.remove(this);      
       }
     }
     
-    public void shutdownOutput() {
+    @Override
+	public void shutdownOutput() {
       super.shutdownOutput();
       synchronized(BandwidthLimitingTransportLayer.this) {
         sockets.remove(this);
@@ -299,28 +308,34 @@ public class BandwidthLimitingTransportLayer<Identifier> implements
     }    
   }
   
-  public void acceptMessages(boolean b) {
+  @Override
+public void acceptMessages(boolean b) {
     tl.acceptMessages(b);
   }
 
-  public void acceptSockets(boolean b) {
+  @Override
+public void acceptSockets(boolean b) {
     tl.acceptSockets(b);
   }
 
-  public Identifier getLocalIdentifier() {
+  @Override
+public Identifier getLocalIdentifier() {
     return tl.getLocalIdentifier();
   }
 
-  public void setErrorHandler(ErrorHandler<Identifier> handler) {
+  @Override
+public void setErrorHandler(ErrorHandler<Identifier> handler) {
     this.errorHandler = handler;
     tl.setErrorHandler(handler);
   }
 
-  public void destroy() {
+  @Override
+public void destroy() {
     tl.destroy();
   }
 
-  public void messageReceived(Identifier i, ByteBuffer m, Map<String, Object> options) throws IOException {
+  @Override
+public void messageReceived(Identifier i, ByteBuffer m, Map<String, Object> options) throws IOException {
     // notify listeners
     callback.messageReceived(i, m, options);
   }
@@ -374,13 +389,16 @@ public class BandwidthLimitingTransportLayer<Identifier> implements
             srm.getTransportLayer(), amt, time, pn.getEnvironment());
         
         return new TransLivenessProximity<MultiInetSocketAddress, ByteBuffer>(){
-          public TransportLayer<MultiInetSocketAddress, ByteBuffer> getTransportLayer() {
+          @Override
+		public TransportLayer<MultiInetSocketAddress, ByteBuffer> getTransportLayer() {
             return bll;
           }        
-          public LivenessProvider<MultiInetSocketAddress> getLivenessProvider() {
+          @Override
+		public LivenessProvider<MultiInetSocketAddress> getLivenessProvider() {
             return srm.getLivenessProvider();
           }
-          public ProximityProvider<MultiInetSocketAddress> getProximityProvider() {
+          @Override
+		public ProximityProvider<MultiInetSocketAddress> getProximityProvider() {
             return srm.getProximityProvider();
           }
         };

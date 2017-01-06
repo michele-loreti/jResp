@@ -37,8 +37,6 @@ advised of the possibility of such damage.
 package org.mpisws.p2p.transport.util;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-
 import rice.p2p.commonapi.rawserialization.InputBuffer;
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
 

@@ -49,8 +49,8 @@ import org.mpisws.p2p.transport.SocketRequestHandle;
 import org.mpisws.p2p.transport.TransportLayer;
 import org.mpisws.p2p.transport.TransportLayerCallback;
 import org.mpisws.p2p.transport.exception.NodeIsFaultyException;
-import org.mpisws.p2p.transport.liveness.LivenessListener;
 import org.mpisws.p2p.transport.liveness.LivenessProvider;
+import org.mpisws.p2p.transport.liveness.LivenessTypes;
 import org.mpisws.p2p.transport.util.MessageRequestHandleImpl;
 import org.mpisws.p2p.transport.util.SocketRequestHandleImpl;
 
@@ -87,15 +87,18 @@ public class DirectTransportLayer<Identifier, MessageType> implements TransportL
 
   }
   
-  public void acceptMessages(boolean b) {
+  @Override
+public void acceptMessages(boolean b) {
     acceptMessages = b;
   }
 
-  public void acceptSockets(boolean b) {
+  @Override
+public void acceptSockets(boolean b) {
     acceptSockets = b;
   }
 
-  public Identifier getLocalIdentifier() {
+  @Override
+public Identifier getLocalIdentifier() {
     return localIdentifier;
   }
   
@@ -108,19 +111,21 @@ public class DirectTransportLayer<Identifier, MessageType> implements TransportL
       this.cancelMe = task;
     }
 
-    public boolean cancel() {
+    @Override
+	public boolean cancel() {
       closeMe.connectorEndpoint.close();
       return cancelMe.cancel();
     }
     
   }
 
-  public SocketRequestHandle<Identifier> openSocket(Identifier i, SocketCallback<Identifier> deliverSocketToMe, Map<String, Object> options) {
+  @Override
+public SocketRequestHandle<Identifier> openSocket(Identifier i, SocketCallback<Identifier> deliverSocketToMe, Map<String, Object> options) {
     SocketRequestHandleImpl<Identifier> handle = new SocketRequestHandleImpl<Identifier>(i,options, logger);
 
     
     if (simulator.isAlive(i)) {
-      int delay = (int)Math.round(simulator.networkDelay(localIdentifier, i));
+      int delay = Math.round(simulator.networkDelay(localIdentifier, i));
       DirectAppSocket<Identifier, MessageType> socket = new DirectAppSocket<Identifier, MessageType>(i, localIdentifier, deliverSocketToMe, simulator, handle, options);
       CancelAndClose<Identifier, MessageType> cancelAndClose = new CancelAndClose<Identifier, MessageType>(socket, simulator.enqueueDelivery(socket.getAcceptorDelivery(),
           delay));
@@ -135,14 +140,15 @@ public class DirectTransportLayer<Identifier, MessageType> implements TransportL
     return handle;
   }
 
-  public MessageRequestHandle<Identifier, MessageType> sendMessage(
+  @Override
+public MessageRequestHandle<Identifier, MessageType> sendMessage(
       Identifier i, MessageType m, 
       MessageCallback<Identifier, MessageType> deliverAckToMe, 
       Map<String, Object> options) {
     if (!simulator.isAlive(localIdentifier)) return null; // just make this stop, the local node is dead, he shouldn't be doing anything
     MessageRequestHandleImpl<Identifier, MessageType> handle = new MessageRequestHandleImpl<Identifier, MessageType>(i, m, options);
     
-    if (livenessProvider.getLiveness(i, null) >= LivenessListener.LIVENESS_DEAD) {
+    if (livenessProvider.getLiveness(i, null) >= LivenessTypes.LIVENESS_DEAD) {
       if (logger.level <= Logger.FINE)
         logger.log("Attempt to send message " + m
             + " to a dead node " + i + "!");      
@@ -150,7 +156,7 @@ public class DirectTransportLayer<Identifier, MessageType> implements TransportL
       if (deliverAckToMe != null) deliverAckToMe.sendFailed(handle, new NodeIsFaultyException(i));
     } else {
       if (simulator.isAlive(i)) {
-        int delay = (int)Math.round(simulator.networkDelay(localIdentifier, i));
+        int delay = Math.round(simulator.networkDelay(localIdentifier, i));
 //        simulator.notifySimulatorListenersSent(m, localIdentifier, i, delay);
         handle.setSubCancellable(simulator.deliverMessage(m, i, localIdentifier, delay));
         if (deliverAckToMe != null) deliverAckToMe.ack(handle);
@@ -161,15 +167,18 @@ public class DirectTransportLayer<Identifier, MessageType> implements TransportL
     return handle;
   }
 
-  public void setCallback(TransportLayerCallback<Identifier, MessageType> callback) {
+  @Override
+public void setCallback(TransportLayerCallback<Identifier, MessageType> callback) {
     this.callback = callback;
   }
 
-  public void setErrorHandler(ErrorHandler<Identifier> handler) {
+  @Override
+public void setErrorHandler(ErrorHandler<Identifier> handler) {
     this.errorHandler = handler;
   }
 
-  public void destroy() {
+  @Override
+public void destroy() {
     simulator.remove(getLocalIdentifier());
   }
 

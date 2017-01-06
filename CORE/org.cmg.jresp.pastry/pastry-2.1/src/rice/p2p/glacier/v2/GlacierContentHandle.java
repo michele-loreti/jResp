@@ -36,12 +36,7 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package rice.p2p.glacier.v2;
 
-import java.io.Serializable;
-
-import rice.*;
-import rice.p2p.past.PastContentHandle;
 import rice.p2p.past.gc.GCPastContentHandle;
-import rice.p2p.past.gc.rawserialization.RawGCPastContentHandle;
 import rice.p2p.commonapi.*;
 
 public class GlacierContentHandle implements GCPastContentHandle {
@@ -58,19 +53,23 @@ public class GlacierContentHandle implements GCPastContentHandle {
     this.version = version;
   }
 
-  public Id getId() {
+  @Override
+public Id getId() {
     return id;
   }
   
-  public NodeHandle getNodeHandle() {
+  @Override
+public NodeHandle getNodeHandle() {
     return nodeHandle;
   }
   
-  public long getVersion() {
+  @Override
+public long getVersion() {
     return version;
   }
   
-  public long getExpiration() {
+  @Override
+public long getExpiration() {
     return manifest.expirationDate;
   }
   

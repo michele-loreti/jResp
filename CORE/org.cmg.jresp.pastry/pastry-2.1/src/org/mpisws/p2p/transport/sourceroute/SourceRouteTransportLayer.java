@@ -36,7 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package org.mpisws.p2p.transport.sourceroute;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import org.mpisws.p2p.transport.TransportLayer;

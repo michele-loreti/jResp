@@ -38,8 +38,6 @@ package rice.pastry.join;
 
 import rice.pastry.*;
 import rice.pastry.messaging.*;
-import rice.pastry.socket.nat.rendezvous.RendezvousSocketNodeHandle;
-
 import java.io.*;
 import java.util.*;
 
@@ -107,7 +105,8 @@ public class InitiateJoin extends Message implements Serializable {
     return null;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     String s = "IJ{"; 
     for (int i = 0; i < handle.length; i++) {
       s+=handle[i]+":"+handle[i].isAlive();

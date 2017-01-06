@@ -68,7 +68,8 @@ public class SimpleInputBuffer extends DataInputStream implements InputBuffer {
 //    return temp;
 //  }
   
-  public int bytesRemaining() {
+  @Override
+public int bytesRemaining() {
     try {
       return this.available();
     } catch (IOException ioe) {

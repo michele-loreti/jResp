@@ -36,17 +36,12 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package org.mpisws.p2p.transport.peerreview.history;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import org.mpisws.p2p.transport.peerreview.audit.LogSnippet;
 import org.mpisws.p2p.transport.peerreview.audit.SnippetEntry;
-import org.mpisws.p2p.transport.util.FileInputBuffer;
-import org.mpisws.p2p.transport.util.FileOutputBuffer;
-
 import rice.environment.logging.Logger;
 import rice.p2p.commonapi.rawserialization.OutputBuffer;
 import rice.p2p.util.RandomAccessFileIOBuffer;
@@ -109,22 +104,26 @@ public class SecureHistoryImpl implements SecureHistory {
 //    entry.serialize(fileWriter);
 //  }
   
-  public long getBaseSeq() {
+  @Override
+public long getBaseSeq() {
     return baseSeq;
   }
 
-  public long getLastSeq() {
+  @Override
+public long getLastSeq() {
     return topEntry.seq;
   }
 
-  public long getNumEntries() {
+  @Override
+public long getNumEntries() {
     return numEntries;
   }
 
   /**
    *  Returns the node hash and the sequence number of the most recent log entry 
    */
-  public HashSeq getTopLevelEntry() {
+  @Override
+public HashSeq getTopLevelEntry() {
     return new HashSeq(topEntry.nodeHash, topEntry.seq);
   }
 
@@ -133,7 +132,8 @@ public class SecureHistoryImpl implements SecureHistory {
    * entry is stored. If 'header' is not NULL, the log entry is formed by concatenating
    * 'header' and 'entry'; otherwise, only 'entry' is used. 
    */
-  public void appendEntry(short type, boolean storeFullEntry, ByteBuffer ... entry) throws IOException {
+  @Override
+public void appendEntry(short type, boolean storeFullEntry, ByteBuffer ... entry) throws IOException {
     assert(indexFile != null && dataFile != null);
     if (logger.level <= Logger.FINER) logger.log("appendEntry("+type+","+storeFullEntry+","+entry.length+","+entry[0].remaining()+"):"+nextSeq);
     // Sanity check (for debugging) 
@@ -196,7 +196,8 @@ public class SecureHistoryImpl implements SecureHistory {
    * the content type, sequence number, and hash values. No entry is made in
    * the data file. 
    */
-  public void appendHash(short type, byte[] hash) throws IOException {
+  @Override
+public void appendHash(short type, byte[] hash) throws IOException {
     assert(indexFile != null && dataFile != null);
     
     // Sanity check (for debugging) 
@@ -235,7 +236,8 @@ public class SecureHistoryImpl implements SecureHistory {
    * and Y a sequence number. The sequence numbers need not be contigious
    * (and usually aren't) 
    */
-  public boolean setNextSeq(long nextSeq) {
+  @Override
+public boolean setNextSeq(long nextSeq) {
     if (nextSeq < this.nextSeq) return false;
     
     this.nextSeq = nextSeq;
@@ -245,7 +247,8 @@ public class SecureHistoryImpl implements SecureHistory {
   /**
    * The destructor.  Closes the file handles.
    */
-  public void close() throws IOException {
+  @Override
+public void close() throws IOException {
     assert(indexFile != null && dataFile != null);
     if (logger.level <= Logger.FINE) logger.logException(this+".close()", new Exception("Stack Trace"));
     indexFile.close();
@@ -255,7 +258,8 @@ public class SecureHistoryImpl implements SecureHistory {
     dataFile = null;
   }
   
-  public long findSeq(long seq) throws IOException { 
+  @Override
+public long findSeq(long seq) throws IOException { 
     return findSeqOrHigher(seq, false); 
   }
 
@@ -265,7 +269,8 @@ public class SecureHistoryImpl implements SecureHistory {
    * the corresponding record in the index file, or -1 if no matching
    * record was found. 
    */
-  public long findSeqOrHigher(long seq, boolean allowHigher) throws IOException {
+  @Override
+public long findSeqOrHigher(long seq, boolean allowHigher) throws IOException {
     assert(indexFile != null && dataFile != null);
     
     // Some special cases where we know the answer without looking
@@ -285,7 +290,7 @@ public class SecureHistoryImpl implements SecureHistory {
     
     indexFile.seek(indexFile.length());
     long rbegin = 1;
-    long rend = (indexFile.getFilePointer() / (long)indexFactory.getSerializedSize()) - 1;
+    long rend = (indexFile.getFilePointer() / indexFactory.getSerializedSize()) - 1;
     
     while (rbegin != rend) {
       assert(rend >= rbegin);
@@ -328,7 +333,8 @@ public class SecureHistoryImpl implements SecureHistory {
    * Note that the idxFrom and idxTo arguments are record numbers, NOT sequence numbers.
    * Use findSeqOrHigher() to get these if only sequence numbers are known. 
    */
-  public LogSnippet serializeRange(long idxFrom, long idxTo, HashPolicy hashPolicy) throws IOException {
+  @Override
+public LogSnippet serializeRange(long idxFrom, long idxTo, HashPolicy hashPolicy) throws IOException {
     assert((0 < idxFrom) && (idxFrom <= idxTo) && (idxTo < numEntries));
 
     IndexEntry ie;
@@ -359,7 +365,7 @@ public class SecureHistoryImpl implements SecureHistory {
       // If entry is not hashed, read contents from the data file       
       byte[] buffer = null;
       if (ie.sizeInFile > 0) {
-        buffer = new byte[(int)ie.sizeInFile]; // grumble...  This needs to be long eventually...
+        buffer = new byte[ie.sizeInFile]; // grumble...  This needs to be long eventually...
 //        buffer = (unsigned char*) malloc(ie.sizeInFile);
         assert(ie.fileIndex >= 0);
         dataFile.seek(ie.fileIndex);
@@ -447,7 +453,7 @@ public class SecureHistoryImpl implements SecureHistory {
       // If entry is not hashed, read contents from the data file       
       byte[] buffer = null;
       if (ie.sizeInFile > 0) {
-        buffer = new byte[(int)ie.sizeInFile]; // grumble...  This needs to be long eventually...
+        buffer = new byte[ie.sizeInFile]; // grumble...  This needs to be long eventually...
 //        buffer = (unsigned char*) malloc(ie.sizeInFile);
         assert(ie.fileIndex >= 0);
         dataFile.seek(ie.fileIndex);
@@ -503,7 +509,8 @@ public class SecureHistoryImpl implements SecureHistory {
    *  
    *  @param idx the index you are interested in
    */
-  public IndexEntry statEntry(long idx) throws IOException {
+  @Override
+public IndexEntry statEntry(long idx) throws IOException {
     if ((idx < 0) || (idx >= numEntries))
       return null;
       
@@ -519,11 +526,13 @@ public class SecureHistoryImpl implements SecureHistory {
   /**
    *  Get the content of a log entry, specified by its record number 
    */
-  public byte[] getEntry(long idx, int maxSizeToRead) throws IOException {
+  @Override
+public byte[] getEntry(long idx, int maxSizeToRead) throws IOException {
     return getEntry(statEntry(idx), maxSizeToRead);
   }
   
-  public byte[] getEntry(IndexEntry ie, int maxSizeToRead) throws IOException {
+  @Override
+public byte[] getEntry(IndexEntry ie, int maxSizeToRead) throws IOException {
     if (ie == null) return null;
     
     if (ie.sizeInFile < 0) return null;
@@ -546,7 +555,8 @@ public class SecureHistoryImpl implements SecureHistory {
    * If the log already contains an entry in 'hashed' form and we learn the actual
    * contents later, this function is called. 
    */
-  public boolean upgradeHashedEntry(int idx, ByteBuffer entry) throws IOException {
+  @Override
+public boolean upgradeHashedEntry(int idx, ByteBuffer entry) throws IOException {
     if (readOnly)
       throw new IllegalStateException("Cannot upgrade hashed entry in readonly history");
     
@@ -582,7 +592,8 @@ public class SecureHistoryImpl implements SecureHistory {
    * Find the most recent entry whose type is in the specified set. Useful e.g. for
    * locating the last CHECKPOINT or INIT entry. 
    */
-  public long findLastEntry(short[] types, long maxSeq) throws IOException {
+  @Override
+public long findLastEntry(short[] types, long maxSeq) throws IOException {
     long maxIdx = findSeqOrHigher(Math.min(maxSeq, topEntry.seq), true);
     long currentIdx = maxIdx;
    
@@ -600,7 +611,8 @@ public class SecureHistoryImpl implements SecureHistory {
     return -1;
   }
 
-  public void appendSnippetToHistory(LogSnippet snippet) throws IOException {
+  @Override
+public void appendSnippetToHistory(LogSnippet snippet) throws IOException {
 //    long currentSeq = snippet.getFirstSeq();
     for (SnippetEntry sEntry : snippet.entries) {
 //    int readptr = 0;

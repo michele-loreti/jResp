@@ -42,8 +42,6 @@ advised of the possibility of such damage.
  */
 package rice.tutorial.rawserialization2;
 
-import java.io.IOException;
-
 import rice.p2p.commonapi.Application;
 import rice.p2p.commonapi.Endpoint;
 import rice.p2p.commonapi.Id;
@@ -51,7 +49,6 @@ import rice.p2p.commonapi.Message;
 import rice.p2p.commonapi.Node;
 import rice.p2p.commonapi.NodeHandle;
 import rice.p2p.commonapi.RouteMessage;
-import rice.p2p.commonapi.rawserialization.*;
 import rice.pastry.messaging.JavaSerializedDeserializer;
 
 /**
@@ -111,7 +108,8 @@ public class MyApp implements Application {
   /**
    * Called when we receive a message.
    */
-  public void deliver(Id id, Message message) {
+  @Override
+public void deliver(Id id, Message message) {
     System.out.println(this+" received "+message);
   }
 
@@ -119,18 +117,21 @@ public class MyApp implements Application {
    * Called when you hear about a new neighbor.
    * Don't worry about this method for now.
    */
-  public void update(NodeHandle handle, boolean joined) {
+  @Override
+public void update(NodeHandle handle, boolean joined) {
   }
   
   /**
    * Called a message travels along your path.
    * Don't worry about this method for now.
    */
-  public boolean forward(RouteMessage message) {
+  @Override
+public boolean forward(RouteMessage message) {
     return true;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "MyApp "+endpoint.getId();
   }
 

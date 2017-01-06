@@ -55,7 +55,8 @@ public class JavaSerializedPastContentHandle implements RawPastContentHandle {
     this.handle = handle;
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {
     try {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -74,19 +75,23 @@ public class JavaSerializedPastContentHandle implements RawPastContentHandle {
     }
   }
 
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "JSPCH ["+handle+"]"; 
   }
 
-  public Id getId() {
+  @Override
+public Id getId() {
     return handle.getId();
   }
 
-  public NodeHandle getNodeHandle() {
+  @Override
+public NodeHandle getNodeHandle() {
     return handle.getNodeHandle();
   }
   

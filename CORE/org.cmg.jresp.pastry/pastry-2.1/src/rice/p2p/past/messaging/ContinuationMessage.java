@@ -43,7 +43,6 @@ import rice.*;
 import rice.environment.Environment;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.*;
-import rice.p2p.past.*;
 import rice.p2p.util.rawserialization.*;
 
 /**
@@ -87,7 +86,8 @@ public abstract class ContinuationMessage extends PastMessage implements Continu
    *
    * @param o The object argument
    */
-  public void receiveResult(Object o) {
+  @Override
+public void receiveResult(Object o) {
     setResponse();
     response = o;
   }
@@ -98,7 +98,8 @@ public abstract class ContinuationMessage extends PastMessage implements Continu
    *
    * @param e The exception argument
    */
-  public void receiveException(Exception e) {
+  @Override
+public void receiveException(Exception e) {
     setResponse();
 //    System.out.println("ContinuationMessage.receiveException("+e+")");
 //    e.printStackTrace();
@@ -110,7 +111,8 @@ public abstract class ContinuationMessage extends PastMessage implements Continu
    *
    * @param c The continuation to return the reponse to.
    */
-  public void returnResponse(Continuation c, Environment env, String instance) {
+  @Override
+public void returnResponse(Continuation c, Environment env, String instance) {
     if (exception == null)
       c.receiveResult(response);
     else
@@ -189,7 +191,8 @@ public abstract class ContinuationMessage extends PastMessage implements Continu
 //    throw new RuntimeException("Illegal call.  Must call serialize(OutputBuffer, boolean");
 //  }
   
-  public abstract void serialize(OutputBuffer buf) throws IOException;
+  @Override
+public abstract void serialize(OutputBuffer buf) throws IOException;
   
   protected byte serType;
   

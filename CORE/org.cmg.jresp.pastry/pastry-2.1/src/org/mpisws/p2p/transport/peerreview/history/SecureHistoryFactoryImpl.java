@@ -37,10 +37,7 @@ advised of the possibility of such damage.
 package org.mpisws.p2p.transport.peerreview.history;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-
 import org.mpisws.p2p.transport.peerreview.PeerReviewConstants;
 
 
@@ -66,7 +63,8 @@ public class SecureHistoryFactoryImpl implements SecureHistoryFactory, IndexEntr
    * bytes for each entry. Note that the caller must specify the node hash and the sequence
    * number of the first log entry, which forms the base of the hash chain.
    */
-  public SecureHistory create(String name, long baseSeq, byte[] baseHash) throws IOException {
+  @Override
+public SecureHistory create(String name, long baseSeq, byte[] baseHash) throws IOException {
     RandomAccessFileIOBuffer indexFile, dataFile;
     
     if (name == null) {
@@ -93,7 +91,7 @@ public class SecureHistoryFactoryImpl implements SecureHistoryFactory, IndexEntr
       throw ioe;
     }
 
-    IndexEntry entry = new IndexEntry(baseSeq, (long)0,EVT_INIT,-1, hashProv.getEmptyHash(), baseHash);
+    IndexEntry entry = new IndexEntry(baseSeq, 0,EVT_INIT,-1, hashProv.getEmptyHash(), baseHash);
     
     entry.serialize(indexFile);
     
@@ -111,7 +109,8 @@ public class SecureHistoryFactoryImpl implements SecureHistoryFactory, IndexEntr
    *  'w' (read/write). 
    */
 
-  public SecureHistory open(String name, String mode) throws IOException {
+  @Override
+public SecureHistory open(String name, String mode) throws IOException {
     boolean readOnly = false;
     
     if (mode.equals("r")) {
@@ -151,7 +150,8 @@ public class SecureHistoryFactoryImpl implements SecureHistoryFactory, IndexEntr
     return makeSecureHistory(indexFile, dataFile, readOnly, hashProv, this, environment.getLogManager().getLogger(SecureHistoryImpl.class, name));
   }
 
-  public IndexEntry build(InputBuffer buf) throws IOException {
+  @Override
+public IndexEntry build(InputBuffer buf) throws IOException {
     long seq = buf.readLong();
     long fileIndex = buf.readLong();
     int sizeInFile = buf.readInt();
@@ -163,11 +163,13 @@ public class SecureHistoryFactoryImpl implements SecureHistoryFactory, IndexEntr
     return new IndexEntry(seq, fileIndex, type, sizeInFile, contentHash, nodeHash);
   }
 
-  public int getSerializedSize() {
+  @Override
+public int getSerializedSize() {
     return 8+8+4+2+hashProv.getHashSizeBytes()*2;
   }
 
-  public SecureHistory createTemp(long baseSeq, byte[] baseHash)
+  @Override
+public SecureHistory createTemp(long baseSeq, byte[] baseHash)
       throws IOException {
     return create(null, baseSeq, baseHash);
   }

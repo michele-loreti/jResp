@@ -144,7 +144,8 @@ public class WireSRTest extends TLTest<SourceRoute<InetSocketAddress>> {
     final List<Triplet> bad = new ArrayList<Triplet>(1);
     
     SourceRouteTap tap = new SourceRouteTap(){    
-      public void socketOpened(SourceRoute path, P2PSocket a, P2PSocket b) {
+      @Override
+	public void socketOpened(SourceRoute path, P2PSocket a, P2PSocket b) {
         synchronized(lock) {
 //          System.out.println("socketOpened("+path+","+a+","+b+")");
           opened.add(new Triplet(path, a, b));
@@ -152,18 +153,21 @@ public class WireSRTest extends TLTest<SourceRoute<InetSocketAddress>> {
         }
       }
     
-      public void receivedMessage(ByteBuffer m, SourceRoute path) {
+      @Override
+	public void receivedMessage(ByteBuffer m, SourceRoute path) {
         bad.add(new Triplet(path, null, null));
       }
       
-      public void socketClosed(SourceRoute path, P2PSocket a, P2PSocket b) {
+      @Override
+	public void socketClosed(SourceRoute path, P2PSocket a, P2PSocket b) {
         synchronized(lock) {
           closed.add(new Triplet(path, a, b));        
           lock.notify();
         }
       }
         
-      public void receivedBytes(ByteBuffer m, SourceRoute path, P2PSocket a, P2PSocket b) {
+      @Override
+	public void receivedBytes(ByteBuffer m, SourceRoute path, P2PSocket a, P2PSocket b) {
         synchronized(lock) {
           Triplet t = new Triplet(path, a, b);
           t.m = m;
@@ -203,18 +207,22 @@ public class WireSRTest extends TLTest<SourceRoute<InetSocketAddress>> {
     final List<TapTupel> taptupels = new ArrayList<TapTupel>(1);
     
     SourceRouteTap tap = new SourceRouteTap(){    
-      public void socketOpened(SourceRoute path, P2PSocket a, P2PSocket b) {
+      @Override
+	public void socketOpened(SourceRoute path, P2PSocket a, P2PSocket b) {
       }
     
-      public void receivedBytes(ByteBuffer m, SourceRoute path, P2PSocket a, P2PSocket b) {
+      @Override
+	public void receivedBytes(ByteBuffer m, SourceRoute path, P2PSocket a, P2PSocket b) {
         
       }    
       
-      public void socketClosed(SourceRoute path, P2PSocket a, P2PSocket b) {
+      @Override
+	public void socketClosed(SourceRoute path, P2PSocket a, P2PSocket b) {
         
       }
     
-      public void receivedMessage(ByteBuffer m, SourceRoute path) {
+      @Override
+	public void receivedMessage(ByteBuffer m, SourceRoute path) {
 //        System.out.println("receivedMessage("+m+","+path+"):"+m.remaining());        
         synchronized(lock) {
           taptupels.add(new TapTupel(m,path));

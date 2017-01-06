@@ -58,7 +58,6 @@ import rice.environment.random.simple.SimpleRandomSource;
 import rice.environment.time.TimeSource;
 import rice.environment.time.simple.SimpleTimeSource;
 import rice.environment.time.simulated.DirectTimeSource;
-import rice.pastry.Id;
 import rice.selector.SelectorManager;
 
 
@@ -259,7 +258,8 @@ public class Environment implements Destructable {
    * Tears down the environment.  Calls params.store(), selectorManager.destroy().
    *
    */
-  public void destroy() {
+  @Override
+public void destroy() {
     try {
       params.store();
     } catch (IOException ioe) {      
@@ -269,7 +269,8 @@ public class Environment implements Destructable {
       callDestroyOnDestructables();
     } else {
       getSelectorManager().invoke(new Runnable() {
-        public void run() {
+        @Override
+		public void run() {
           callDestroyOnDestructables();
         }
       });
@@ -279,7 +280,7 @@ public class Environment implements Destructable {
   private void callDestroyOnDestructables() {
     Iterator<Destructable> i = new ArrayList<Destructable>(destructables).iterator();
     while(i.hasNext()) {
-      Destructable d = (Destructable)i.next();
+      Destructable d = i.next();
       d.destroy();
     }
     selectorManager.destroy();

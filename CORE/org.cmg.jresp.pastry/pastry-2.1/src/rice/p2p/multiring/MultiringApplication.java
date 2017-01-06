@@ -84,7 +84,8 @@ public class MultiringApplication implements Application {
    *
    * @return Whether or not to forward the message further
    */
-  public boolean forward(RouteMessage message) {
+  @Override
+public boolean forward(RouteMessage message) {
     return application.forward(new MultiringRouteMessage(ringId, message)); 
   }
   
@@ -95,7 +96,8 @@ public class MultiringApplication implements Application {
    * @param id The destination id of the message
    * @param message The message being sent
    */
-  public void deliver(Id id, Message message) {
+  @Override
+public void deliver(Id id, Message message) {
     if (id != null) {
       application.deliver(RingId.build(ringId, id), message);
     } else {
@@ -111,11 +113,13 @@ public class MultiringApplication implements Application {
    * @param handle The handle that has joined/left
    * @param joined Whether the node has joined or left
    */
-  public void update(NodeHandle handle, boolean joined) {
+  @Override
+public void update(NodeHandle handle, boolean joined) {
     application.update(new MultiringNodeHandle(ringId, handle), joined);
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return "MultiringApplication<"+application+">:"+ringId; 
   }
   

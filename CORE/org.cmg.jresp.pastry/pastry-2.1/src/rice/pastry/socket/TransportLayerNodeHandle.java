@@ -36,12 +36,6 @@ advised of the possibility of such damage.
 *******************************************************************************/ 
 package rice.pastry.socket;
 
-import java.io.IOException;
-
-import rice.p2p.commonapi.Id;
-import rice.p2p.commonapi.NodeHandle;
-import rice.p2p.commonapi.rawserialization.OutputBuffer;
-
 /**
  * Parallel interface to the CommonAPI NodeHandle, because it is an abstract object to gain the 
  * observer pattern.

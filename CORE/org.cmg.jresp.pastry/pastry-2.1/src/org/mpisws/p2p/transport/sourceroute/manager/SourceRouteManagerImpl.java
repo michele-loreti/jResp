@@ -59,21 +59,17 @@ import org.mpisws.p2p.transport.exception.NodeIsFaultyException;
 import org.mpisws.p2p.transport.liveness.LivenessListener;
 import org.mpisws.p2p.transport.liveness.LivenessProvider;
 import org.mpisws.p2p.transport.liveness.PingListener;
-import org.mpisws.p2p.transport.liveness.Pinger;
 import org.mpisws.p2p.transport.proximity.ProximityListener;
 import org.mpisws.p2p.transport.proximity.ProximityProvider;
 import org.mpisws.p2p.transport.sourceroute.SourceRoute;
 import org.mpisws.p2p.transport.sourceroute.SourceRouteFactory;
-import org.mpisws.p2p.transport.sourceroute.manager.SourceRouteManagerImpl.AddressManager.PendingMessage;
 import org.mpisws.p2p.transport.util.MessageRequestHandleImpl;
 import org.mpisws.p2p.transport.util.SocketRequestHandleImpl;
 
-import rice.Continuation;
 import rice.environment.Environment;
 import rice.environment.logging.Logger;
 import rice.environment.params.Parameters;
 import rice.p2p.commonapi.Cancellable;
-import rice.p2p.util.TimerWeakHashMap;
 
 /**
  * This class adapts a SourceRoute transport layer back to an Identifier
@@ -152,7 +148,8 @@ public class SourceRouteManagerImpl<Identifier> implements
    * @param address The address to send the message to
    */
 //  public void send(final Identifier address, final SocketBuffer message) {    
-  public MessageRequestHandle<Identifier, ByteBuffer> sendMessage(
+  @Override
+public MessageRequestHandle<Identifier, ByteBuffer> sendMessage(
       Identifier i, 
       ByteBuffer m, 
       MessageCallback<Identifier, ByteBuffer> deliverAckToMe, 
@@ -187,7 +184,8 @@ public class SourceRouteManagerImpl<Identifier> implements
   }
 
   
-  public void clearState(Identifier i) {
+  @Override
+public void clearState(Identifier i) {
     getAddressManager(i).clearLivenessState();
   }
 
@@ -228,7 +226,8 @@ public class SourceRouteManagerImpl<Identifier> implements
    * @param address The address to send the message to
    */
 //  public void connect(final Identifier address, final int appAddress, final AppSocketReceiver receiver, final int timeout) {
-  public SocketRequestHandle<Identifier> openSocket(
+  @Override
+public SocketRequestHandle<Identifier> openSocket(
       Identifier i, 
       SocketCallback<Identifier> deliverSocketToMe, 
       Map<String, Object> options) {
@@ -254,7 +253,8 @@ public class SourceRouteManagerImpl<Identifier> implements
    *
    * @return true if node is currently alive.
    */
-  public boolean checkLiveness(Identifier address, Map<String, Object> options) {
+  @Override
+public boolean checkLiveness(Identifier address, Map<String, Object> options) {
     return getAddressManager(address).checkLiveness(options);
   }
 
@@ -265,7 +265,8 @@ public class SourceRouteManagerImpl<Identifier> implements
    * @param address The address to return the value for
    * @return The liveness value
    */
-  public int getLiveness(Identifier address, Map<String, Object> options) {
+  @Override
+public int getLiveness(Identifier address, Map<String, Object> options) {
     return getAddressManager(address).getLiveness(options);
   }  
    
@@ -276,31 +277,38 @@ public class SourceRouteManagerImpl<Identifier> implements
    * @param address The address to return the value for
    * @return The ping value to the remote address
    */
-  public int proximity(Identifier address, Map<String, Object> options) {
+  @Override
+public int proximity(Identifier address, Map<String, Object> options) {
     return getAddressManager(address).proximity(options);
   }
   
-  public void acceptMessages(boolean b) {
+  @Override
+public void acceptMessages(boolean b) {
     tl.acceptMessages(b);
   }
 
-  public void acceptSockets(boolean b) {
+  @Override
+public void acceptSockets(boolean b) {
     tl.acceptSockets(b);
   }
 
-  public Identifier getLocalIdentifier() {
+  @Override
+public Identifier getLocalIdentifier() {
     return localAddress;
   }
 
-  public void setCallback(TransportLayerCallback<Identifier, ByteBuffer> callback) {
+  @Override
+public void setCallback(TransportLayerCallback<Identifier, ByteBuffer> callback) {
     this.callback = callback;
   }
 
-  public void setErrorHandler(ErrorHandler<Identifier> handler) {
+  @Override
+public void setErrorHandler(ErrorHandler<Identifier> handler) {
     this.errorHandler = handler;    
   }
 
-  public void destroy() {
+  @Override
+public void destroy() {
     tl.destroy();
   }
   
@@ -410,11 +418,13 @@ public class SourceRouteManagerImpl<Identifier> implements
         this.options = options;        
       }
 
-      public void receiveResult(SocketRequestHandle<SourceRoute<Identifier>> cancellable, P2PSocket<SourceRoute<Identifier>> sock) {
+      @Override
+	public void receiveResult(SocketRequestHandle<SourceRoute<Identifier>> cancellable, P2PSocket<SourceRoute<Identifier>> sock) {
         deliverSocketToMe.receiveResult(this, new SourceRouteManagerP2PSocket<Identifier>(sock, logger, errorHandler, environment));
       }
       
-      public void receiveException(SocketRequestHandle<SourceRoute<Identifier>> s, Exception ex) {
+      @Override
+	public void receiveException(SocketRequestHandle<SourceRoute<Identifier>> s, Exception ex) {
         deliverSocketToMe.receiveException(this, ex);
       }        
 
@@ -423,18 +433,21 @@ public class SourceRouteManagerImpl<Identifier> implements
         receiveException(null, ex);
       }        
       
-      public boolean cancel() {
+      @Override
+	public boolean cancel() {
         if (cancellable == null) {
           return pendingSockets.remove(this);
         } 
         return cancellable.cancel();
       }
 
-      public Identifier getIdentifier() {
+      @Override
+	public Identifier getIdentifier() {
         return address;
       }
 
-      public Map<String, Object> getOptions() {
+      @Override
+	public Map<String, Object> getOptions() {
         return options;
       }      
     }
@@ -451,30 +464,36 @@ public class SourceRouteManagerImpl<Identifier> implements
         this.options = options;        
       }
 
-      public boolean cancel() {
+      @Override
+	public boolean cancel() {
         if (cancellable == null) {
           return pendingMessages.remove(this);
         } 
         return cancellable.cancel();
       }      
       
-      public Map<String, Object> getOptions() {
+      @Override
+	public Map<String, Object> getOptions() {
         return options;
       }
 
-      public Identifier getIdentifier() {
+      @Override
+	public Identifier getIdentifier() {
         return address;
       }
 
-      public ByteBuffer getMessage() {
+      @Override
+	public ByteBuffer getMessage() {
         return message;
       }
 
-      public void ack(MessageRequestHandle<SourceRoute<Identifier>, ByteBuffer> msg) {
+      @Override
+	public void ack(MessageRequestHandle<SourceRoute<Identifier>, ByteBuffer> msg) {
         deliverAckToMe.ack(this);
       }
 
-      public void sendFailed(MessageRequestHandle<SourceRoute<Identifier>, ByteBuffer> msg, Exception reason) {
+      @Override
+	public void sendFailed(MessageRequestHandle<SourceRoute<Identifier>, ByteBuffer> msg, Exception reason) {
         deliverAckToMe.sendFailed(this, reason);        
       }
       
@@ -555,12 +574,14 @@ public class SourceRouteManagerImpl<Identifier> implements
       final MessageRequestHandleImpl<Identifier, ByteBuffer> handle 
         = new MessageRequestHandleImpl<Identifier, ByteBuffer>(address, message, options);
       handle.setSubCancellable(tl.sendMessage(best, message, new MessageCallback<SourceRoute<Identifier>, ByteBuffer>(){
-        public void ack(MessageRequestHandle<SourceRoute<Identifier>, ByteBuffer> msg) {
+        @Override
+		public void ack(MessageRequestHandle<SourceRoute<Identifier>, ByteBuffer> msg) {
           if (handle.getSubCancellable() != null && msg != handle.getSubCancellable()) throw new RuntimeException("msg != cancellable.getSubCancellable() (indicates a bug in the code) msg:"+msg+" sub:"+handle.getSubCancellable());
           if (deliverAckToMe != null) deliverAckToMe.ack(handle);
         }
             
-        public void sendFailed(MessageRequestHandle<SourceRoute<Identifier>, ByteBuffer> msg, Exception ex) {
+        @Override
+		public void sendFailed(MessageRequestHandle<SourceRoute<Identifier>, ByteBuffer> msg, Exception ex) {
           if (handle.getSubCancellable() != null && msg != handle.getSubCancellable()) throw new RuntimeException("msg != cancellable.getSubCancellable() (indicates a bug in the code) msg:"+msg+" sub:"+handle.getSubCancellable());
           if (deliverAckToMe == null) {
             errorHandler.receivedException(address, ex);
@@ -601,12 +622,14 @@ public class SourceRouteManagerImpl<Identifier> implements
           new SocketRequestHandleImpl<Identifier>(address, options, logger);
         
         handle.setSubCancellable(tl.openSocket(best, new SocketCallback<SourceRoute<Identifier>>(){        
-          public void receiveResult(
+          @Override
+		public void receiveResult(
               SocketRequestHandle<SourceRoute<Identifier>> cancellable, 
               P2PSocket<SourceRoute<Identifier>> sock) {
             deliverSocketToMe.receiveResult(handle, new SourceRouteManagerP2PSocket<Identifier>(sock, logger, errorHandler, environment));
           }        
-          public void receiveException(SocketRequestHandle<SourceRoute<Identifier>> s, Exception ex) {
+          @Override
+		public void receiveException(SocketRequestHandle<SourceRoute<Identifier>> s, Exception ex) {
             deliverSocketToMe.receiveException(handle, ex);
           }
         }, options));
@@ -683,7 +706,8 @@ public class SourceRouteManagerImpl<Identifier> implements
       }  
     }   
     
-    public String toString() {
+    @Override
+	public String toString() {
       return "AM "+this.address; 
     }
 
@@ -1027,13 +1051,15 @@ public class SourceRouteManagerImpl<Identifier> implements
     }
   }
 
-  public void addLivenessListener(LivenessListener<Identifier> name) {
+  @Override
+public void addLivenessListener(LivenessListener<Identifier> name) {
     synchronized(livenessListeners) {
       livenessListeners.add(name);
     }
   }
 
-  public boolean removeLivenessListener(LivenessListener<Identifier> name) {
+  @Override
+public boolean removeLivenessListener(LivenessListener<Identifier> name) {
     synchronized(livenessListeners) {
       return livenessListeners.remove(name);
     }
@@ -1072,15 +1098,18 @@ public class SourceRouteManagerImpl<Identifier> implements
 //    }
 //  }
 
-  public void incomingSocket(P2PSocket<SourceRoute<Identifier>> s) throws IOException {
+  @Override
+public void incomingSocket(P2PSocket<SourceRoute<Identifier>> s) throws IOException {
     callback.incomingSocket(new SourceRouteManagerP2PSocket<Identifier>(s, logger, errorHandler, environment));
   }
 
-  public void messageReceived(SourceRoute<Identifier> i, ByteBuffer m, Map<String, Object> options) throws IOException {
+  @Override
+public void messageReceived(SourceRoute<Identifier> i, ByteBuffer m, Map<String, Object> options) throws IOException {
     callback.messageReceived(i.getLastHop(), m, options);
   }
 
-  public void livenessChanged(SourceRoute<Identifier> i, int val, Map<String, Object> options) {
+  @Override
+public void livenessChanged(SourceRoute<Identifier> i, int val, Map<String, Object> options) {
     if (logger.level <= Logger.FINER) logger.log("livenessChanged("+i+","+val+")");
     getAddressManager(i.getLastHop()).livenessChanged(i,val, options);
   }
@@ -1094,19 +1123,22 @@ public class SourceRouteManagerImpl<Identifier> implements
 //  }
 
   Collection<ProximityListener<Identifier>> listeners = new ArrayList<ProximityListener<Identifier>>();
-  public void addProximityListener(ProximityListener<Identifier> listener) {
+  @Override
+public void addProximityListener(ProximityListener<Identifier> listener) {
     synchronized(listeners) {
       listeners.add(listener);
     }
   }
 
-  public boolean removeProximityListener(ProximityListener<Identifier> listener) {
+  @Override
+public boolean removeProximityListener(ProximityListener<Identifier> listener) {
     synchronized(listeners) {
       return listeners.remove(listener);
     }
   }
 
-  public void proximityChanged(SourceRoute<Identifier> i, int newProximity, Map<String, Object> options) {
+  @Override
+public void proximityChanged(SourceRoute<Identifier> i, int newProximity, Map<String, Object> options) {
     getAddressManager(i.getLastHop()).markProximity(i, newProximity, options);
   }
   

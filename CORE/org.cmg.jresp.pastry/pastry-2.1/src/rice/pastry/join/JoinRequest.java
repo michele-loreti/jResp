@@ -205,24 +205,27 @@ public class JoinRequest extends PRawMessage {
     rows = new RouteSet[rowCount][];
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return "JoinRequest(" + (handle != null ? handle.getNodeId() : null) + ","
         + (joinHandle != null ? joinHandle.getNodeId() : null) +","+timestamp+ ")";
   }
 
   /***************** Raw Serialization ***************************************/  
-  public short getType() {
+  @Override
+public short getType() {
     return TYPE;
   }
   
-  public void serialize(OutputBuffer buf) throws IOException {    
+  @Override
+public void serialize(OutputBuffer buf) throws IOException {    
 //    buf.writeByte((byte)0); // version
     
     // version 1
     buf.writeByte((byte)1); // version
     buf.writeLong(timestamp);
     
-    buf.writeByte((byte) rtBaseBitLength);    
+    buf.writeByte(rtBaseBitLength);    
     handle.serialize(buf);
     if (joinHandle != null) {
       buf.writeBoolean(true);
@@ -232,7 +235,7 @@ public class JoinRequest extends PRawMessage {
     }
     
     // encode the table
-    buf.writeShort((short) rowCount);
+    buf.writeShort(rowCount);
     int maxIndex = Id.IdBitLength / rtBaseBitLength;
     for (int i=0; i<maxIndex; i++) {
       RouteSet[] thisRow = rows[i];

@@ -155,7 +155,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    *
    * @throws IOException If an error occurs
    */
-  protected void writeStreamHeader() throws IOException {
+  @Override
+protected void writeStreamHeader() throws IOException {
     if (writer == null) {
       System.out.println("FLUGLE writer is null in writeStreamHeader()...");
       System.out.println(debugstr);
@@ -181,7 +182,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    *
    * @throws IOException if an error occurs
    */
-  public void flush() throws IOException {
+  @Override
+public void flush() throws IOException {
     writer.flush();
   }
   
@@ -189,7 +191,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    * Method which closes the underlying output stream for writing.  Any subsequent 
    * writes will throw an IOException.
    */
-  public void close() throws IOException {
+  @Override
+public void close() throws IOException {
     writer.end("jsx");
     writer.close();
   }
@@ -201,7 +204,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    *
    * @throws IOException If an error occurs, or an object is currently being written
    */
-  public void reset() throws IOException {
+  @Override
+public void reset() throws IOException {
     if (currentObjects.peek() == null) {
       references = new Hashtable(); 
       writeReset();
@@ -226,7 +230,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    *
    * @throws IOException If an error occurs
    */
-  public void write(byte[] b) throws IOException {
+  @Override
+public void write(byte[] b) throws IOException {
     write(b, 0, b.length);
   }
   
@@ -236,7 +241,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    *
    * @throws IOException If an error occurs
    */
-  public void write(byte[] b, int offset, int length) throws IOException {
+  @Override
+public void write(byte[] b, int offset, int length) throws IOException {
     writer.start("base64");
     writer.attribute("length", length);
     writer.writeBase64(b, offset, length);
@@ -249,7 +255,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    * @param i The value to write to the stream
    * @throws IOException If an error occurs
    */
-  public void writeInt(int i) throws IOException {
+  @Override
+public void writeInt(int i) throws IOException {
     writePrimitive(i, null);
   }
   
@@ -259,7 +266,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    * @param b The value to write to the stream
    * @throws IOException If an error occurs
    */
-  public void writeBoolean(boolean b) throws IOException {
+  @Override
+public void writeBoolean(boolean b) throws IOException {
     writePrimitive(b, null);
   }
   
@@ -269,7 +277,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    * @param i The value to write to the stream, casted to a byte
    * @throws IOException If an error occurs
    */
-  public void writeByte(int i) throws IOException {
+  @Override
+public void writeByte(int i) throws IOException {
     writeByte((byte) i);
   }
   
@@ -289,7 +298,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    * @param i The value to write to the stream, casted to an int
    * @throws IOException If an error occurs
    */
-  public void writeChar(int i) throws IOException {
+  @Override
+public void writeChar(int i) throws IOException {
     writeChar((char) i);
   }
   
@@ -309,7 +319,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    * @param d The value to write to the stream
    * @throws IOException If an error occurs
    */
-  public void writeDouble(double d) throws IOException {
+  @Override
+public void writeDouble(double d) throws IOException {
     writePrimitive(d, null);
   }
   
@@ -319,7 +330,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    * @param f The value to write to the stream
    * @throws IOException If an error occurs
    */
-  public void writeFloat(float f) throws IOException {
+  @Override
+public void writeFloat(float f) throws IOException {
     writePrimitive(f, null);
   }
   
@@ -329,7 +341,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    * @param l The value to write to the stream
    * @throws IOException If an error occurs
    */
-  public void writeLong(long l) throws IOException {
+  @Override
+public void writeLong(long l) throws IOException {
     writePrimitive(l, null);
   }
   
@@ -339,7 +352,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    * @param i The value to write to the stream, casted to a short
    * @throws IOException If an error occurs
    */
-  public void writeShort(int i) throws IOException {
+  @Override
+public void writeShort(int i) throws IOException {
     writeShort((short) i);
   }
   
@@ -359,7 +373,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    *
    * @throws IOException If an error occurs
    */
-  public void writeUTF(String s) throws IOException {
+  @Override
+public void writeUTF(String s) throws IOException {
     writeObject(s);
   }
   
@@ -371,7 +386,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    *
    * @throws IOException If an error occurs
    */
-  public void writeChars(String s) throws IOException {
+  @Override
+public void writeChars(String s) throws IOException {
     char[] chars = s.toCharArray();
     
     for (int i=0; i<chars.length; i++) 
@@ -386,7 +402,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    *
    * @throws IOException If an error occurs
    */
-  public void writeBytes(String s) throws IOException {
+  @Override
+public void writeBytes(String s) throws IOException {
     byte[] bytes = s.getBytes();
     
     for (int i=0; i<bytes.length; i++) 
@@ -402,7 +419,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    * @param o The value to write to the stream
    * @throws IOException If an error occurs
    */
-  public void writeObjectOverride(Object o) throws IOException {
+  @Override
+public void writeObjectOverride(Object o) throws IOException {
     writeObject(o, null);
   }
   
@@ -414,7 +432,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    * @param o The value to write to the stream
    * @throws IOException If an error occurs
    */
-  public void writeUnshared(Object o) throws IOException {
+  @Override
+public void writeUnshared(Object o) throws IOException {
     writeObjectUnshared(o, null, false);
   }
   
@@ -428,7 +447,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    * @throws IOException If an error occurs
    * @throws NotActiveException If a object is not currently being written
    */
-  public void defaultWriteObject() throws IOException {
+  @Override
+public void defaultWriteObject() throws IOException {
     if (currentObjects.peek() != null)
       writeFields(currentObjects.peek(), (Class) currentClasses.peek());
     else
@@ -447,7 +467,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    * @throws IOException If an error occurs
    * @throws NotActiveException If a object is not currently being read
    */
-  public ObjectOutputStream.PutField putFields() throws IOException {
+  @Override
+public ObjectOutputStream.PutField putFields() throws IOException {
     if (currentPutFields.peek() != null)
       return (PutField) currentPutFields.peek();
     else
@@ -463,7 +484,8 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
    * @throws IOException If an error occurs
    * @throws NotActiveException If a object is not currently being read
    */
-  public void writeFields() throws IOException {
+  @Override
+public void writeFields() throws IOException {
     if (currentObjects.peek() != null)
       writePutFields((PutField) putFields());
     else
@@ -1276,39 +1298,48 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
       return (String[]) objects.keySet().toArray(new String[0]);
     }
     
-    public void put(String name, boolean value) {
+    @Override
+	public void put(String name, boolean value) {
       primitives.put(name, new Boolean(value));
     }
     
-    public void put(String name, byte value) {
+    @Override
+	public void put(String name, byte value) {
       primitives.put(name, new Byte(value));
     }
     
-    public void put(String name, char value) {
+    @Override
+	public void put(String name, char value) {
       primitives.put(name, new Character(value));
     }
     
-    public void put(String name, double value) {
+    @Override
+	public void put(String name, double value) {
       primitives.put(name, new Double(value));
     }
 
-    public void put(String name, float value) {
+    @Override
+	public void put(String name, float value) {
       primitives.put(name, new Float(value));
     }
     
-    public void put(String name, int value) {
+    @Override
+	public void put(String name, int value) {
       primitives.put(name, new Integer(value));
     }
     
-    public void put(String name, long value) {
+    @Override
+	public void put(String name, long value) {
       primitives.put(name, new Long(value));
     }
     
-    public void put(String name, short value) {
+    @Override
+	public void put(String name, short value) {
       primitives.put(name, new Short(value));
     }
     
-    public void put(String name, Object value) {
+    @Override
+	public void put(String name, Object value) {
       objects.put(name, value);
     }
     
@@ -1356,7 +1387,9 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
      * only exists to satisfy deprecated method in superclass
      * @deprecated
      */
-    public void write(ObjectOutput output) throws IOException {
+    @Deprecated
+	@Override
+	public void write(ObjectOutput output) throws IOException {
       XMLObjectOutputStream xoos = (XMLObjectOutputStream) output;
       xoos.writeFields();
     }
@@ -1372,11 +1405,13 @@ public class XMLObjectOutputStream extends ObjectOutputStream {
       this.object = object;
     }
     
-    public int hashCode() {
+    @Override
+	public int hashCode() {
       return hash(object);
     }
     
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
       return (((Reference) o).object == object); 
     }
   }

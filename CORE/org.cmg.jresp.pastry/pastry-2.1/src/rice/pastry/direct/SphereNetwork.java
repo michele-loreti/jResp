@@ -35,15 +35,8 @@ advised of the possibility of such damage.
 
 *******************************************************************************/ 
 package rice.pastry.direct;
-import java.lang.*;
-
-import java.util.*;
-
 import rice.environment.Environment;
-import rice.environment.logging.Logger;
-import rice.pastry.*;
 import rice.pastry.direct.proximitygenerators.SphereNetworkProximityGenerator;
-import rice.pastry.messaging.*;
 
 /**
  * Sphere network topology and idealized node life. Emulates a network of nodes that are randomly

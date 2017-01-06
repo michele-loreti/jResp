@@ -41,8 +41,6 @@ package org.mpisws.p2p.transport.sourceroute.manager.simple;
 
 import java.util.Collection;
 
-import org.mpisws.p2p.transport.multiaddress.MultiInetSocketAddress;
-
 /**
  * This is a simplified Source Route Strategy, that only needs to 
  * provide a next hop.
