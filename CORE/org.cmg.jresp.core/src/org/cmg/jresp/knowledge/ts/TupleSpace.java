@@ -70,11 +70,14 @@ public class TupleSpace implements KnowledgeManager {
 	}
 
 	private Tuple _get(Template template, boolean remove) {
-		for (int i = 0; i < elements.size(); i++) {
-			Tuple t = elements.get(i);
+		
+		Tuple t;
+		Iterator<Tuple> itr = elements.iterator();
+		while(itr.hasNext()) {
+			t = itr.next();
 			if (template.match(t)) {
 				if (remove) {
-					elements.remove(i);
+					itr.remove();
 				}
 				return t;
 			}
