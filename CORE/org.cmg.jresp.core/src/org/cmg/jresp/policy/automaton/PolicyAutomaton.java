@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+//import org.cmg.resp.behaviour.Action;
 import org.cmg.jresp.behaviour.Agent;
 import org.cmg.jresp.comp.INode;
 import org.cmg.jresp.knowledge.Attribute;
@@ -67,11 +68,12 @@ public class PolicyAutomaton implements IPolicy {
 	}
 
 	public PolicyAutomaton(IPolicyAutomatonState... states) {
+		this.policyStates = new ArrayList<IPolicyAutomatonState>();
 		for (int i = 0; i < states.length; i++) {
 			this.policyStates.add(states[i]);
 		}
 		this.rules = new ArrayList<LinkedList<PATransition>>(states.length);
-		// initialize list of transition for each state
+		// initialise list of transition for each state
 		for (int i = 0; i < states.length; i++) {
 			this.rules.add(i, new LinkedList<PATransition>());
 		}
@@ -155,13 +157,15 @@ public class PolicyAutomaton implements IPolicy {
 	 * @param req
 	 */
 	private void updatePolicState(AuthorizationRequest req) {
-		LinkedList<PATransition> stateTransitions = rules.get(currentState);
-		for (PATransition paTransition : stateTransitions) {
-			// ADD policy Name
-			if (paTransition.isEnabled(req, node.getName())) {
-				System.out.println("Automaton state updated to: " + paTransition.nextState);
-				currentState = paTransition.nextState;
-				return;
+		if (rules.size() > 0) {
+			LinkedList<PATransition> stateTransitions = rules.get(currentState);
+			for (PATransition paTransition : stateTransitions) {
+				// ADD policy Name
+				if (paTransition.isEnabled(req, node.getName())) {
+					System.out.println("Automaton state updated to: " + paTransition.nextState);
+					currentState = paTransition.nextState;
+					return;
+				}
 			}
 		}
 	}
@@ -201,12 +205,14 @@ public class PolicyAutomaton implements IPolicy {
 			if (res.getObligations(ObligationType.BEFORE).size() > 0) {
 				executeActions(node, res.getObligations(ObligationType.BEFORE));
 			}
+			System.out.println("Permitting put action with argument "+ tuple.toString());
 			node.put(tuple);
 			if (res.getObligations(ObligationType.AFTER).size() > 0) {
 				executeActions(node, res.getObligations(ObligationType.AFTER));
 			}
 		} else {
 			// action not authorised, obligation actions executed
+			System.out.println("Denying put action with argument "+ tuple.toString());
 			if (res.getObligations(ObligationType.BEFORE).size() > 0) {
 				executeActions(node, res.getObligations(ObligationType.BEFORE));
 			}
@@ -243,6 +249,7 @@ public class PolicyAutomaton implements IPolicy {
 				executeActions(node, res.getObligations(ObligationType.BEFORE));
 			}
 			t = node.get(template);
+			System.out.println("Permitting get action with template "+ template.toString());
 			if (t != null) {
 				node.sendTuple(from, session, t);
 			} else {
@@ -254,6 +261,7 @@ public class PolicyAutomaton implements IPolicy {
 			}
 		} else {
 			// action not authorised, obligation actions executed
+			System.out.println("Denying get action with template "+ template.toString());
 			if (res.getObligations(ObligationType.BEFORE).size() > 0) {
 				executeActions(node, res.getObligations(ObligationType.BEFORE));
 			}

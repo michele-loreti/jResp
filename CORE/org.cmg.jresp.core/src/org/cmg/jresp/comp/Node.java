@@ -1060,7 +1060,9 @@ public class Node extends Observable implements MessageDispatcher, INode {
 				Pending<Boolean> pending = new Pending<Boolean>();
 				putPending.put(session, pending);
 				p.sendPutRequest(l, getName(), session, t);
-				return pending.get();
+				// Alberto: is this a bug? it causes some deadlock with policies
+				//return true; // temporary patch, makes put async
+				return pending.get(); //bug?
 			}
 		}
 		return false;// TODO: Probably an exception should be raised here!
