@@ -206,7 +206,7 @@ public class PolicyAutomaton implements IPolicy {
 				executeActions(node, res.getObligations(ObligationType.BEFORE));
 			}
 			System.out.println("Permitting put action with argument "+ tuple.toString());
-			node.put(tuple);
+			node.put(from, session, tuple);
 			if (res.getObligations(ObligationType.AFTER).size() > 0) {
 				executeActions(node, res.getObligations(ObligationType.AFTER));
 			}
@@ -219,6 +219,7 @@ public class PolicyAutomaton implements IPolicy {
 			if (res.getObligations(ObligationType.AFTER).size() > 0) {
 				executeActions(node, res.getObligations(ObligationType.AFTER));
 			}
+			node.sendFail(from, session, "Denying put action with argument "+ tuple.toString());
 		}
 		return true;
 	}
