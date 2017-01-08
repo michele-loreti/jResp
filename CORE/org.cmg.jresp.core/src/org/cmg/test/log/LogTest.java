@@ -10,7 +10,7 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.cmg.jresp.test.log;
+package org.cmg.test.log;
 
 import java.util.logging.Logger;
 

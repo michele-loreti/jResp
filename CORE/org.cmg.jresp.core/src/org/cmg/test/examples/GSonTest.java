@@ -10,7 +10,7 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.cmg.jresp.test.examples;
+package org.cmg.test.examples;
 
 import java.lang.reflect.Type;
 

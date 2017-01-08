@@ -10,7 +10,7 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.cmg.jresp.test.json;
+package org.cmg.test.json;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

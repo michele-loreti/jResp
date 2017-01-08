@@ -1,5 +1,15 @@
-*.class
+
+# Gradle generated files.
+.gradle/
 bin/
+build/
+
+# Eclipse related metadata files.
+.classpath
+.project
+.settings
+
+*.class
 *~
 logs.zip
 *.log

@@ -1,4 +1,4 @@
-package org.cmg.jresp.test.knowledge;
+package org.cmg.test.knowledge;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

@@ -10,7 +10,7 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.cmg.jresp.test.topology;
+package org.cmg.test.topology;
 
 import java.io.IOException;
 

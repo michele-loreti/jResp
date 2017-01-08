@@ -1,4 +1,4 @@
-package org.cmg.jresp.test.predicates;
+package org.cmg.test.predicates;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

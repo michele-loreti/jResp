@@ -10,7 +10,7 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.cmg.jresp.test.topology;
+package org.cmg.test.topology;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

@@ -1,4 +1,4 @@
-package org.cmg.jresp.test;
+package org.cmg.test;
 /**
  * Copyright (c) 2012 Concurrency and Mobility Group.
  * Universita' di Firenze
@@ -12,9 +12,9 @@ package org.cmg.jresp.test;
  *      Michele Loreti
  */
 
-import org.cmg.jresp.test.json.JSonTests;
-import org.cmg.jresp.test.knowledge.KnowledgeTests;
-import org.cmg.jresp.test.topology.AgentTests;
+import org.cmg.test.json.JSonTests;
+import org.cmg.test.knowledge.KnowledgeTests;
+import org.cmg.test.topology.AgentTests;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;

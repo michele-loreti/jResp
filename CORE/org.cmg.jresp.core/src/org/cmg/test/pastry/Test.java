@@ -1,4 +1,4 @@
-package org.cmg.jresp.test.pastry;
+package org.cmg.test.pastry;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

@@ -37,7 +37,7 @@ advised of the possibility of such damage.
 /*
  * Created on May 4, 2005
  */
-package org.cmg.jresp.test.pastry;
+package org.cmg.test.pastry;
 
 import rice.p2p.commonapi.Application;
 import rice.p2p.commonapi.CancellableTask;

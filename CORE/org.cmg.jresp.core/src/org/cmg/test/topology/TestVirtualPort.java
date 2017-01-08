@@ -10,7 +10,7 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.cmg.jresp.test.topology;
+package org.cmg.test.topology;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

@@ -1,4 +1,4 @@
-package org.cmg.jresp.test.json;
+package org.cmg.test.json;
 
 import static org.junit.Assert.assertEquals;
 
