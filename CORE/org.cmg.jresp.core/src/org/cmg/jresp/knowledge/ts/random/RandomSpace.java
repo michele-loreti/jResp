@@ -15,6 +15,7 @@ package org.cmg.jresp.knowledge.ts.random;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Random;
 
 import org.cmg.jresp.knowledge.KnowledgeManager;
 import org.cmg.jresp.knowledge.Template;
@@ -44,6 +45,7 @@ public class RandomSpace implements KnowledgeManager {
 	 * Elements in the tuple space are arranged in a list.
 	 */
 	LinkedList<Tuple> elements;
+	Random start = new Random();
 
 	public RandomSpace() {
 		elements = new LinkedList<Tuple>();
@@ -85,11 +87,11 @@ public class RandomSpace implements KnowledgeManager {
 	private Tuple _get(Template template, boolean remove) {
 		
 		Tuple t;
-		int j, start;
+		int j, startI;
 		for (int i = 0; i < elements.size(); i++) {
 			// randomise starting index
-			start =  ((int)(Math.random() * (elements.size()-1))%elements.size());
-			j = (start+i)%elements.size();
+			startI =  start.nextInt(elements.size());
+			j = (startI+i)%elements.size();
 			t = elements.get(j);
 			if (template.match(t)) {
 				if (remove) {

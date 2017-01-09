@@ -205,21 +205,21 @@ public class PolicyAutomaton implements IPolicy {
 			if (res.getObligations(ObligationType.BEFORE).size() > 0) {
 				executeActions(node, res.getObligations(ObligationType.BEFORE));
 			}
-			System.out.println("Permitting put action with argument "+ tuple.toString());
+			//System.out.println("Permitting put action by " + from.toString() + "  with argument "+ tuple.toString());
 			node.put(from, session, tuple);
 			if (res.getObligations(ObligationType.AFTER).size() > 0) {
 				executeActions(node, res.getObligations(ObligationType.AFTER));
 			}
 		} else {
 			// action not authorised, obligation actions executed
-			System.out.println("Denying put action with argument "+ tuple.toString());
+			System.out.println("Denying put action by " + from.toString() + "  with argument "+ tuple.toString());
 			if (res.getObligations(ObligationType.BEFORE).size() > 0) {
 				executeActions(node, res.getObligations(ObligationType.BEFORE));
 			}
 			if (res.getObligations(ObligationType.AFTER).size() > 0) {
 				executeActions(node, res.getObligations(ObligationType.AFTER));
 			}
-			node.sendFail(from, session, "Denying put action with argument "+ tuple.toString());
+			node.sendFail(from, session, "Denying put action by " + from.toString() + "  with argument "+ tuple.toString());
 		}
 		return true;
 	}
@@ -250,7 +250,7 @@ public class PolicyAutomaton implements IPolicy {
 				executeActions(node, res.getObligations(ObligationType.BEFORE));
 			}
 			t = node.get(template);
-			System.out.println("Permitting get action with template "+ template.toString());
+			//System.out.println("Permitting get action by " + from + " with template "+ template.toString());
 			if (t != null) {
 				node.sendTuple(from, session, t);
 			} else {
@@ -262,7 +262,7 @@ public class PolicyAutomaton implements IPolicy {
 			}
 		} else {
 			// action not authorised, obligation actions executed
-			System.out.println("Denying get action with template "+ template.toString());
+			System.out.println("Denying get action by " + from + " with template "+ template.toString());
 			if (res.getObligations(ObligationType.BEFORE).size() > 0) {
 				executeActions(node, res.getObligations(ObligationType.BEFORE));
 			}
@@ -302,6 +302,7 @@ public class PolicyAutomaton implements IPolicy {
 			}
 			// execution of action
 			t = node.query(template);
+			//System.out.println("Permitting query action by " + from.toString() + "  with argument "+ t.toString());
 
 			if (t != null) {
 				node.sendTuple(from, session, t);
@@ -314,6 +315,7 @@ public class PolicyAutomaton implements IPolicy {
 				executeActions(node, res.getObligations(ObligationType.AFTER));
 			}
 		} else {
+			System.out.println("Denying query action by " + from + " with template "+ template.toString());
 			// action not authorised, obligation actions executed
 			if (res.getObligations(ObligationType.BEFORE).size() > 0) {
 				executeActions(node, res.getObligations(ObligationType.BEFORE));
