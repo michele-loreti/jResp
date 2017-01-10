@@ -5,11 +5,14 @@ jResp is a Java framework that aims at providing programmers with a set of API t
 
 ## Building
 
-jResp is using the Gradle build automation tool for dependency managment and building. One can import the project directly in IDE that supports Gradle, or generate meta-data for an IDE. Currently supported IDE's for this project is Eclipse.
+jResp is using the Gradle build automation tool for dependency managment and building. One can import the project directly in an IDE that supports Gradle, or generate meta-data for an IDE. Currently supported IDE's for this project is Eclipse.
 
-In order to build the project, open a terminal, and execute in the `CORE/` directory: `gradle build`
+In order to build the project, open a terminal, and execute in the `core/` directory: `gradle build`
 
-To build meta-data for Eclipse, open a terminal and execute in the `CORE/` directory: `gradle eclipse`
+To build meta-data for Eclipse, open a terminal and execute in the `core/` directory: `gradle cleanEclipse eclipse`
 
-To build a standalone JAR library, opeen a terminal and execute in the `CORE/` directory: `gradle standaloneJar`
+To build a JAR library file without dependencies, open a terminal and execute in the `core/` directory: `gradle jar`
 
+To build a standalone JAR file with all dependencies, open a terminal and execute in the `core/` directory: `gradle standaloneJar`
+
+To see more available build tasks, open a terminal and execute in the `core/` directory: `gradle tasks`
