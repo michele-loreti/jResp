@@ -15,8 +15,6 @@ eclipse {
                 
                 node.appendNode('classpathentry', [kind: 'src', path: 'src'])
                 
-                node.appendNode('classpathentry', [kind: 'src', path: 'log4j'])
-
                 // note : In case one mixes builds between Eclipse and pure Gradle.
                 node.appendNode('classpathentry', [excluding: '**', kind: 'output', path: "bin"])
                 node.appendNode('classpathentry', [excluding: '**', kind: 'output', path: "build"])
@@ -58,10 +56,12 @@ repositories {
     }
 }
 
+// todo : Compile the org.cmg.jresp.core and use the library JAR instead.
 dependencies {
     compile name: 'pastry'
     compile 'com.google.code.gson:gson:2.2.1'
     compile 'org.slf4j:slf4j-api:1.7.21'
+    compile project(':org.cmg.jresp.core')
     testCompile 'junit:junit:4.12'
 }
 
@@ -69,12 +69,12 @@ dependencies {
 sourceSets {
     main {
         java {
-            srcDirs = ['src/org/cmg/jresp']
+            srcDirs = ['src/org/cmg/jresp/simulation']
         }
     }
     test {
         java {
-            srcDirs = ['src/org/cmg/test']
+            srcDirs = ['src/org/cmg/jresp/test']
         }
     }
     eclipse {

@@ -13,9 +13,7 @@ eclipse {
             withXml {
                 def node = it.asNode()
                 
-                node.appendNode('classpathentry', [kind: 'src', path: 'src'])
-                
-                node.appendNode('classpathentry', [kind: 'src', path: 'log4j'])
+                // node.appendNode('classpathentry', [kind: 'src', path: 'src'])
 
                 // note : In case one mixes builds between Eclipse and pure Gradle.
                 node.appendNode('classpathentry', [excluding: '**', kind: 'output', path: "bin"])
@@ -26,8 +24,7 @@ eclipse {
         // note : Remove custom source sets so no collision between Eclipse project and pure Gradle can happen. 
         // note : When importing project as an Eclipse project in Eclipse, source directories are detected.
         // note : When importing project as an Gradle project in Eclipse, source directories are not detected.
-        sourceSets -= [sourceSets.main, sourceSets.test] 
-        sourceSets += sourceSets.eclipse
+        // sourceSets -= [sourceSets.main, sourceSets.test] 
 
         downloadSources = true
         downloadJavadoc = true
@@ -54,7 +51,7 @@ repositories {
     mavenCentral()
     // todo : Create a Gradle project for pastry and avoid using binaries in repository.
     flatDir {
-        dirs '../org.cmg.jresp.pastry/pastry-2.1'
+        dirs '../../core/org.cmg.jresp.pastry/pastry-2.1'
     }
 }
 
@@ -62,22 +59,13 @@ dependencies {
     compile name: 'pastry'
     compile 'com.google.code.gson:gson:2.2.1'
     compile 'org.slf4j:slf4j-api:1.7.21'
-    testCompile 'junit:junit:4.12'
+    compile project(':org.cmg.jresp.core')
+    compile project(':org.cmg.jresp.simulation')
 }
 
 // todo : Do we need to refactor a bit more in order to avoid custom source sets?
 sourceSets {
     main {
-        java {
-            srcDirs = ['src/org/cmg/jresp']
-        }
-    }
-    test {
-        java {
-            srcDirs = ['src/org/cmg/test']
-        }
-    }
-    eclipse {
         java {
             srcDirs = ['src/']
         }

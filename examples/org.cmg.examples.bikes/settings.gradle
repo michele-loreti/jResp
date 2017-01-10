@@ -1,0 +1,5 @@
+include 'org.cmg.jresp.core', 'org.cmg.jresp.simulation'
+project(':org.cmg.jresp.core').projectDir = new File(settingsDir, '../../core/org.cmg.jresp.core')
+project(':org.cmg.jresp.simulation').projectDir = new File(settingsDir, '../../core/org.cmg.jresp.simulation')
+
+rootProject.name = 'org.cmg.examples.bikes'
