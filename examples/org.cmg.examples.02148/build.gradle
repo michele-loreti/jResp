@@ -22,26 +22,23 @@ eclipse {
             }
         }
 
+        // note : Remove custom source sets so no collision between Eclipse project and pure Gradle can happen. 
+        // note : When importing project as an Eclipse project in Eclipse, source directories are detected.
+        // note : When importing project as an Gradle project in Eclipse, source directories are not detected.
+        // sourceSets -= [sourceSets.main, sourceSets.test] 
+
         downloadSources = true
         downloadJavadoc = true
     }
 }
 
 def components = [
-    [name: "org.cmg.jresp.examples.pingpong.LocalPingPong"]
-/*    [name: "org.cmg.jresp.examples.pingpong.LocalPingPongWithRetry"],
-    [name: "org.cmg.jresp.examples.pingpong.PastryPingPong"],
-    [name: "org.cmg.jresp.examples.pingpong.PingNode"],
-    [name: "org.cmg.jresp.examples.pingpong.PongNode"],
-    [name: "org.cmg.jresp.examples.pingpong.QueryCounters"],
-    [name: "org.cmg.jresp.examples.pingpong.RemotePingPong"],
-    [name: "org.cmg.jresp.examples.pingpong.RemotePingPong2"],
-    [name: "org.cmg.jresp.examples.pingpong.VirtualPingPong"]*/
+    [name: "02148"]
 ]
 
 components.each { comp ->
     project.task(comp.name, type:Jar) {
-        mainClassName = comp.name
+        mainClassName = comp.name + "Main"
     } 
 }
 
@@ -74,14 +71,13 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.1'
     compile 'org.slf4j:slf4j-api:1.7.21'
     compile project(':org.cmg.jresp.core')
-    compile project(':org.cmg.jresp.simulation')
 }
 
 // todo : Do we need to refactor a bit more in order to avoid custom source sets?
 sourceSets {
     main {
         java {
-            srcDirs = ['src/']
+            srcDirs = ['src/02148']
         }
     }
 }

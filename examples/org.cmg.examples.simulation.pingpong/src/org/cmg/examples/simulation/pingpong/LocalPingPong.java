@@ -10,7 +10,7 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.cmg.jresp.simulation.pingpong;
+package org.cmg.examples.simulation.pingpong;
 
 import java.util.Random;
 
