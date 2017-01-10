@@ -34,39 +34,23 @@ In jRESP policies can be used to regulate the interaction between the different 
 
 # Getting Started
 
-The best way to develop applications with jResp is to use [Eclipse](https://eclipse.org). Below a brief description showing how set-up the environment:
-
-1. Download and Install Eclipse;
-
-2. Check if the ```gson``` plug-in is available in your distribution, if not install it via the [Orbit repository](https://www.eclipse.org/orbit/);
-
-3. Create directory ```<projectbase>``` 
-
-4. Go into your directory ```<projectbase>``` and clone the jresp repository with git:
+1. Clone the git repository in your computer with
 
 ```
-cd <projectbase>
 git clone https://github.com/michele-loreti/jResp.git
 ```
 
-5. Run Eclipse and open and create a new workspace in 
-
-```
-<projectbase>/JRESP_WORKSPACE
-```
-
-6. Import all the projects in the folder ```<projectbase>/jResp```. Notice that it is convenient that the imported project *is not* copied  in the workspace.
+2. Follow the build instructions at https://github.com/michele-loreti/jResp/blob/master/README.md which include also instructions to build meta-data for Eclipse.
 
 If needed, you can update your jRESP installation you have to execute:
 
 ```
-cd <projectbase>
 git pull 
 ```
 
-## Create a new jResp project
+## Create a new jResp project in Eclipse
 
-1. Create a New Plug-In Project (If you have a “Java project” you can assign to it “Plug-In Nature”)
+1. Create a Java Project 
 
 2. Open the MANIFEST.MF file under META-INF folder and add ```org.cmg.jresp.core```, ```org.cmg.jresp.pastry```, ```org.cmg.jresp.simulation``` among the “Required Plug-ins"
 
