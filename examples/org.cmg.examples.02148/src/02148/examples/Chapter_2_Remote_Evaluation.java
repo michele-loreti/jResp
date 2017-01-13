@@ -28,7 +28,7 @@ public class Chapter_2_Remote_Evaluation {
 		// starting the server *before* avoids clients to crash
 		server.start();
 
-		int N = 10;
+		int N = 1;
 		Node[] client = new Node[N];
 		Agent[] clients = new Client[N];
 		for(int i=0; i<N; i++){
