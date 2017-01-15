@@ -1,4 +1,4 @@
-package org.cmg.resp.knowledge2;
+package org.cmg.jresp.knowledge2;
 
 public class ActualTemplateField implements TemplateField {
 	private Object value;

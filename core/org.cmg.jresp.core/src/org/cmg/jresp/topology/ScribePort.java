@@ -210,7 +210,7 @@ public class ScribePort extends AbstractPort {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.topology.AbstractPort#canSendTo(org.cmg.resp.topology.
+	 * @see org.cmg.jresp.topology.AbstractPort#canSendTo(org.cmg.jresp.topology.
 	 * Target)
 	 */
 	@Override
@@ -223,8 +223,8 @@ public class ScribePort extends AbstractPort {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.cmg.resp.topology.AbstractPort#send(org.cmg.resp.topology.Address,
-	 * org.cmg.resp.protocol.UnicastMessage)
+	 * org.cmg.jresp.topology.AbstractPort#send(org.cmg.jresp.topology.Address,
+	 * org.cmg.jresp.protocol.UnicastMessage)
 	 */
 	@Override
 	protected void send(Address address, UnicastMessage message) throws IOException, InterruptedException {
@@ -236,7 +236,7 @@ public class ScribePort extends AbstractPort {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.cmg.resp.topology.AbstractPort#send(org.cmg.resp.protocol.Message)
+	 * org.cmg.jresp.topology.AbstractPort#send(org.cmg.jresp.protocol.Message)
 	 */
 	@Override
 	protected void send(jRESPMessage m) throws IOException, InterruptedException {
@@ -295,7 +295,7 @@ public class ScribePort extends AbstractPort {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.topology.AbstractPort#register(org.cmg.resp.topology.
+	 * @see org.cmg.jresp.topology.AbstractPort#register(org.cmg.jresp.topology.
 	 * MessageDispatcher)
 	 */
 	@Override

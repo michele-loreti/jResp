@@ -10,7 +10,7 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.cmg.resp.examples.group;
+package org.cmg.jresp.examples.group;
 
 import java.io.IOException;
 import java.util.Random;

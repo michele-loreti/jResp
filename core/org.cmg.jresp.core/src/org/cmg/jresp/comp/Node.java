@@ -448,7 +448,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#addActuator(org.cmg.resp.comp.NodeActuator)
+	 * @see org.cmg.jresp.comp.INode#addActuator(org.cmg.jresp.comp.NodeActuator)
 	 */
 	@Override
 	public synchronized void addActuator(AbstractActuator actuator) {
@@ -458,7 +458,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#addAgent(org.cmg.resp.behaviour.Agent)
+	 * @see org.cmg.jresp.comp.INode#addAgent(org.cmg.jresp.behaviour.Agent)
 	 */
 	@Override
 	public void addAgent(Agent a) {
@@ -587,7 +587,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#addAttributeCollector(org.cmg.resp.comp.
+	 * @see org.cmg.jresp.comp.INode#addAttributeCollector(org.cmg.jresp.comp.
 	 * AttributeCollector)
 	 */
 	@Override
@@ -623,7 +623,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#addSensor(org.cmg.resp.comp.NodeSensor)
+	 * @see org.cmg.jresp.comp.INode#addSensor(org.cmg.jresp.comp.NodeSensor)
 	 */
 	@Override
 	public synchronized void addSensor(AbstractSensor sensor) {
@@ -641,7 +641,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#get(org.cmg.resp.knowledge.Template)
+	 * @see org.cmg.jresp.comp.INode#get(org.cmg.jresp.knowledge.Template)
 	 */
 	@Override
 	public Tuple get(Template template) throws InterruptedException {
@@ -651,8 +651,8 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#get(org.cmg.resp.knowledge.Template,
-	 * org.cmg.resp.topology.Target)
+	 * @see org.cmg.jresp.comp.INode#get(org.cmg.jresp.knowledge.Template,
+	 * org.cmg.jresp.topology.Target)
 	 */
 	@Override
 	public Tuple get(Template t, Target l) throws InterruptedException, IOException {
@@ -668,7 +668,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#getActuators()
+	 * @see org.cmg.jresp.comp.INode#getActuators()
 	 */
 	@Override
 	public AbstractActuator[] getActuators() {
@@ -687,7 +687,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#getAttribute(java.lang.String)
+	 * @see org.cmg.jresp.comp.INode#getAttribute(java.lang.String)
 	 */
 	@Override
 	public synchronized Attribute getAttribute(String name) {
@@ -703,7 +703,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#getAttributes(java.lang.String[])
+	 * @see org.cmg.jresp.comp.INode#getAttributes(java.lang.String[])
 	 */
 	@Override
 	public synchronized Attribute[] getAttributes(String[] attributes) {
@@ -750,7 +750,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#getName()
+	 * @see org.cmg.jresp.comp.INode#getName()
 	 */
 	@Override
 	public String getName() {
@@ -776,7 +776,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#getSensors()
+	 * @see org.cmg.jresp.comp.INode#getSensors()
 	 */
 	@Override
 	public AbstractSensor[] getSensors() {
@@ -795,7 +795,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#getState()
+	 * @see org.cmg.jresp.comp.INode#getState()
 	 */
 	@Override
 	public synchronized ContextState getState() {
@@ -805,7 +805,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#isRunning()
+	 * @see org.cmg.jresp.comp.INode#isRunning()
 	 */
 	@Override
 	public synchronized boolean isRunning() {
@@ -815,7 +815,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#put(org.cmg.resp.knowledge.Tuple)
+	 * @see org.cmg.jresp.comp.INode#put(org.cmg.jresp.knowledge.Tuple)
 	 */
 	@Override
 	public void put(Tuple tuple) {
@@ -825,8 +825,8 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#put(org.cmg.resp.knowledge.Tuple,
-	 * org.cmg.resp.topology.Target)
+	 * @see org.cmg.jresp.comp.INode#put(org.cmg.jresp.knowledge.Tuple,
+	 * org.cmg.jresp.topology.Target)
 	 */
 	@Override
 	public boolean put(Tuple t, Target l) throws InterruptedException, IOException {
@@ -843,7 +843,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#query(org.cmg.resp.knowledge.Template)
+	 * @see org.cmg.jresp.comp.INode#query(org.cmg.jresp.knowledge.Template)
 	 */
 	@Override
 	public Tuple query(Template template) throws InterruptedException {
@@ -853,8 +853,8 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#query(org.cmg.resp.knowledge.Template,
-	 * org.cmg.resp.topology.Target)
+	 * @see org.cmg.jresp.comp.INode#query(org.cmg.jresp.knowledge.Template,
+	 * org.cmg.jresp.topology.Target)
 	 */
 	@Override
 	public Tuple query(Template t, Target l) throws InterruptedException, IOException {
@@ -927,7 +927,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.cmg.resp.comp.INode#sendAttibutes(org.cmg.resp.topology.PointToPoint,
+	 * org.cmg.jresp.comp.INode#sendAttibutes(org.cmg.jresp.topology.PointToPoint,
 	 * int, java.lang.String[])
 	 */
 	@Override
@@ -968,7 +968,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#sendFail(org.cmg.resp.topology.PointToPoint,
+	 * @see org.cmg.jresp.comp.INode#sendFail(org.cmg.jresp.topology.PointToPoint,
 	 * int, java.lang.String)
 	 */
 	@Override
@@ -1045,8 +1045,8 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#sendGroupPutReply(org.cmg.resp.topology.
-	 * PointToPoint, int, org.cmg.resp.knowledge.Attribute[])
+	 * @see org.cmg.jresp.comp.INode#sendGroupPutReply(org.cmg.jresp.topology.
+	 * PointToPoint, int, org.cmg.jresp.knowledge.Attribute[])
 	 */
 	@Override
 	public void sendGroupPutReply(PointToPoint source, int session, Attribute[] attributes2) {
@@ -1090,8 +1090,8 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.cmg.resp.comp.INode#sendTuple(org.cmg.resp.topology.PointToPoint,
-	 * int, org.cmg.resp.knowledge.Tuple)
+	 * org.cmg.jresp.comp.INode#sendTuple(org.cmg.jresp.topology.PointToPoint,
+	 * int, org.cmg.jresp.knowledge.Tuple)
 	 */
 	@Override
 	public void sendTuple(PointToPoint to, int session, Tuple tuple) throws IOException, InterruptedException {
@@ -1357,8 +1357,8 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#put(org.cmg.resp.topology.PointToPoint, int,
-	 * org.cmg.resp.knowledge.Tuple)
+	 * @see org.cmg.jresp.comp.INode#put(org.cmg.jresp.topology.PointToPoint, int,
+	 * org.cmg.jresp.knowledge.Tuple)
 	 */
 	@Override
 	public void put(PointToPoint from, int session, Tuple tuple) throws IOException, InterruptedException {
@@ -1369,8 +1369,8 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#gPut(org.cmg.resp.topology.PointToPoint,
-	 * int, java.lang.String[], org.cmg.resp.knowledge.Tuple)
+	 * @see org.cmg.jresp.comp.INode#gPut(org.cmg.jresp.topology.PointToPoint,
+	 * int, java.lang.String[], org.cmg.jresp.knowledge.Tuple)
 	 */
 	@Override
 	public void gPut(PointToPoint from, int session, GroupPredicate groupPredicate, Tuple tuple)
@@ -1401,8 +1401,8 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#gGet(org.cmg.resp.topology.PointToPoint,
-	 * int, java.lang.String[], org.cmg.resp.knowledge.Template)
+	 * @see org.cmg.jresp.comp.INode#gGet(org.cmg.jresp.topology.PointToPoint,
+	 * int, java.lang.String[], org.cmg.jresp.knowledge.Template)
 	 */
 	@Override
 	public Tuple gGet(PointToPoint from, int session, GroupPredicate groupPredicate, Template template) {
@@ -1433,8 +1433,8 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.comp.INode#gQuery(org.cmg.resp.topology.PointToPoint,
-	 * int, java.lang.String[], org.cmg.resp.knowledge.Template)
+	 * @see org.cmg.jresp.comp.INode#gQuery(org.cmg.jresp.topology.PointToPoint,
+	 * int, java.lang.String[], org.cmg.jresp.knowledge.Template)
 	 */
 	@Override
 	public Tuple gQuery(PointToPoint from, int session, GroupPredicate groupPredicate, Template template) {

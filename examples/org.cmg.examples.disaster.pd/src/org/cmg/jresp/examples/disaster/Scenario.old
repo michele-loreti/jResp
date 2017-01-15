@@ -10,7 +10,7 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.cmg.resp.examples.disaster;
+package org.cmg.jresp.examples.disaster;
 
 import java.awt.*;
 import java.awt.geom.*;

@@ -25,7 +25,7 @@ public class WalkingAgent extends Agent {
 		super("WalkingAgent");
 	}
 	/* (non-Javadoc)
-	 * @see org.cmg.resp.behaviour.Agent#doRun()
+	 * @see org.cmg.jresp.behaviour.Agent#doRun()
 	 */
 	@Override
 	protected void doRun() throws Exception {

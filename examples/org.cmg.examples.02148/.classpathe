@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="src" path="src/02148"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
+	<classpathentry kind="src" path="/org.cmg.jresp.core"/>
+	<classpathentry kind="lib" path="/Users/albl/Documents/jRESP-02148-2017/jResp/core/org.cmg.jresp.pastry/pastry-2.1/pastry.jar"/>
+	<classpathentry sourcepath="/Users/albl/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.2.1/e0ce57d7886a590ce0add6fed4651181e97fc905/gson-2.2.1-sources.jar" kind="lib" path="/Users/albl/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.2.1/d8e711ae108185c59c17b36b3c3f11b20cf9b4d5/gson-2.2.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/Users/albl/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.2.1/11af97c94d6e0b9ed982300cab4bbcc080e22270/gson-2.2.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="/Users/albl/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.21/f285ac123f201fb4b028bac556928d7cf527ef48/slf4j-api-1.7.21-sources.jar" kind="lib" path="/Users/albl/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.21/139535a69a4239db087de9bab0bee568bf8e0b70/slf4j-api-1.7.21.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/Users/albl/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.21/72e00d8dc052190c5d0aca77f9a9c5124ec3a1c1/slf4j-api-1.7.21-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="output" path="bin"/>
+	<classpathentry excluding="**" kind="output" path="build"/>
+</classpath>

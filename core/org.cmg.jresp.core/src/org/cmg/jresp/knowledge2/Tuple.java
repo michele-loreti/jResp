@@ -1,6 +1,6 @@
-package org.cmg.resp.knowledge2;
+package org.cmg.jresp.knowledge2;
 
-import org.cmg.resp.policy.facpl.function.comparison.Equal;
+import org.cmg.jresp.policy.facpl.function.comparison.Equal;
 
 public class Tuple {
 	private Object fields[];

@@ -1,0 +1,16 @@
+subprojects {   
+    apply plugin: 'java'
+    group = 'org.cmg.jresp'
+    version = '3.3'
+}
+
+project(':org.cmg.jresp.simulation') {
+    dependencies {
+        compile project(':org.cmg.jresp.core')
+    }
+}
+
+project(':org.cmg.jresp.core') {
+
+}
+

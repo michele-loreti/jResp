@@ -38,7 +38,7 @@ public class IsGreaterThan extends GroupPredicate {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.topology.GroupPredicate#evaluate(java.util.HashMap)
+	 * @see org.cmg.jresp.topology.GroupPredicate#evaluate(java.util.HashMap)
 	 */
 	@Override
 	public boolean evaluate(HashMap<String, Attribute> data) {
@@ -60,7 +60,7 @@ public class IsGreaterThan extends GroupPredicate {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cmg.resp.topology.GroupPredicate#equals(java.lang.Object)
+	 * @see org.cmg.jresp.topology.GroupPredicate#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {

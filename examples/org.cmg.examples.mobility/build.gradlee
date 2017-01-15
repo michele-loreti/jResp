@@ -1,0 +1,79 @@
+apply plugin: 'application'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+eclipse {
+    jdt {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+    // todo : There has to be a much more nice way of doing this. Fix this.
+    classpath {
+        file {
+            withXml {
+                def node = it.asNode()
+                
+                // node.appendNode('classpathentry', [kind: 'src', path: 'src'])
+
+                // note : In case one mixes builds between Eclipse and pure Gradle.
+                node.appendNode('classpathentry', [excluding: '**', kind: 'output', path: "bin"])
+                node.appendNode('classpathentry', [excluding: '**', kind: 'output', path: "build"])
+            }
+        }
+
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+
+def components = [
+    [name: "org.cmg.jresp.examples.mobility"],
+]
+
+components.each { comp ->
+    project.task(comp.name, type:Jar) {
+        mainClassName = comp.name + '.' + 'SimpleMobility'
+    } 
+}
+
+// note : Create a standalone library JAR containing all dependencies
+task standaloneJar(type: Jar) {
+    baseName = project.name + '-standalone'
+
+    description = 'Create a standalone JAR containing all dependencies.'
+
+    from {
+        configurations.compile.collect {
+            it.isDirectory()? it : zipTree(it)
+        }
+    }
+    
+    with jar
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+    // todo : Create a Gradle project for pastry and avoid using binaries in repository.
+    flatDir {
+        dirs '../../core/org.cmg.jresp.pastry/pastry-2.1'
+    }
+}
+
+dependencies {
+    compile name: 'pastry'
+    compile 'com.google.code.gson:gson:2.2.1'
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile project(':org.cmg.jresp.core')
+    compile project(':org.cmg.jresp.simulation')
+}
+
+// todo : Do we need to refactor a bit more in order to avoid custom source sets?
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/']
+        }
+    }
+}

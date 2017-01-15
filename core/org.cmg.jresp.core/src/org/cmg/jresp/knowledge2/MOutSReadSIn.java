@@ -1,4 +1,4 @@
-package org.cmg.resp.knowledge2;
+package org.cmg.jresp.knowledge2;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;

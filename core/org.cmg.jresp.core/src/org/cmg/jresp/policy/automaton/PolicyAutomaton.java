@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-//import org.cmg.resp.behaviour.Action;
+//import org.cmg.jresp.behaviour.Action;
 import org.cmg.jresp.behaviour.Agent;
 import org.cmg.jresp.comp.INode;
 import org.cmg.jresp.knowledge.Attribute;
