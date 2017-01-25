@@ -5,22 +5,22 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /*
- * Implementa TupleSpaceLock in modo da avere un accesso esclusivo per il read e l'in. 
- * Permette threads multipli per l'out.
+ * Implementa TupleSpaceLock in modo da avere un accesso esclusivo per l'in. 
+ * Permette threads multipli per l'out e il read.
  */
-public class MOutSReadSIn implements TupleSpaceLock {
+public class MOutMReadSIn implements TupleSpaceLock {
 	private ReadWriteLock lock;
 	private Lock r;
 	private Lock w;
 
-	public MOutSReadSIn() {
-		lock = new ReentrantReadWriteLock();
-		r = lock.readLock();
-		w = lock.writeLock();
-	}
+	public MOutMReadSIn() {
+			lock = new ReentrantReadWriteLock();
+			r = lock.readLock();
+			w = lock.writeLock();
+		}
 
 	public void readLock() {
-		w.lock();
+		r.lock();
 	}
 
 	public void inLock() {
@@ -32,7 +32,7 @@ public class MOutSReadSIn implements TupleSpaceLock {
 	}
 
 	public void readUnlock() {
-		w.unlock();
+		r.unlock();
 	}
 
 	public void inUnlock() {
@@ -42,5 +42,4 @@ public class MOutSReadSIn implements TupleSpaceLock {
 	public void outUnlock() {
 		r.unlock();
 	}
-
 }

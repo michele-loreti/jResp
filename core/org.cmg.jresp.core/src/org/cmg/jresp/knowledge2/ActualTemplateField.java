@@ -18,10 +18,11 @@ public class ActualTemplateField implements TemplateField {
 	public boolean isActual() {
 		return true;
 	}
-	public String toString(){
+
+	public String toString() {
 		return value.toString();
 	}
-	
+
 	public Object getValue() {
 		return value;
 	}

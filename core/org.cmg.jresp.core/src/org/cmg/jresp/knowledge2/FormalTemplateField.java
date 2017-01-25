@@ -23,8 +23,8 @@ public class FormalTemplateField implements TemplateField {
 
 	public static void main(String[] args) throws InterruptedException {
 		FormalTemplateField formal = new FormalTemplateField(Integer.class);
-		int i =0;
+		int i = 0;
 		System.out.println(formal.match(i));
 	}
-	
+
 }

@@ -4,4 +4,5 @@ public interface TemplateField {
 	public boolean match(Object o);
 
 	public boolean isActual();
+
 }

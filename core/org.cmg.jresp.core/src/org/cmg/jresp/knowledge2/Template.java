@@ -1,6 +1,5 @@
 package org.cmg.jresp.knowledge2;
 
-
 public class Template {
 	private TemplateField[] fields;
 

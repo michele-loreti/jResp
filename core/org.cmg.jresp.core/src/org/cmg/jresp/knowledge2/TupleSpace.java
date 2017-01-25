@@ -1,16 +1,16 @@
 package org.cmg.jresp.knowledge2;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.*;
 
+//quando faccio get di una tupla non presente?
+//waitTuple in TupleSpaceLock?
 public class TupleSpace {
 	private Map<Object, TupleNode> elementsTree;
 	private TupleSpaceLock lock;
@@ -18,7 +18,11 @@ public class TupleSpace {
 	public TupleSpace() {
 		elementsTree = new HashMap<Object, TupleNode>();
 		lock = new MOutSReadSIn();
+	}
 
+	public TupleSpace(TupleSpaceLock lock) {
+		elementsTree = new HashMap<Object, TupleNode>();
+		this.lock = lock;
 	}
 
 	public boolean put(Tuple t) {
@@ -51,19 +55,21 @@ public class TupleSpace {
 		return n;
 	}
 
-	public Tuple get(Template template) throws InterruptedException {
+	public Tuple get(Template template) throws Exception {
 		return get(template, true);
 	}
 
-	public Tuple query(Template template) throws InterruptedException {
+	public Tuple query(Template template) throws Exception {
 		return get(template, false);
 	}
 
-	private synchronized Tuple get(Template template, boolean remove) throws InterruptedException {
+	// Dove va interrupted exception?????
+	private Tuple get(Template template, boolean remove) throws Exception {
 		Tuple t;
 		if (remove) {
 			while (((t = getTuple(template, 0, remove)) == null)) {
-				// wait
+				// da capire come fare wait
+				throw new Exception("tupla non presente");
 			}
 		} else {
 			t = getTuple(template, 0, remove);
@@ -78,7 +84,7 @@ public class TupleSpace {
 	 */
 	protected Tuple getTuple(Template template, int idx, boolean remove) {
 		Object[] fields = new Object[template.lenght()];
-		getTupleFields(template, idx, fields, remove);
+		getTupleFields(template, idx, fields, null, remove);
 		if (fields == null || fields[0] == null) {
 			return null;
 		}
@@ -91,26 +97,125 @@ public class TupleSpace {
 	 * presenti. Agisce in modi differenti in base al tipo di template, attuale
 	 * o formale.
 	 */
-	protected void getTupleFields(Template template, int idx, Object[] tupleFields, boolean remove) {
+	protected void getTupleFields(Template template, int idx, Object[] tupleFields, LinkedList<Tuple> tupleList,
+			boolean remove) {
 		TemplateField tf = (TemplateField) template.get(idx);
 		if (tf.isActual()) {
-			Object o = ((ActualTemplateField) tf).getValue();
-			TupleNode tn = elementsTree.get(o);
-			if (tn != null) {
-				tn.getTupleFields(template, idx, tupleFields, remove);
-			} else {
-				tupleFields = null;
-			}
+			getTupleWithActualTemplate(template, idx, tupleFields, remove, (ActualTemplateField) tf);
 		} else {
 			for (Entry<Object, TupleNode> keyMap : elementsTree.entrySet()) {
 				if (tf.match(keyMap.getKey())) {
-					keyMap.getValue().getTupleFields(template, idx, tupleFields, remove);
-				} // in questo modo si controlla tutto l'albero in ogni caso. Da
-					// migliorare
+					keyMap.getValue().getTupleFields(template, idx, tupleFields, tupleList, remove);
+				}
 			}
 		}
 	}
 
+	private void getTupleWithActualTemplate(Template template, int idx, Object[] tupleFields, boolean remove,
+			ActualTemplateField tf) {
+		Object o = tf.getValue();
+		TupleNode tn = elementsTree.get(o);
+		if (tn != null) {
+			tn.getTupleFields(template, idx, tupleFields, null, remove);
+		} else {
+			tupleFields = null;
+		}
+	}
+
+	public LinkedList<Tuple> getAll(Template template) {
+		return getAllTuple(template, 0, true);
+	}
+
+	public LinkedList<Tuple> queryAll(Template template) {
+		return getAllTuple(template, 0, false);
+	}
+
+	protected LinkedList<Tuple> getAllTuple(Template template, int idx, boolean remove) {
+		LinkedList<Tuple> tupleList = new LinkedList<Tuple>();
+		Object[] tupleFields = new Object[template.lenght()];
+		getTupleFields(template, idx, tupleFields, tupleList, remove);
+		if (tupleList.isEmpty()) {
+			return null;
+		}
+		return tupleList;
+	}
+
+	public TupleSpace map(Function<Tuple, Tuple> f) {
+		TupleSpace mapped = new TupleSpace();
+		LinkedList<Tuple> tupleList = new LinkedList<Tuple>();
+		LinkedList<Object> tupleFields = new LinkedList<Object>();
+		LinkedList<Tuple> t = getAll(0, tupleFields, tupleList, false);
+		for (Tuple tuple : t) {
+			mapped.put(f.apply(tuple));
+		}
+		return mapped;
+	}
+
+	public TupleSpace map(Template template, Function<Tuple, Tuple> f) {
+		TupleSpace mapped = new TupleSpace();
+		LinkedList<Tuple> t = getAll(template);
+		for (Tuple tuple : t) {
+			mapped.put(f.apply(tuple));
+		}
+		return mapped;
+
+	}
+
+	protected LinkedList<Tuple> getAll(int idx, LinkedList<Object> tupleFields, LinkedList<Tuple> tupleList,
+			boolean remove) {
+		for (Entry<Object, TupleNode> keyMap : elementsTree.entrySet()) {
+			keyMap.getValue().getAllTuple(idx, tupleFields, tupleList, remove);
+		}
+		return tupleList;
+	}
+
+	public LinkedList<Tuple> getAll() {
+		LinkedList<Tuple> tupleList = new LinkedList<Tuple>();
+		LinkedList<Object> tupleFields = new LinkedList<Object>();
+		LinkedList<Tuple> t = getAll(0, tupleFields, tupleList, true);
+		return t;
+	}
+
+	public LinkedList<Tuple> queryAll() {
+		LinkedList<Tuple> tupleList = new LinkedList<Tuple>();
+		LinkedList<Object> tupleFields = new LinkedList<Object>();
+		LinkedList<Tuple> t = getAll(0, tupleFields, tupleList, false);
+		return t;
+	}
+
+	public boolean isEmpty() {
+		return elementsTree.isEmpty();
+	}
+
+	public <T1> T1 reduce(BiFunction<Tuple, T1, T1> f, Comparator<Tuple> comp, T1 v) {
+		LinkedList<Tuple> tuple = queryAll();
+		tuple.sort(comp);
+		for (int i = 0; i < tuple.size(); i++) {
+			v = f.apply(tuple.get(i), v);
+		}
+
+		return v;
+	}
+
+	public LinkedList<Tuple> queryAll(Template template, Comparator<Tuple> comp) {
+		LinkedList<Tuple> tuple = queryAll(template);
+		tuple.sort(comp);
+		return tuple;
+	}
+
+	public LinkedList<Tuple> queryAll(Comparator<Tuple> comp) {
+		LinkedList<Tuple> tuple = queryAll();
+		tuple.sort(comp);
+		return tuple;
+	}
+
+	
+	
+	
+	
+	
+	
+	
 	/*
 	 * Metodi seguenti utilizzati per stampa su console. richiamando il metodo
 	 * firstStamp stampa su console l'albero attuale.
