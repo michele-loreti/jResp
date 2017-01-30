@@ -31,7 +31,7 @@ import org.cmg.jresp.knowledge.KnowledgeManager;
 import org.cmg.jresp.knowledge.Template;
 import org.cmg.jresp.knowledge.Tuple;
 import org.cmg.jresp.policy.DefaultPermitPolicy;
-import org.cmg.jresp.policy.IPolicy;
+import org.cmg.jresp.policy.INodePolicy;
 import org.cmg.jresp.topology.Group;
 import org.cmg.jresp.topology.GroupPredicate;
 import org.cmg.jresp.topology.PointToPoint;
@@ -72,7 +72,7 @@ public class SimulationNode extends Observable implements INode {
 
 	protected KnowledgeManager knowledgeManager;
 
-	protected IPolicy policy;
+	protected INodePolicy policy;
 
 	public SimulationNode(String name, SimulationEnvironment environment) {
 		this(name, environment, new SimulationTupleSpace(environment.getElementSelector()));
@@ -101,7 +101,7 @@ public class SimulationNode extends Observable implements INode {
 	 * 
 	 * @param policy
 	 */
-	public void setPolicy(IPolicy policy) {
+	public void setPolicy(INodePolicy policy) {
 		this.policy = policy;
 		this.policy.setNode(this);
 	}

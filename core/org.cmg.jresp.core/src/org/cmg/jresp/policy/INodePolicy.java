@@ -29,7 +29,7 @@ import org.cmg.jresp.topology.Target;
  * @author Michele Loreti
  *
  */
-public interface IPolicy {
+public interface INodePolicy {
 
 	/**
 	 * This method is invoked when a remote node asks for adding a tuple in the

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.cmg.jresp.policy.AuthorizationRequest;
 import org.cmg.jresp.policy.AuthorizationResponse;
+import org.cmg.jresp.policy.IAuthorisationPolicy;
 
 public interface ICombiningAlgorithm {
 
@@ -17,5 +18,5 @@ public interface ICombiningAlgorithm {
 	 *            name of the this node
 	 * @return
 	 */
-	AuthorizationResponse evaluate(List<IFacplPolicy> elements, AuthorizationRequest request, String thisValue);
+	AuthorizationResponse evaluate(List<IAuthorisationPolicy> elements, AuthorizationRequest request, String thisValue);
 }

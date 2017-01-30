@@ -5,17 +5,17 @@ import java.util.List;
 import org.cmg.jresp.policy.AuthorizationDecision;
 import org.cmg.jresp.policy.AuthorizationRequest;
 import org.cmg.jresp.policy.AuthorizationResponse;
+import org.cmg.jresp.policy.IAuthorisationPolicy;
 import org.cmg.jresp.policy.facpl.ICombiningAlgorithm;
-import org.cmg.jresp.policy.facpl.IFacplPolicy;
 
 public class FirstApplicable implements ICombiningAlgorithm {
 
 	@Override
-	public AuthorizationResponse evaluate(List<IFacplPolicy> elements, AuthorizationRequest request, String thisValue) {
+	public AuthorizationResponse evaluate(List<IAuthorisationPolicy> elements, AuthorizationRequest request, String thisValue) {
 
 		AuthorizationResponse dr = new AuthorizationResponse();
 
-		for (IFacplPolicy el : elements) {
+		for (IAuthorisationPolicy el : elements) {
 			dr = el.evaluate(request, thisValue);
 			if (dr.getDecision().equals(AuthorizationDecision.DENY)) {
 				return dr;

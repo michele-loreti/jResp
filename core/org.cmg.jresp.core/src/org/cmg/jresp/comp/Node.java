@@ -35,7 +35,7 @@ import org.cmg.jresp.knowledge.KnowledgeManager;
 import org.cmg.jresp.knowledge.Template;
 import org.cmg.jresp.knowledge.Tuple;
 import org.cmg.jresp.policy.DefaultPermitPolicy;
-import org.cmg.jresp.policy.IPolicy;
+import org.cmg.jresp.policy.INodePolicy;
 import org.cmg.jresp.protocol.Ack;
 import org.cmg.jresp.protocol.AttributeReply;
 import org.cmg.jresp.protocol.AttributeRequest;
@@ -298,7 +298,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	/**
 	 * Node policy
 	 */
-	protected IPolicy policy;
+	protected INodePolicy policy;
 
 	/**
 	 * Port used to perform group-based interactions
@@ -440,7 +440,7 @@ public class Node extends Observable implements MessageDispatcher, INode {
 	 * 
 	 * @param policy
 	 */
-	public void setPolicy(IPolicy policy) {
+	public void setPolicy(INodePolicy policy) {
 		this.policy = policy;
 		this.policy.setNode(this);
 	}

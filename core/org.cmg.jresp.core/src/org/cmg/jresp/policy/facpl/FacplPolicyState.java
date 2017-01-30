@@ -19,6 +19,7 @@ import java.util.List;
 import org.cmg.jresp.policy.AuthorizationDecision;
 import org.cmg.jresp.policy.AuthorizationRequest;
 import org.cmg.jresp.policy.AuthorizationResponse;
+import org.cmg.jresp.policy.IAuthorisationPolicy;
 import org.cmg.jresp.policy.automaton.IPolicyAutomatonState;
 
 /**
@@ -30,18 +31,18 @@ public class FacplPolicyState implements IPolicyAutomatonState {
 	// private PolicyAutomaton automata;
 
 	private Class<? extends ICombiningAlgorithm> algorithm;
-	private List<IFacplPolicy> policies;
+	private List<IAuthorisationPolicy> policies;
 
-	public FacplPolicyState(Class<? extends ICombiningAlgorithm> algorithm, IFacplPolicy... policy) {
+	public FacplPolicyState(Class<? extends ICombiningAlgorithm> algorithm, IAuthorisationPolicy... policy) {
 		this.algorithm = algorithm;
-		this.policies = new LinkedList<IFacplPolicy>();
-		for (IFacplPolicy p : policy) {
+		this.policies = new LinkedList<IAuthorisationPolicy>();
+		for (IAuthorisationPolicy p : policy) {
 			this.policies.add(p);
 		}
 	}
 
-	public FacplPolicyState(IFacplPolicy policy) {
-		this.policies = new LinkedList<IFacplPolicy>();
+	public FacplPolicyState(IAuthorisationPolicy policy) {
+		this.policies = new LinkedList<IAuthorisationPolicy>();
 		this.policies.add(policy);
 	}
 

@@ -10,7 +10,7 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.cmg.jresp.policy;
+package org.cmg.jresp.policy.facpl;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,7 +18,6 @@ import java.util.List;
 import org.cmg.jresp.behaviour.Agent;
 import org.cmg.jresp.knowledge.Template;
 import org.cmg.jresp.knowledge.Tuple;
-import org.cmg.jresp.policy.facpl.FulfilledObligation;
 import org.cmg.jresp.topology.Target;
 
 /**

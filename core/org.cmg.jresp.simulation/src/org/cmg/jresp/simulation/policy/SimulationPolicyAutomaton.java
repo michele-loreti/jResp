@@ -30,7 +30,7 @@ import org.cmg.jresp.policy.ActionThisID;
 import org.cmg.jresp.policy.AuthorizationDecision;
 import org.cmg.jresp.policy.AuthorizationRequest;
 import org.cmg.jresp.policy.AuthorizationResponse;
-import org.cmg.jresp.policy.IPolicy;
+import org.cmg.jresp.policy.INodePolicy;
 import org.cmg.jresp.policy.automaton.IPolicyAutomatonState;
 import org.cmg.jresp.policy.automaton.PATransition;
 import org.cmg.jresp.policy.facpl.FulfilledObligation;
@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * @author Andrea Margheri
  * 
  */
-public class SimulationPolicyAutomaton implements IPolicy {
+public class SimulationPolicyAutomaton implements INodePolicy {
 
 	private IPolicyAutomatonState[] policyStates;
 

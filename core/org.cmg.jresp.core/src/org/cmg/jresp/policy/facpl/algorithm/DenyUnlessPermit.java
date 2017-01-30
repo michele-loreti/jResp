@@ -6,19 +6,19 @@ import java.util.List;
 import org.cmg.jresp.policy.AuthorizationDecision;
 import org.cmg.jresp.policy.AuthorizationRequest;
 import org.cmg.jresp.policy.AuthorizationResponse;
+import org.cmg.jresp.policy.IAuthorisationPolicy;
 import org.cmg.jresp.policy.facpl.FulfilledObligation;
 import org.cmg.jresp.policy.facpl.ICombiningAlgorithm;
-import org.cmg.jresp.policy.facpl.IFacplPolicy;
 
 public class DenyUnlessPermit implements ICombiningAlgorithm {
 
 	@Override
-	public AuthorizationResponse evaluate(List<IFacplPolicy> elements, AuthorizationRequest request, String thisValue) {
+	public AuthorizationResponse evaluate(List<IAuthorisationPolicy> elements, AuthorizationRequest request, String thisValue) {
 
 		LinkedList<FulfilledObligation> obls_deny = new LinkedList<FulfilledObligation>();
 
 		AuthorizationResponse dr = new AuthorizationResponse();
-		for (IFacplPolicy el : elements) {
+		for (IAuthorisationPolicy el : elements) {
 			AuthorizationResponse d = el.evaluate(request, thisValue);
 			if (d.getDecision().equals(AuthorizationDecision.PERMIT)) {
 				dr.setDecision(AuthorizationDecision.PERMIT);

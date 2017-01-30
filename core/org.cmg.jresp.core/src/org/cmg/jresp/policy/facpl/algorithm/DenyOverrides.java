@@ -6,14 +6,14 @@ import java.util.List;
 import org.cmg.jresp.policy.AuthorizationDecision;
 import org.cmg.jresp.policy.AuthorizationRequest;
 import org.cmg.jresp.policy.AuthorizationResponse;
+import org.cmg.jresp.policy.IAuthorisationPolicy;
 import org.cmg.jresp.policy.facpl.FulfilledObligation;
 import org.cmg.jresp.policy.facpl.ICombiningAlgorithm;
-import org.cmg.jresp.policy.facpl.IFacplPolicy;
 
 public class DenyOverrides implements ICombiningAlgorithm {
 
 	@Override
-	public AuthorizationResponse evaluate(List<IFacplPolicy> elements, AuthorizationRequest request, String thisValue) {
+	public AuthorizationResponse evaluate(List<IAuthorisationPolicy> elements, AuthorizationRequest request, String thisValue) {
 
 		boolean atLeastOnePermit = false;
 		boolean atLeastOneError = false;
@@ -22,7 +22,7 @@ public class DenyOverrides implements ICombiningAlgorithm {
 
 		AuthorizationResponse authResp = new AuthorizationResponse();
 
-		for (IFacplPolicy el : elements) {
+		for (IAuthorisationPolicy el : elements) {
 			AuthorizationResponse d = el.evaluate(request, thisValue);
 
 			if (AuthorizationDecision.DENY.equals(d.getDecision())) {

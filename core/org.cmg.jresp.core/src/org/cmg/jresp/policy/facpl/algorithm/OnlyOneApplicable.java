@@ -5,21 +5,21 @@ import java.util.List;
 import org.cmg.jresp.policy.AuthorizationDecision;
 import org.cmg.jresp.policy.AuthorizationRequest;
 import org.cmg.jresp.policy.AuthorizationResponse;
+import org.cmg.jresp.policy.IAuthorisationPolicy;
 import org.cmg.jresp.policy.facpl.ICombiningAlgorithm;
-import org.cmg.jresp.policy.facpl.IFacplPolicy;
 import org.cmg.jresp.policy.facpl.MatchDecision;
 
 public class OnlyOneApplicable implements ICombiningAlgorithm {
 
 	@Override
-	public AuthorizationResponse evaluate(List<IFacplPolicy> elements, AuthorizationRequest request, String thisValue) {
+	public AuthorizationResponse evaluate(List<IAuthorisationPolicy> elements, AuthorizationRequest request, String thisValue) {
 
 		Boolean atLeastOne = false;
-		IFacplPolicy selectedPolicy = null;
+		IAuthorisationPolicy selectedPolicy = null;
 		MatchDecision appResult;
 
 		AuthorizationResponse dr = new AuthorizationResponse();
-		for (IFacplPolicy el : elements) {
+		for (IAuthorisationPolicy el : elements) {
 			appResult = el.getTargetDecision(request, thisValue);
 
 			if (appResult.equals(MatchDecision.INDETERMINATE)) {

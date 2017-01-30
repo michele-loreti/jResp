@@ -1,10 +1,9 @@
 /**
  * 
  */
-package org.cmg.jresp.policy.facpl;
+package org.cmg.jresp.policy;
 
-import org.cmg.jresp.policy.AuthorizationRequest;
-import org.cmg.jresp.policy.AuthorizationResponse;
+import org.cmg.jresp.policy.facpl.MatchDecision;
 
 /**
  * Interface for the FACPL element, i.e. policy, policy set or rule, that could
@@ -12,7 +11,7 @@ import org.cmg.jresp.policy.AuthorizationResponse;
  * 
  * @author Andrea Margheri
  */
-public interface IFacplPolicy {
+public interface IAuthorisationPolicy {
 
 	/**
 	 * The method for retrieving an authorization decision for a request

@@ -18,7 +18,7 @@ import org.cmg.jresp.behaviour.Agent;
 import org.cmg.jresp.comp.INode;
 import org.cmg.jresp.knowledge.Template;
 import org.cmg.jresp.knowledge.Tuple;
-import org.cmg.jresp.policy.IPolicy;
+import org.cmg.jresp.policy.INodePolicy;
 import org.cmg.jresp.simulation.SimulationNode;
 import org.cmg.jresp.topology.GroupPredicate;
 import org.cmg.jresp.topology.PointToPoint;
@@ -29,7 +29,7 @@ import org.cmg.jresp.topology.Target;
  * @author Andrea Margheri
  *
  */
-public class DefaultPermitPolicy implements IPolicy {
+public class DefaultPermitPolicy implements INodePolicy {
 
 	private INode node;
 

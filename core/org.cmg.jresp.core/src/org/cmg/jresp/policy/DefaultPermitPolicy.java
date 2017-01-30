@@ -26,7 +26,7 @@ import org.cmg.jresp.topology.Target;
  * @author Michele Loreti
  *
  */
-public class DefaultPermitPolicy implements IPolicy {
+public class DefaultPermitPolicy implements INodePolicy {
 
 	private INode node;
 
@@ -133,11 +133,6 @@ public class DefaultPermitPolicy implements IPolicy {
 	}
 
 	@Override
-	public void setNode(INode node) {
-		this.node = node;
-	}
-
-	@Override
 	public Object readAttribute(String name) throws InterruptedException {
 		return this.node.readAttribute(name);
 	}
@@ -146,6 +141,12 @@ public class DefaultPermitPolicy implements IPolicy {
 	public boolean updateAttribute(String name, Object value) throws InterruptedException {
 		this.node.updateAttribute(name, value);
 		return true;
+	}
+
+	@Override
+	public void setNode(INode node) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -3,8 +3,8 @@ package org.cmg.jresp.policy.facpl.elements;
 import java.util.LinkedList;
 
 import org.cmg.jresp.policy.AuthorizationRequest;
+import org.cmg.jresp.policy.IAuthorisationPolicy;
 import org.cmg.jresp.policy.facpl.FulfilledObligation;
-import org.cmg.jresp.policy.facpl.IFacplPolicy;
 import org.cmg.jresp.policy.facpl.MatchDecision;
 import org.cmg.jresp.policy.facpl.RuleEffect;
 import org.cmg.jresp.policy.facpl.elements.util.TargetTreeRepresentation;
@@ -15,7 +15,7 @@ import org.cmg.jresp.policy.facpl.elements.util.TargetTreeRepresentation;
  *
  */
 
-public abstract class FACPLPolicy implements IFacplPolicy {
+public abstract class FACPLPolicy implements IAuthorisationPolicy {
 
 	protected TargetTreeRepresentation target;
 	protected LinkedList<ScelObligationExpression> obligations;

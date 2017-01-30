@@ -6,14 +6,14 @@ import java.util.List;
 import org.cmg.jresp.policy.AuthorizationDecision;
 import org.cmg.jresp.policy.AuthorizationRequest;
 import org.cmg.jresp.policy.AuthorizationResponse;
+import org.cmg.jresp.policy.IAuthorisationPolicy;
 import org.cmg.jresp.policy.facpl.FulfilledObligation;
 import org.cmg.jresp.policy.facpl.ICombiningAlgorithm;
-import org.cmg.jresp.policy.facpl.IFacplPolicy;
 
 public class PermitOverrides implements ICombiningAlgorithm {
 
 	@Override
-	public AuthorizationResponse evaluate(List<IFacplPolicy> elements, AuthorizationRequest request, String thisValue) {
+	public AuthorizationResponse evaluate(List<IAuthorisationPolicy> elements, AuthorizationRequest request, String thisValue) {
 
 		Boolean atLeastOneError = false;
 		Boolean atLeastOneDeny = false;
@@ -21,7 +21,7 @@ public class PermitOverrides implements ICombiningAlgorithm {
 		LinkedList<FulfilledObligation> obligationDeny = new LinkedList<FulfilledObligation>();
 
 		AuthorizationResponse dr = new AuthorizationResponse();
-		for (IFacplPolicy el : elements) {
+		for (IAuthorisationPolicy el : elements) {
 			AuthorizationResponse d = el.evaluate(request, thisValue);
 
 			if (AuthorizationDecision.PERMIT.equals(d.getDecision())) {
