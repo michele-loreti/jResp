@@ -30,7 +30,15 @@ Behaviour of a component is defined via the abstract class ```Agent```, which pr
 
 ## Policies
 
-In jRESP policies can be used to regulate the interaction between the different internal parts of components and their mutual interactions. When a method of an instance of class ```Agent``` is invoked, its execution is delegated to the policy associated to the node where the agent is running. The policy can then control the execution of the action (for instance, by generating an exception when some access right has been violated) and, possibly, of related extra actions. By default, each node is instantiated with the policy allowing any operation. Different kinds of policies can be easily integrated in jRESP by implementing the interface ```IPolicy```.
+In jRESP policies can be used to regulate the interaction between the different internal parts of components and their mutual interactions. When a method of an instance of class ```Agent``` is invoked, its execution is controlled by the policy associated to the node where the agent is running. The policy can then allow or forbid the execution of the action (for instance, by generating an exception when some access right has been violated) and, possibly, dynamically add additional actions to the agent. The authorisation approach is based on the ```attribute-based access control``` model [ABAC](https://en.wikipedia.org/wiki/Attribute-Based_Access_Control). Each action to authorise and its context (given by the interfaces of the involved components) are represented by an attribute-based request that is then evaluated by the policy currently in force. 
+
+By default, each node is instantiated with the policy allowing any operation. Different kinds of policies can be easily integrated in jRESP by implementing the interface ```INodePolicy```. Currently, this interface is implemented to support policies of different structures; namely we have
+
+1. ```SinglePolicy```, i.e. a single authorisation policy in force in a node.
+
+2. ```PolicyAutomaton```, i.e. an automaton whose states define the policies possibly in force in the node; the policy of the current state corresponds to the current policy. 
+
+For both the policy type, there is available an implementation based on [FACPL](http://facpl.sf.net), a Java framework to design and implement attributed-based access control policies. Indeed, a ```SinglePolicy``` can be instantiated with a FACPL policy, while each state of a ```PolicyAutomaton``` corresponds to a FACPL policy; the automaton transitions are defined by conditions on the attributes forming the authorisation request to evaluate. 
 
 # Getting Started
 
