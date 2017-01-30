@@ -9,7 +9,7 @@ import org.cmg.jresp.knowledge.Template;
 import org.cmg.jresp.knowledge.Tuple;
 import org.cmg.jresp.policy.ActionThisID;
 import org.cmg.jresp.policy.RequestAttributeName;
-import org.cmg.jresp.policy.facpl.IFacplPolicy;
+import org.cmg.jresp.policy.IAuthorisationPolicy;
 import org.cmg.jresp.policy.facpl.ObligationType;
 import org.cmg.jresp.policy.facpl.RuleEffect;
 import org.cmg.jresp.policy.facpl.algorithm.PermitUnlessDeny;
@@ -114,7 +114,7 @@ public class HelpRescuer extends Agent {
 	 * 
 	 * @return
 	 */
-	public IFacplPolicy getPolicyHelpRescuer() {
+	public IAuthorisationPolicy getPolicyHelpRescuer() {
 		return new Policy_HelpRescuer();
 	}
 

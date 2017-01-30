@@ -9,7 +9,7 @@ import org.cmg.jresp.knowledge.Template;
 import org.cmg.jresp.knowledge.Tuple;
 import org.cmg.jresp.policy.ActionThisID;
 import org.cmg.jresp.policy.RequestAttributeName;
-import org.cmg.jresp.policy.facpl.IFacplPolicy;
+import org.cmg.jresp.policy.IAuthorisationPolicy;
 import org.cmg.jresp.policy.facpl.ObligationType;
 import org.cmg.jresp.policy.facpl.RuleEffect;
 import org.cmg.jresp.policy.facpl.algorithm.PermitUnlessDeny;
@@ -79,7 +79,7 @@ public class Explorer extends Agent {
 	 * 
 	 * @return
 	 */
-	public IFacplPolicy getPolicyExplorer() {
+	public IAuthorisationPolicy getPolicyExplorer() {
 		return new Policy_Explorer();
 	}
 
@@ -89,7 +89,7 @@ public class Explorer extends Agent {
 	 * @return
 	 */
 
-	public IFacplPolicy getPolicyRescuer() {
+	public IAuthorisationPolicy getPolicyRescuer() {
 		return new Policy_Rescuer();
 	}
 
