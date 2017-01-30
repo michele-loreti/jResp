@@ -9,8 +9,9 @@ import org.cmg.jresp.knowledge.Tuple;
 import org.cmg.jresp.knowledge.ts.TupleSpace;
 import org.cmg.jresp.policy.ActionThisID;
 import org.cmg.jresp.policy.RequestAttributeName;
-import org.cmg.jresp.policy.automaton.PolicyAutomaton;
-import org.cmg.jresp.policy.facpl.FacplPolicyState;
+import org.cmg.jresp.policy.SinglePolicy;
+//import org.cmg.jresp.policy.automaton.PolicyAutomaton;
+//import org.cmg.jresp.policy.facpl.FacplPolicyState;
 import org.cmg.jresp.policy.facpl.RuleEffect;
 import org.cmg.jresp.policy.facpl.algorithm.DenyUnlessPermit;
 import org.cmg.jresp.policy.facpl.elements.PolicySet;
@@ -39,10 +40,10 @@ public class Chapter_4_SecureProducerConsumer {
 		bag.addPort(vp);
 		
 		// Access control policy for the bag
-		PolicyAutomaton	p = new PolicyAutomaton();
-		FacplPolicyState start = new FacplPolicyState(new Policy());
-		p.addState(start);
-		bag.setPolicy(p);
+//		PolicyAutomaton	p = new PolicyAutomaton();
+//		FacplPolicyState start = new FacplPolicyState(new Policy());
+//		p.addState(start);
+		bag.setPolicy(new SinglePolicy(new Policy()));
 		bag.start();
 
 		// We create some trusted Producer and Consumer agents

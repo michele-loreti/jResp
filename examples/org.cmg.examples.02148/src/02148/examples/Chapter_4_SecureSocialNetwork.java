@@ -13,6 +13,7 @@ import org.cmg.jresp.knowledge.ts.TupleSpace;
 import org.cmg.jresp.knowledge.ts.random.RandomSpace;
 import org.cmg.jresp.policy.ActionThisID;
 import org.cmg.jresp.policy.RequestAttributeName;
+import org.cmg.jresp.policy.SinglePolicy;
 import org.cmg.jresp.policy.automaton.PolicyAutomaton;
 import org.cmg.jresp.policy.facpl.FacplPolicyState;
 import org.cmg.jresp.policy.facpl.ObligationType;
@@ -47,9 +48,10 @@ public class Chapter_4_SecureSocialNetwork {
 	public static void main(String[] argv) {
 
 		// Access control policy fo the bag
-		PolicyAutomaton	p = new PolicyAutomaton();
-		FacplPolicyState start = new FacplPolicyState(new SocialNetworkPolicy());
-		p.addState(start);
+//		PolicyAutomaton	p = new PolicyAutomaton();
+//		FacplPolicyState start = new FacplPolicyState(new SocialNetworkPolicy());
+//		p.addState(start);
+		SinglePolicy p = new SinglePolicy(new SocialNetworkPolicy());
 
 		Node UserSpace = new Node("UserSpace",new RandomSpace());
 		UserSpace.addPort(vp);
