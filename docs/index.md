@@ -40,6 +40,8 @@ By default, each node is instantiated with the policy allowing any operation. Di
 
 For both the policy type, there is available an implementation based on [FACPL](http://facpl.sf.net), a Java framework to design and implement attributed-based access control policies. Indeed, a ```SinglePolicy``` can be instantiated with a FACPL policy, while each state of a ```PolicyAutomaton``` corresponds to a FACPL policy; the automaton transitions are defined by conditions on the attributes forming the authorisation request to evaluate. 
 
+Intuitively, a FACPL policy is formed by a sequence of basic access control rules, either positive (```permit```) or negative (```deny```), whose authorisations are combined together by a combining algorithm: ```permit-unless-deny``` or ```deny-unless-permit```. When both ```permit``` and ```deny``` authorisations are obtained, the former gives precendence to ```deny```, the latter vice versa. Each rule defines upon the attibutes of authorisation requests the access controls for actions and possibly additional actions to enforce in the Agent as result of the rule evaluation. Thus, rules use pre-defined attribute names to specify controls on action paramenters (e.g, ```action/id``` to check the action type: PUT, GET, ...) or on the context (e.g, ```subjcet/id``` to check the name of the component executing the action). 
+
 # Getting Started
 
 1. Clone the git repository in your computer with
