@@ -7,7 +7,7 @@ public class Tuple {
 		this.fields = fields;
 	}
 
-	public int length() {
+	public int getLength() {
 		return fields.length;
 	}
 
@@ -15,10 +15,14 @@ public class Tuple {
 		return fields[i];
 	}
 
+	public Class<?> getType(int i) {
+		return fields[i].getClass();
+	}
+
 	public boolean equals(Object obj) {
 		if (obj instanceof Tuple) {
 			Tuple t = (Tuple) obj;
-			for (int i = 0; i < t.length(); i++) {
+			for (int i = 0; i < t.getLength(); i++) {
 				if (!t.get(i).equals(fields[i])) {
 					return false;
 				}
@@ -47,4 +51,13 @@ public class Tuple {
 		return prova + "]";
 	}
 
+	public Template getFormalTemplate() {
+		int size = fields.length;
+		FormalTemplateField[] formalFields = new FormalTemplateField[size];
+		for (int i = 0; i < size; i++) {
+			FormalTemplateField element = new FormalTemplateField(fields[i].getClass());
+			formalFields[i] = element;
+		}
+		return new Template(formalFields);
+	}
 }

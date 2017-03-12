@@ -2,18 +2,18 @@ package org.cmg.jresp.knowledge2;
 
 import java.util.LinkedList;
 
-public class TupleNode {
-	private Object field;
-	private int count;
-	private TupleSpace next;
+public abstract class TupleNode {
+	protected Object field;
+	protected int count;
+	protected TupleSpace next;
 
-	public TupleNode() {
-		this.next = new TupleSpace();
-		this.field = new Object();
+	public TupleNode(){
+		count = 0;
+		field = new Object();
 	}
 
 	public TupleNode(Object field) {
-		this.next = new TupleSpace();
+		count=0;
 		this.field = field;
 	}
 
@@ -28,22 +28,26 @@ public class TupleNode {
 	public TupleSpace getNext() {
 		return next;
 	}
+	public void setNext(TupleSpace next){
+		this.next = next;
+	}
 
-	public void add(Tuple t, int idx) {
+	public void add(Tuple t, int idx) throws InterruptedException {
 		int next = idx + 1;
-		if (next == t.length()) {
+		if (next == t.getLength()) {
 			doIncrementNodeCounter();
 		} else {
 			this.next.put(t, next);
 		}
 	}
 
+
 	protected void doIncrementNodeCounter() {
 		this.count++;
 	}
 
-	public String getField() {
-		return field.toString();
+	public Object getField() {
+		return field;
 	}
 
 	/*
@@ -55,21 +59,30 @@ public class TupleNode {
 	 * dell'albero del tupleSpace, agginge la tupla ad una lista.
 	 */
 	// troppi parametri da migliorare
-	public void getTupleFields(Template template, int idx, Object[] tupleFields, LinkedList<Tuple> tupleList,
-			boolean remove) {
+	public boolean getTupleFields(Template template, int idx, Object[] tupleFields, boolean remove,boolean all,LinkedList<Tuple> tuples) {
 		tupleFields[idx] = field;
 		int lenghtTemplate = template.lenght() - 1;
 		if (idx == lenghtTemplate) {
-			checkCount(remove, tupleFields);
-			if (tupleList != null && tupleFields[0] != null) {
-				addTupleToLinkedList(tupleFields, tupleList);
-			}
+			return checkCount(remove, tupleFields);
 		} else {
-			next.getTupleFields(template, idx + 1, tupleFields, tupleList, remove);
+			next.getTupleFields(template, idx + 1, tupleFields, remove,all, tuples);
 		}
+		return false;
 	}
 
-	protected void addTupleToLinkedList(Object[] tupleFields, LinkedList<Tuple> tupleList) {
+	public boolean checkCount(Boolean remove, Object[] tupleFields) {
+		if (count > 0 && remove) {
+			count--;
+		} else if (remove) {
+			if(tupleFields!=null){
+			tupleFields[0]= null;
+			}
+			return false;
+		}
+		return true;
+	}
+	
+	private void addTupleToLinkedList(Object[] tupleFields, LinkedList<Tuple> tupleList) {
 		Tuple t = new Tuple(tupleFields);
 		tupleList.add(t);
 	}
@@ -85,7 +98,7 @@ public class TupleNode {
 		if (next.isEmpty()) {
 			addTupleToLinkedList(tupleFields, tupleList, remove);
 		} else {
-			next.getAll(idx + 1, tupleFields, tupleList, remove);
+			next.getAllTuple(idx + 1, tupleFields, tupleList, remove);
 			tupleFields.removeLast();
 		}
 	}
@@ -109,14 +122,6 @@ public class TupleNode {
 			i++;
 		}
 		return t;
-	}
-
-	protected void checkCount(Boolean remove, Object[] tupleFields) {
-		if (count > 0 && remove) {
-			count--;
-		} else if (remove) {
-			tupleFields[0] = null;
-		}
 	}
 
 	public String toString() {
