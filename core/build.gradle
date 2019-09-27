@@ -1,7 +1,7 @@
 subprojects {   
     apply plugin: 'java'
     group = 'org.cmg.jresp'
-    version = '3.3'
+    version = '3.4'
 }
 
 project(':org.cmg.jresp.simulation') {

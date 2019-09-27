@@ -482,15 +482,13 @@ public class SimulationNode extends Observable implements INode {
 
 	@Override
 	public void put(PointToPoint from, int session, Tuple tuple) throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
-
+		this.put(tuple);
 	}
 
 	@Override
 	public void gPut(PointToPoint from, int session, GroupPredicate groupPredicate, Tuple tuple)
 			throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
-
+		this.put(tuple);
 	}
 
 	@Override
